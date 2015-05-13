@@ -1,9 +1,14 @@
 <?php
 
-namespace allejo\Socrata;
+namespace allejo\Socrata\Utilities;
+
+use allejo\Socrata\Exceptions\CurlException;
+use allejo\Socrata\Exceptions\HttpException;
 
 class UrlQuery
 {
+    const DefaultProtocol = "https";
+
     private $url;
     private $cURL;
     private $token;
@@ -52,13 +57,20 @@ class UrlQuery
         }
     }
 
-    public function sendGet($params = array())
+    public function sendGet($params)
     {
-        $full_url = self::buildQuery($this->url, $params);
+        if (is_array($params))
+        {
+            $full_url = self::buildQuery($this->url, $params);
+        }
+        else
+        {
+            $full_url = $this->url . "?" . $params;
+        }
 
         curl_setopt($this->cURL, CURLOPT_URL, $full_url);
 
-        $this->handleQuery();
+        return $this->handleQuery();
     }
 
     public function sendPost($data_as_json)
@@ -69,7 +81,7 @@ class UrlQuery
             CURLOPT_CUSTOMREQUEST => "POST"
         ));
 
-        $this->handleQuery();
+        return $this->handleQuery();
     }
 
     public function sendPut($data_as_json)
@@ -79,7 +91,7 @@ class UrlQuery
             CURLOPT_CUSTOMREQUEST => "PUT"
         ));
 
-        $this->handleQuery();
+        return $this->handleQuery();
     }
 
     public function handleQuery()
@@ -88,14 +100,14 @@ class UrlQuery
 
         if (!$result)
         {
-            throw new Exception("cURL Error " . curl_errno($this->cURL) . ": " curl_error($this->cURL), 1);
+            throw new CurlException(curl_errno($this->cURL), curl_error($this->cURL));
         }
 
-        $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        $httpCode = curl_getinfo($this->cURL, CURLINFO_HTTP_CODE);
 
         if ($httpCode != "200")
         {
-            throw new Exception("HTTP Error " . $httpCode . ": " . $result, 1);
+            throw new HttpException($httpCode, $result);
         }
 
         return json_decode($result);
@@ -105,9 +117,9 @@ class UrlQuery
     {
         $full_url = $url;
 
-        if (count($this->parameters) > 0)
+        if (count($params) > 0)
         {
-            $full_url .= "?" . implode("&", $this->parameters);
+            $full_url .= "?" . implode("&", $params);
         }
 
         return $full_url;

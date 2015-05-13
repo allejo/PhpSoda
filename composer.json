@@ -4,6 +4,22 @@
     "type": "project",
     "license": "Apache-2.0",
     "require": {
-        "php": ">=5.3.0"
-    }
+      "php": ">=5.3.0"
+    },
+    "require-dev": {
+      "zetacomponents/console-tools": "dev-master",
+      "phpunit/phpunit": "~4.0",
+      "theseer/autoload": "1.16.2"
+    },
+    "autoload": {
+      "classmap": [
+        "src/"
+      ]
+    },
+    "authors": [
+      {
+        "name": "Vladimir Jimenez",
+        "email": "hello@allejo.io"
+      }
+    ]
 }

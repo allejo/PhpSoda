@@ -10,19 +10,19 @@ abstract class SoqlorderDirection
 
 class SoqlQuery
 {
-    public static const Delimiter = ',';
-    public static const SelectKey = '$select';
-    public static const WhereKey  = '$where';
-    public static const OrderKey  = '$order';
-    public static const GroupKey  = '$group';
-    public static const LimitKey  = '$limit';
-    public static const OffsetKey = '$offset';
-    public static const SearchKey = '$q';
+    const Delimiter = ',';
+    const SelectKey = '$select';
+    const WhereKey  = '$where';
+    const OrderKey  = '$order';
+    const GroupKey  = '$group';
+    const LimitKey  = '$limit';
+    const OffsetKey = '$offset';
+    const SearchKey = '$q';
 
-    public static const DefaultSelect[] = array('*');
-    public static const DefaultOrderDirection = SoqlorderDirection::ASC;
-    public static const DefaultOrder[] = array(':id');
-    public static const MaximumLimit = 1000;
+    const DefaultSelect = array('*');
+    const DefaultOrderDirection = SoqlorderDirection::ASC;
+    const DefaultOrder = array(':id');
+    const MaximumLimit = 1000;
 
     private $selectColumns;
     private $whereClause;
@@ -67,7 +67,7 @@ class SoqlQuery
             $soql_query .= implode(self::Delimiter, $selectedColumns);
         }
 
-        $soql_query = sprintf("&%s=%s %s", self::OrderKey, implode(self::Delimiter, $this->orderByColumns), $this->orderDirection);
+        $soql_query .= sprintf("&%s=%s %s", self::OrderKey, implode(self::Delimiter, $this->orderByColumns), $this->orderDirection);
 
         if ($this->isNullOrEmpty($this->whereClause))
         {
