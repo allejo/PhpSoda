@@ -2,7 +2,7 @@
 
 namespace allejo\Socrata;
 
-abstract class SoqlorderDirection
+abstract class SoqlOrderDirection
 {
     const ASC = 'ASC';
     const DESC = 'DESC';
@@ -19,9 +19,9 @@ class SoqlQuery
     const OffsetKey = '$offset';
     const SearchKey = '$q';
 
-    const DefaultSelect = array('*');
-    const DefaultOrderDirection = SoqlorderDirection::ASC;
-    const DefaultOrder = array(':id');
+    const DefaultSelect = '*';
+    const DefaultOrderDirection = SoqlOrderDirection::ASC;
+    const DefaultOrder = ':id';
     const MaximumLimit = 1000;
 
     private $selectColumns;
@@ -35,9 +35,9 @@ class SoqlQuery
 
     public function __construct ()
     {
-        $this->selectColumns = self::DefaultSelect;
+        $this->selectColumns = array(self::DefaultSelect);
         $this->orderByColumns = self::DefaultOrder;
-        $this->orderDirection = self::DefaultOrderDirection;
+        $this->orderDirection = array(self::DefaultOrderDirection);
     }
 
     public function __tostring ()
@@ -46,7 +46,7 @@ class SoqlQuery
 
         if (count($this->selectColumns) === 1 && $this->selectColumns[0] === "*")
         {
-            $soql_query .= $this->selectColumns[0]);
+            $soql_query .= $this->selectColumns[0];
         }
         else
         {
@@ -91,7 +91,7 @@ class SoqlQuery
 
         if ($this->isNullOrEmpty($this->searchText))
         {
-            $soql_query .= sprintf("&%s=%s", self::SearchKey, $this->searchTexth);
+            $soql_query .= sprintf("&%s=%s", self::SearchKey, $this->searchText);
         }
 
         return $soql_query;
@@ -130,7 +130,7 @@ class SoqlQuery
     {
         if ($limit <= 0)
         {
-            throw new OutOfBoundsException("A limit cannot be less than or equal to 0.", 1);
+            throw new \OutOfBoundsException("A limit cannot be less than or equal to 0.", 1);
         }
 
         $this->limitValue = min(self::MaximumLimit, $limit);
@@ -142,10 +142,10 @@ class SoqlQuery
     {
         if ($offset <= 0)
         {
-            throw new OutOfBoundsException("An offset cannot be less than or equal to 0.", 1);
+            throw new \OutOfBoundsException("An offset cannot be less than or equal to 0.", 1);
         }
 
-        $this->offset = $offset;
+        $this->offsetValue = $offset;
 
         return $this;
     }
