@@ -56,7 +56,7 @@ class SoqlQuery
             {
                 if (is_string($key))
                 {
-                    $selectedColumns[] = sprintf("%s AS %s", $key, $value);
+                    $selectedColumns[] = urlencode(sprintf("%s AS %s", $key, $value));
                 }
                 else
                 {
@@ -67,11 +67,11 @@ class SoqlQuery
             $soql_query .= implode(self::Delimiter, $selectedColumns);
         }
 
-        $soql_query .= sprintf("&%s=%s %s", self::OrderKey, implode(self::Delimiter, $this->orderByColumns), $this->orderDirection);
+        $soql_query .= sprintf("&%s=%s", self::OrderKey, urlencode(implode(self::Delimiter, $this->orderByColumns) . " " .  $this->orderDirection));
 
         if (!$this->isNullOrEmpty($this->whereClause))
         {
-            $soql_query .= sprintf("&%s=%s", self::WhereKey, $this->whereClause);
+            $soql_query .= sprintf("&%s=%s", self::WhereKey, urlencode($this->whereClause));
         }
 
         if (count($this->groupByColumns) > 0)
@@ -91,7 +91,7 @@ class SoqlQuery
 
         if (!$this->isNullOrEmpty($this->searchText))
         {
-            $soql_query .= sprintf("&%s=%s", self::SearchKey, $this->searchText);
+            $soql_query .= sprintf("&%s=%s", self::SearchKey, urlencode($this->searchText));
         }
 
         return $soql_query;
@@ -128,6 +128,11 @@ class SoqlQuery
 
     public function limit ($limit)
     {
+        if (!is_integer($limit))
+        {
+            throw new \InvalidArgumentException("An limit must be an integer");
+        }
+
         if ($limit <= 0)
         {
             throw new \OutOfBoundsException("A limit cannot be less than or equal to 0.", 1);
@@ -140,6 +145,11 @@ class SoqlQuery
 
     public function offset ($offset)
     {
+        if (!is_integer($offset))
+        {
+            throw new \InvalidArgumentException("An offset must be an integer");
+        }
+
         if ($offset <= 0)
         {
             throw new \OutOfBoundsException("An offset cannot be less than or equal to 0.", 1);
