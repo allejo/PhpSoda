@@ -11,8 +11,10 @@ spl_autoload_register(
                 'allejo\\socrata\\exceptions\\httpexception' => '/Exceptions/HttpException.php',
                 'allejo\\socrata\\exceptions\\invalidresourceexception' => '/Exceptions/InvalidResourceException.php',
                 'allejo\\socrata\\sodaclient' => '/SodaClient.php',
+                'allejo\\socrata\\sodadataset' => '/SodaDataset.php',
                 'allejo\\socrata\\soqlorderdirection' => '/SoqlQuery.php',
                 'allejo\\socrata\\soqlquery' => '/SoqlQuery.php',
+                'allejo\\socrata\\utilities\\stringutilities' => '/Utilities/StringUtilities.php',
                 'allejo\\socrata\\utilities\\urlquery' => '/Utilities/UrlQuery.php'
             );
         }
@@ -20,6 +22,8 @@ spl_autoload_register(
         if (isset($classes[$cn])) {
             require __DIR__ . $classes[$cn];
         }
-    }
+    },
+    true,
+    false
 );
 // @codeCoverageIgnoreEnd

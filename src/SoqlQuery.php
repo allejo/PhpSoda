@@ -38,6 +38,8 @@ class SoqlQuery
         $this->selectColumns = array(self::DefaultSelect);
         $this->orderByColumns = array(self::DefaultOrder);
         $this->orderDirection = self::DefaultOrderDirection;
+
+        return $this;
     }
 
     public function __tostring ()

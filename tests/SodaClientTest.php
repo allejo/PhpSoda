@@ -1,10 +1,15 @@
 <?php
 
 use allejo\Socrata\SodaClient;
+use allejo\Socrata\SodaDataset;
 use allejo\Socrata\SoqlQuery;
 
 class SodaClientTest extends PHPUnit_Framework_TestCase
 {
+    private $id;
+    private $domain;
+    private $token;
+
     public static function invalidResourceIDs()
     {
         return array(
@@ -13,6 +18,13 @@ class SodaClientTest extends PHPUnit_Framework_TestCase
             array("1234-werwe"),
             array("123--4545")
         );
+    }
+
+    public function setUp ()
+    {
+        $this->id = "pkfj-5jsd";
+        $this->domain = "opendata.socrata.com";
+        $this->token = "khpKCi1wMz2bwXyMIHfb6ux73";
     }
 
     /**
@@ -26,35 +38,47 @@ class SodaClientTest extends PHPUnit_Framework_TestCase
     public function testInvalidResourceIDs($resourceID)
     {
         $sc = new SodaClient("https://opendata.socrata.com");
-        $sc->getResource($resourceID);
+        $ds = new SodaDataset($sc, $resourceID);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidClient()
+    {
+        $sc = null;
+        $ds = new SodaDataset($sc, "qwer-1234");
     }
 
     /**
      * @expectedException \allejo\Socrata\Exceptions\HttpException
      * @expectedExceptionCode 403
      */
-    public function testGetResourceWithoutTokenAndInvalidCredentials()
+    public function testGetDatasetWithInvalidCredentials()
     {
-        $sc = new SodaClient("opendata.socrata.com", "", "fake@email.com", "foobar");
-        $sc->getResource("pkfj-5jsd");
+        $sc = new SodaClient($this->domain, $this->token, "fake@email.com", "foobar");
+        $ds = new SodaDataset($sc, "pkfj-5jsd");
+
+        $ds->getDataset();
     }
 
     public function testGetResourceWithToken()
     {
-        $sc = new SodaClient("opendata.socrata.com", "khpKCi1wMz2bwXyMIHfb6ux73");
-        $sc->getResource("pkfj-5jsd");
+        $sc = new SodaClient($this->domain, $this->token);
+        $ds = new SodaDataset($sc, "pkfj-5jsd");
+
+        $ds->getDataset();
     }
 
     public function testGetResourceWithSoqlQuery()
     {
-        $sc = new SodaClient("opendata.socrata.com", "khpKCi1wMz2bwXyMIHfb6ux73");
-        $soql = new SoqlQuery();
+        $sc   = new SodaClient($this->domain, $this->token);
+        $ds   = new SodaDataset($sc, $this->id);
+        $soql = (new SoqlQuery())
+                ->select(array("date_posted", "state", "sample_type"))
+                ->where("state = 'AR'");
 
-        $soql->select(array("date_posted", "state", "sample_type"))
-             ->where("state = 'AR'");
-
-        $results = $sc->getResource("pkfj-5jsd", $soql);
-
-        print_r($results);
+        $results = $ds->getDataset($soql);
+        $this->assertEquals(2, count($results));
     }
 }

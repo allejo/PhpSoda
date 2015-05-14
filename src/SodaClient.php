@@ -9,9 +9,6 @@
 
 namespace allejo\Socrata;
 
-use allejo\Socrata\Exceptions\InvalidResourceException;
-use allejo\Socrata\Utilities\UrlQuery;
-
 /**
  * A client object to interact with the Socrata API
  *
@@ -131,101 +128,28 @@ class SodaClient
         $this->associativeArray = false;
     }
 
-    /**
-     * Fetch a data set based on a resource ID
-     *
-     * @param  string           $resourceID        The 4x4 resource ID of a data set
-     * @param  string|SoqlQuery $filterOrSoqlQuery A simple filter or a SoqlQuery to filter the results
-     *
-     * @see    enableAssociativeArrays()
-     * @see    disableAssociativeArrays()
-     *
-     * @throws InvalidResourceException If the resource ID isn't in the format of xxxx-xxxx
-     *
-     * @return array The data set as a PHP array. The array will contain associative arrays or stdClass objects from
-     *               the decoded JSON received from the data set.
-     */
-    public function getResource($resourceID, $filterOrSoqlQuery = "")
+    public function associativeArrayEnabled()
     {
-        $this->validateResourceID($resourceID);
-
-        $uq = new UrlQuery($this->buildResourceUrl($resourceID), $this->token);
-
-        if (!empty($this->email) && !empty($this->password))
-        {
-            $uq->setAuthentication($this->email, $this->password);
-        }
-
-        return $uq->sendGet($filterOrSoqlQuery, $this->associativeArray);
+        return $this->associativeArray;
     }
 
-    /**
-     * @param $resourceID
-     * @param $data
-     *
-     * @return mixed
-     * @throws InvalidResourceException
-     */
-    public function upsert($resourceID, $data)
+    public function getDomain()
     {
-        $this->validateResourceID($resourceID);
-        $upsertData = $data;
-
-        if (is_array($data))
-        {
-            $upsertData = json_encode($data);
-        }
-        else if (!self::isJson($data))
-        {
-            throw new \InvalidArgumentException("The given data is not valid JSON");
-        }
-
-        $uq = new UrlQuery($this->buildResourceUrl($resourceID), $this->token);
-
-        if (!empty($this->email) && !empty($this->password))
-        {
-            $uq->setAuthentication($this->email, $this->password);
-        }
-
-        return $uq->sendPost($upsertData, $this->associativeArray);
+        return $this->domain;
     }
 
-    /**
-     * Build the URL that will be used to access the API
-     *
-     * @param  string $resourceId The 4x4 resource ID of a data set
-     *
-     * @return string The API URL
-     */
-    private function buildResourceUrl($resourceId)
+    public function getEmail()
     {
-        return sprintf("%s://%s/resource/%s.json", UrlQuery::DefaultProtocol, $this->domain, $resourceId);
+        return $this->email;
     }
 
-    /**
-     * Validate a resource ID to be sure if matches the criteria
-     *
-     * @param  string  $resourceID  The 4x4 resource ID of a data set
-     *
-     * @throws InvalidResourceException If the resource ID isn't in the format of xxxx-xxxx
-     */
-    private static function validateResourceID($resourceID)
+    public function getToken()
     {
-        if (!preg_match('/^[a-z0-9]{4}-[a-z0-9]{4}$/', $resourceID))
-        {
-            throw new InvalidResourceException("The resource ID given didn't fit the expected criteria");
-        }
+        return $this->token;
     }
 
-    /**
-     * Test whether a string is proper JSON or not
-     *
-     * @param  string  $string The string to be tested as JSON
-     *
-     * @return bool  True if the given string is JSON
-     */
-    private static function isJson($string)
+    public function getPassword()
     {
-        return is_string($string) && is_object(json_decode($string)) && (json_last_error() == JSON_ERROR_NONE);
+        return $this->password;
     }
 }
