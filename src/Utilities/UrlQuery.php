@@ -98,7 +98,7 @@ class UrlQuery
         return $this->handleQuery($associativeArray);
     }
 
-    public function handleQuery($associativeArray)
+    private function handleQuery($associativeArray)
     {
         $result = curl_exec($this->cURL);
 

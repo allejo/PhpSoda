@@ -147,10 +147,7 @@ class SodaClient
      */
     public function getResource($resourceID, $filterOrSoqlQuery = "")
     {
-        if (!preg_match('/^[a-z0-9]{4}-[a-z0-9]{4}$/', $resourceID))
-        {
-            throw new InvalidResourceException("The resource ID given didn't fit the expected criteria");
-        }
+        $this->validateResourceID($resourceID);
 
         $uq = new UrlQuery($this->buildResourceUrl($resourceID), $this->token);
 
@@ -163,6 +160,37 @@ class SodaClient
     }
 
     /**
+     * @param $resourceID
+     * @param $data
+     *
+     * @return mixed
+     * @throws InvalidResourceException
+     */
+    public function upsert($resourceID, $data)
+    {
+        $this->validateResourceID($resourceID);
+        $upsertData = $data;
+
+        if (is_array($data))
+        {
+            $upsertData = json_encode($data);
+        }
+        else if (!self::isJson($data))
+        {
+            throw new \InvalidArgumentException("The given data is not valid JSON");
+        }
+
+        $uq = new UrlQuery($this->buildResourceUrl($resourceID), $this->token);
+
+        if (!empty($this->email) && !empty($this->password))
+        {
+            $uq->setAuthentication($this->email, $this->password);
+        }
+
+        return $uq->sendPost($upsertData, $this->associativeArray);
+    }
+
+    /**
      * Build the URL that will be used to access the API
      *
      * @param  string $resourceId The 4x4 resource ID of a data set
@@ -172,5 +200,32 @@ class SodaClient
     private function buildResourceUrl($resourceId)
     {
         return sprintf("%s://%s/resource/%s.json", UrlQuery::DefaultProtocol, $this->domain, $resourceId);
+    }
+
+    /**
+     * Validate a resource ID to be sure if matches the criteria
+     *
+     * @param  string  $resourceID  The 4x4 resource ID of a data set
+     *
+     * @throws InvalidResourceException If the resource ID isn't in the format of xxxx-xxxx
+     */
+    private static function validateResourceID($resourceID)
+    {
+        if (!preg_match('/^[a-z0-9]{4}-[a-z0-9]{4}$/', $resourceID))
+        {
+            throw new InvalidResourceException("The resource ID given didn't fit the expected criteria");
+        }
+    }
+
+    /**
+     * Test whether a string is proper JSON or not
+     *
+     * @param  string  $string The string to be tested as JSON
+     *
+     * @return bool  True if the given string is JSON
+     */
+    private static function isJson($string)
+    {
+        return is_string($string) && is_object(json_decode($string)) && (json_last_error() == JSON_ERROR_NONE);
     }
 }
