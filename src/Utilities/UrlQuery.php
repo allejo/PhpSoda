@@ -57,23 +57,27 @@ class UrlQuery
         }
     }
 
-    public function sendGet($params)
+    public function sendGet($params, $associativeArray)
     {
         if (is_array($params))
         {
             $full_url = self::buildQuery($this->url, $params);
         }
-        else
+        else if (!empty($params))
         {
             $full_url = $this->url . "?" . $params;
+        }
+        else
+        {
+            $full_url = $this->url;
         }
 
         curl_setopt($this->cURL, CURLOPT_URL, $full_url);
 
-        return $this->handleQuery();
+        return $this->handleQuery($associativeArray);
     }
 
-    public function sendPost($data_as_json)
+    public function sendPost($data_as_json, $associativeArray)
     {
         curl_setopt_array($this->cURL, array(
             CURLOPT_POST => true,
@@ -81,20 +85,20 @@ class UrlQuery
             CURLOPT_CUSTOMREQUEST => "POST"
         ));
 
-        return $this->handleQuery();
+        return $this->handleQuery($associativeArray);
     }
 
-    public function sendPut($data_as_json)
+    public function sendPut($data_as_json, $associativeArray)
     {
         curl_setopt_array($this->cURL, array(
             CURLOPT_POSTFIELDS => $data_as_json,
             CURLOPT_CUSTOMREQUEST => "PUT"
         ));
 
-        return $this->handleQuery();
+        return $this->handleQuery($associativeArray);
     }
 
-    public function handleQuery()
+    public function handleQuery($associativeArray)
     {
         $result = curl_exec($this->cURL);
 
@@ -110,7 +114,7 @@ class UrlQuery
             throw new HttpException($httpCode, $result);
         }
 
-        return json_decode($result);
+        return json_decode($result, $associativeArray);
     }
 
     public static function buildQuery($url, $params = array())

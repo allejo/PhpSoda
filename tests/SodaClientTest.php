@@ -1,6 +1,7 @@
 <?php
 
 use allejo\Socrata\SodaClient;
+use allejo\Socrata\SoqlQuery;
 
 class SodaClientTest extends PHPUnit_Framework_TestCase
 {
@@ -32,9 +33,28 @@ class SodaClientTest extends PHPUnit_Framework_TestCase
      * @expectedException \allejo\Socrata\Exceptions\HttpException
      * @expectedExceptionCode 403
      */
-    public function testGetResourceWithoutToken()
+    public function testGetResourceWithoutTokenAndInvalidCredentials()
     {
-        $sc = new SodaClient("opendata.socrata.com");
+        $sc = new SodaClient("opendata.socrata.com", "", "fake@email.com", "foobar");
         $sc->getResource("pkfj-5jsd");
+    }
+
+    public function testGetResourceWithToken()
+    {
+        $sc = new SodaClient("opendata.socrata.com", "khpKCi1wMz2bwXyMIHfb6ux73");
+        $sc->getResource("pkfj-5jsd");
+    }
+
+    public function testGetResourceWithSoqlQuery()
+    {
+        $sc = new SodaClient("opendata.socrata.com", "khpKCi1wMz2bwXyMIHfb6ux73");
+        $soql = new SoqlQuery();
+
+        $soql->select(array("date_posted", "state", "sample_type"))
+             ->where("state = 'AR'");
+
+        $results = $sc->getResource("pkfj-5jsd", $soql);
+
+        print_r($results);
     }
 }

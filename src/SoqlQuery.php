@@ -36,8 +36,8 @@ class SoqlQuery
     public function __construct ()
     {
         $this->selectColumns = array(self::DefaultSelect);
-        $this->orderByColumns = self::DefaultOrder;
-        $this->orderDirection = array(self::DefaultOrderDirection);
+        $this->orderByColumns = array(self::DefaultOrder);
+        $this->orderDirection = self::DefaultOrderDirection;
     }
 
     public function __tostring ()
@@ -69,7 +69,7 @@ class SoqlQuery
 
         $soql_query .= sprintf("&%s=%s %s", self::OrderKey, implode(self::Delimiter, $this->orderByColumns), $this->orderDirection);
 
-        if ($this->isNullOrEmpty($this->whereClause))
+        if (!$this->isNullOrEmpty($this->whereClause))
         {
             $soql_query .= sprintf("&%s=%s", self::WhereKey, $this->whereClause);
         }
@@ -89,7 +89,7 @@ class SoqlQuery
             $soql_query .= sprintf("&%s=%s", self::LimitKey, $this->limitValue);
         }
 
-        if ($this->isNullOrEmpty($this->searchText))
+        if (!$this->isNullOrEmpty($this->searchText))
         {
             $soql_query .= sprintf("&%s=%s", self::SearchKey, $this->searchText);
         }
@@ -99,7 +99,7 @@ class SoqlQuery
 
     public function select ($columns = self::DefaultSelect)
     {
-        $this->selectedColumns = $columns;
+        $this->selectColumns = $columns;
 
         return $this;
     }

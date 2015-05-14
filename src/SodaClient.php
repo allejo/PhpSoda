@@ -11,6 +11,7 @@ class SodaClient
     private $token;
     private $email;
     private $password;
+    private $associativeArray;
 
     public function __construct ($url, $token = "", $email = "", $password = "")
     {
@@ -18,17 +19,34 @@ class SodaClient
         $this->token    = $token;
         $this->email    = $email;
         $this->password = $password;
+        $this->associativeArray = true;
+    }
+
+    /**
+     * When fetching a data set, the returned data will be in an array of associative arrays
+     */
+    public function enableAssociativeArrays()
+    {
+        $this->associativeArray = true;
+    }
+
+    /**
+     * When fetching a data set, the returned data will be in an array of stdClass objects
+     */
+    public function disableAssociativeArrays()
+    {
+        $this->associativeArray = false;
     }
 
     /**
      * Fetch a data set based on a resource ID
      *
-     * @param  string           $resourceID        The 4x4 resource ID of a dataset
+     * @param  string           $resourceID        The 4x4 resource ID of a data set
      * @param  string|SoqlQuery $filterOrSoqlQuery A simple filter or a SoqlQuery to filter the results
      *
-     * @throws InvalidResourceException
+     * @throws \allejo\Socrata\Exceptions\InvalidResourceException
      *
-     * @return array A JSON decoded array containing the information returned from Socrata
+     * @return array
      */
     public function getResource($resourceID, $filterOrSoqlQuery = "")
     {
@@ -39,12 +57,12 @@ class SodaClient
 
         $uq = new UrlQuery($this->buildResourceUrl($resourceID), $this->token);
 
-        if (isset($this->email) && isset($this->password))
+        if (!empty($this->email) && !empty($this->password))
         {
             $uq->setAuthentication($this->email, $this->password);
         }
 
-        return $uq->sendGet($filterOrSoqlQuery);
+        return $uq->sendGet($filterOrSoqlQuery, $this->associativeArray);
     }
 
     private function buildResourceUrl($resourceId)
