@@ -7,6 +7,8 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
+                'allejo\\socrata\\converters\\converter' => '/Converters/Converter.php',
+                'allejo\\socrata\\converters\\csvconverter' => '/Converters/CsvConverter.php',
                 'allejo\\socrata\\exceptions\\curlexception' => '/Exceptions/CurlException.php',
                 'allejo\\socrata\\exceptions\\httpexception' => '/Exceptions/HttpException.php',
                 'allejo\\socrata\\exceptions\\invalidresourceexception' => '/Exceptions/InvalidResourceException.php',

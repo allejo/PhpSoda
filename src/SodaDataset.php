@@ -2,6 +2,7 @@
 
 namespace allejo\Socrata;
 
+use allejo\Socrata\Converters\Converter;
 use allejo\Socrata\Utilities\StringUtilities;
 use allejo\Socrata\Utilities\UrlQuery;
 
@@ -58,6 +59,10 @@ class SodaDataset
         if (is_array($data))
         {
             $upsertData = json_encode($data);
+        }
+        else if ($data instanceof Converter)
+        {
+            $upsertData = $data->toJson();
         }
         else if (!StringUtilities::isJson($data))
         {
