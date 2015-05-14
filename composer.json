@@ -2,7 +2,7 @@
     "name": "allejo/PhpSoda",
     "description": "A more Object-Oriented PHP library for working with the Socrata API",
     "type": "project",
-    "license": "Apache-2.0",
+    "license": "LGPL-2.1",
     "require": {
       "php": ">=5.3.0"
     },

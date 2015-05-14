@@ -4,7 +4,7 @@
  * This file contains the content of the SodaClient object
  *
  * @copyright 2015 Vladimir Jimenez
- * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0
+ * @license   https://www.gnu.org/licenses/lgpl-2.1.html LGPL-2.1
  */
 
 namespace allejo\Socrata;
