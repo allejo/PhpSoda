@@ -74,9 +74,10 @@ class SodaClientTest extends PHPUnit_Framework_TestCase
     {
         $sc   = new SodaClient($this->domain, $this->token);
         $ds   = new SodaDataset($sc, $this->id);
-        $soql = (new SoqlQuery())
-                ->select(array("date_posted", "state", "sample_type"))
-                ->where("state = 'AR'");
+        $soql = new SoqlQuery();
+
+        $soql->select(array("date_posted", "state", "sample_type"))
+             ->where("state = 'AR'");
 
         $results = $ds->getDataset($soql);
         $this->assertEquals(2, count($results));
