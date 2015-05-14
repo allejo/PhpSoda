@@ -1,4 +1,5 @@
 # PhpSoda
+[![Build Status](https://magnum.travis-ci.com/allejo/PhpSoda.svg?token=N8pP5syRDREGy8yzpAqR&branch=master)](https://magnum.travis-ci.com/allejo/PhpSoda)
 
 A more Object-Oriented PHP library for working with the Socrata API
 
