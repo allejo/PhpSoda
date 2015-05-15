@@ -109,12 +109,11 @@ output/
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
 # composer.lock
 
-# PHPUnit
-/app/phpunit.xml
-/phpunit.xml
-
 # Build data
 /build/
 
 # Composer PHAR
 /composer.phar
+
+### Grunt ###
+node_modules/
