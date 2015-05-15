@@ -1,6 +1,39 @@
 # PhpSoda [![Build Status](https://magnum.travis-ci.com/allejo/PhpSoda.svg?token=N8pP5syRDREGy8yzpAqR&branch=master)](https://magnum.travis-ci.com/allejo/PhpSoda)
 
-A more Object-Oriented PHP library for working with the Socrata API
+A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Compared to Socrata's official implementation, this library takes more of an object-oriented approach to working with the API instead of manually creating requests to submit.
+
+## Requires
+
+- PHP 5.3+
+
+## Examples
+
+This library supports getting datasets, writing datasets, and handling tokens or authentication.
+
+### Get a dataset
+
+```php
+// Create a client with information about the API to handle tokens and authentication
+$sc = new SodaClient("opendata.socrata.com");
+
+// Access a dataset based on the API end point
+$ds = new SodaDataset($sc, "pkfj-5jsd");
+
+// Create a SoqlQuery that will be used to filter out the results of a dataset
+$soql = new SoqlQuery();
+
+// Write a SoqlQuery naturally
+$soql->select(array("date_posted", "state", "sample_type"))
+     ->where("state = 'AR'");
+
+// Finally, get the results
+$results = $ds->getDataset($soql);
+```
+
+## Thanks To
+
+- [Socrata PHP Wrapper](https://github.com/socrata/soda-php)
+- [C# Socrata Library](https://github.com/CityofSantaMonica/SODA.NET)
 
 ## License
 
