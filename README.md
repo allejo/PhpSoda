@@ -32,7 +32,7 @@ $results = $ds->getDataset($soql);
 
 ## Thank You
 
-- [Socrata PHP Wrapper](https://github.com/socrata/soda-php)
+- [Official Socrata PHP Library](https://github.com/socrata/soda-php)
 - [C# Socrata Library](https://github.com/CityofSantaMonica/SODA.NET)
 
 ## License
