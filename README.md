@@ -2,15 +2,15 @@
 
 A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Compared to Socrata's official implementation, this library takes more of an object-oriented approach to working with the API instead of manually creating requests to submit.
 
+This library fully supports interacting with the API by getting datasets and handling tokens or authentication in order to write or modify datasets.
+
 ## Requires
 
 - PHP 5.3+
 
-## Examples
+## Sample Usage
 
-This library supports getting datasets, writing datasets, and handling tokens or authentication.
-
-### Get a dataset
+**Get a dataset**
 
 ```php
 // Create a client with information about the API to handle tokens and authentication
@@ -30,7 +30,7 @@ $soql->select(array("date_posted", "state", "sample_type"))
 $results = $ds->getDataset($soql);
 ```
 
-## Thanks To
+## Thank You
 
 - [Socrata PHP Wrapper](https://github.com/socrata/soda-php)
 - [C# Socrata Library](https://github.com/CityofSantaMonica/SODA.NET)
