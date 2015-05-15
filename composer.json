@@ -1,7 +1,7 @@
 {
     "name": "allejo/PhpSoda",
-    "description": "A more Object-Oriented PHP library for working with the Socrata API",
-    "type": "project",
+    "description": "A PHP library for working with the Socrata API",
+    "type": "library",
     "license": "LGPL-2.1",
     "require": {
       "php": ">=5.3.0"
@@ -20,7 +20,13 @@
     "authors": [
       {
         "name": "Vladimir Jimenez",
-        "email": "hello@allejo.io"
+        "homepage": "https://allejo.io",
+        "role": "Project Maintainer"
       }
-    ]
+    ],
+    "support": {
+      "issues": "https://github.com/allejo/PhpSoda/issues",
+      "irc": "irc://irc.freenode.net/sujevo",
+      "source": "https://github.com/allejo/PhpSoda"
+    }
 }
