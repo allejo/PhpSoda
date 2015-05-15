@@ -23,7 +23,7 @@ class SodaDataset
 
         $this->sodaClient = $sodaClient;
         $this->resourceId = $resourceID;
-        $this->urlQuery = new UrlQuery($this->buildResourceUrl($this->resourceId), $this->sodaClient->getToken());
+        $this->urlQuery = new UrlQuery($this->buildResourceUrl(), $this->sodaClient->getToken());
 
         if ($this->sodaClient->getEmail() != null && $this->sodaClient->getPassword() != null)
         {
@@ -75,12 +75,10 @@ class SodaDataset
     /**
      * Build the URL that will be used to access the API
      *
-     * @param  string $resourceId The 4x4 resource ID of a data set
-     *
      * @return string The API URL
      */
-    private function buildResourceUrl ($resourceId)
+    private function buildResourceUrl ()
     {
-        return sprintf("%s://%s/resource/%s.json", UrlQuery::DefaultProtocol, $this->sodaClient->getDomain(), $resourceId);
+        return sprintf("%s://%s/resource/%s.json", UrlQuery::DefaultProtocol, $this->sodaClient->getDomain(), $this->resourceId);
     }
 }
