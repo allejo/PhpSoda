@@ -99,9 +99,32 @@ class SoqlQuery
         return $soql_query;
     }
 
+    /**
+     * Select only specific columns in your Soql Query. When this function is given no parameters or is not used in a
+     * query, the Soql Query will return all of the columns
+     *
+     * ```
+     * // These are all valid usages
+     * $soqlQuery->select();
+     * $soqlQuery->select(array("foo", "bar", "baz"));
+     * $soqlQuery->select("foo", "bar", "baz");
+     * ```
+     *
+     * @param   array|mixed  $columns  The columns to select from the dataset. The columns can be specified as an array of
+     *                                 values or it can be specified as multiple parameters separated by commas.
+     *
+     * @return  $this  The SoqlQuery object that can be chained
+     */
     public function select ($columns = self::DefaultSelect)
     {
-        $this->selectColumns = $columns;
+        if (func_num_args() == 1)
+        {
+            $this->selectColumns = (is_array($columns)) ? $columns : array($columns);
+        }
+        else if (func_num_args() > 1)
+        {
+            $this->selectColumns = func_get_args();
+        }
 
         return $this;
     }
