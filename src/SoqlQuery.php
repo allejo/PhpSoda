@@ -44,7 +44,8 @@ class SoqlQuery
 
     /**
      * Write a SoQL query by chaining functions. This object will handle encoding the final query in order for it to be
-     * used properly as a URL
+     * used properly as a URL. By default a SoqlQuery will select all columns (excluding socrata columns; e.g. :id) and
+     * sort by `:id` in ascending order.
      *
      * @since 0.1.0
      */
@@ -299,7 +300,7 @@ class SoqlQuery
      *                                            to 0. When set to false, it will disallow numbers that are less than 0
      *
      * @since   0.1.0
-     *          
+     *
      * @throws  \InvalidArgumentException         If the given argument is not an integer
      * @throws  \OutOfBoundsException             If the given argument is less than 0
      */

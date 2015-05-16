@@ -32,7 +32,10 @@ class SodaDataset
     }
 
     /**
-     * Fetch a data set based on a resource ID
+     * Fetch a data set based on a resource ID.
+     *
+     * Warning: Passing a default SoqlQuery object is **not** the same passing no arguments. The sorting provided by
+     * Socrata is different than what a SoqlQuery object does by default.
      *
      * @param  string|SoqlQuery $filterOrSoqlQuery A simple filter or a SoqlQuery to filter the results
      *

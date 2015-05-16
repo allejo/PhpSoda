@@ -88,4 +88,19 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($limit, count($results));
     }
+
+    public function testOffsetQuery ()
+    {
+        $offset = 5;
+
+        $soql = new SoqlQuery();
+
+        $soql_offset = new SoqlQuery();
+        $soql_offset->offset($offset);
+
+        $normal_results = $this->dataset->getDataset($soql);
+        $offset_results = $this->dataset->getDataset($soql_offset);
+
+        $this->assertEquals($normal_results[$offset], $offset_results[0]);
+    }
 }
