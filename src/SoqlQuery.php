@@ -177,9 +177,13 @@ class SoqlQuery
     /**
      * Determines the order the results should be sorted in.
      *
+     * @link    http://dev.socrata.com/changelog/2015/04/27/new-higher-performance-apis.html New Higher Performance API
      * @link    http://dev.socrata.com/docs/queries.html#the-order-parameter SoQL $order Parameter
      *
-     * @param   string|array  $column     The column that determines how the results should be sorted
+     * @param   string|array  $column     The column(s) that determines how the results should be sorted. This information
+     *                                    can be given as an array of values, a single column, or a comma separated string.
+     *                                    In order to support sorting by multiple columns, you need to use the latest version
+     *                                    of the dataset API.
      * @param   string        $direction  The direction the results should be sorted in, either ascending or descending. The
      *                                    {@link SoqlOrderDirection} class provides constants to use should these values ever change
      *                                    in the future. The only accepted values are: `ASC` and `DESC`
@@ -192,57 +196,126 @@ class SoqlQuery
      */
     public function order ($column, $direction = self::DefaultOrderDirection)
     {
-        $this->orderByColumns = (is_array($column)) ? implode(self::Delimiter, $column) : $column;
+        $this->orderByColumns = $this->handlePossibleArray($column);
         $this->orderDirection = SoqlOrderDirection::parseOrder($direction);
 
         return $this;
     }
 
-    public function group ($columns = array())
+    public function group ($columns)
     {
         $this->groupByColumns = $columns;
 
         return $this;
     }
 
+    /**
+     * Set the amount of results that can be retrieved from a dataset per query.
+     *
+     * The maximum value is 1000 based on API restrictions; larger values will be ignored.
+     *
+     * @link    http://dev.socrata.com/docs/queries.html#the-limit-parameter  SoQL $limit Parameter
+     *
+     * @param   int    $limit  The number of results the dataset should be limited to when returned
+     *
+     * @throws  \InvalidArgumentException  If the given argument is not an integer
+     * @throws  \OutOfBoundsException      If the given argument is less than or equal to 0
+     *
+     * @since   0.1.0
+     *
+     * @return  $this          A SoqlQuery object that can continue to be changed
+     */
     public function limit ($limit)
     {
-        if (!is_integer($limit))
-        {
-            throw new \InvalidArgumentException("A limit must be an integer");
-        }
-
-        if ($limit <= 0)
-        {
-            throw new \OutOfBoundsException("A limit cannot be less than or equal to 0.", 1);
-        }
+        $this->handleInteger("limit", $limit, true);
 
         $this->limitValue = min(self::MaximumLimit, $limit);
 
         return $this;
     }
 
+    /**
+     * The offset is the number of records into a dataset that you want to start, indexed at 0. For example, to retrieve
+     * the “4th page” of records (records 151 - 200) where you are using limit() to page 50 records at a time, you’d ask
+     * for an $offset of 150.
+     *
+     * @link    http://dev.socrata.com/docs/queries.html#the-offset-parameter  SoQL $offset Parameter
+     *
+     * @param   int    $offset  The number of results the dataset should be offset to when returned
+     *
+     * @throws  \InvalidArgumentException  If the given argument is not an integer
+     * @throws  \OutOfBoundsException      If the given argument is less than 0
+     *
+     * @since   0.1.0
+     *
+     * @return  $this           A SoqlQuery object that can continue to be changed
+     */
     public function offset ($offset)
     {
-        if (!is_integer($offset))
-        {
-            throw new \InvalidArgumentException("An offset must be an integer");
-        }
-
-        if ($offset < 0)
-        {
-            throw new \OutOfBoundsException("An offset cannot be less than 0.", 1);
-        }
+        $this->handleInteger("offset", $offset, false);
 
         $this->offsetValue = $offset;
 
         return $this;
     }
 
+    /**
+     * Search the entire dataset for a specified string. Think of this as a search engine instead of performing a SQL
+     * query.
+     *
+     * @param   string  $needle  The phrase to search for
+     *
+     * @since   0.1.0
+     *
+     * @return  $this            A SoqlQuery object that can continue to be changed
+     */
     public function fullTextSearch ($needle)
     {
         $this->searchText = $needle;
 
         return $this;
+    }
+
+    /**
+     * Convert an array argument into a comma separated value or just return the string as it was
+     *
+     * @param   string|array  $mixed  Multiple values given as an array or a comma separated list in a string
+     *
+     * @since   0.1.0
+     *
+     * @return  string        A comma separated list or a single value
+     */
+    private function handlePossibleArray ($mixed)
+    {
+        return (is_array($mixed)) ? implode(self::Delimiter, $mixed) : $mixed;
+    }
+
+    /**
+     * Analyze a given value and ensure the value fits the criteria set by the Socrata API
+     *
+     * @param   string  $variable                 The literal name of this field
+     * @param   int     $number                   The value to analyze
+     * @param   bool    $disallowNegativeAndZero  When set to true, it will disallow numbers that are less than or equal
+     *                                            to 0. When set to false, it will disallow numbers that are less than 0
+     *
+     * @since   0.1.0
+     *          
+     * @throws  \InvalidArgumentException         If the given argument is not an integer
+     * @throws  \OutOfBoundsException             If the given argument is less than 0
+     */
+    private function handleInteger ($variable, $number, $disallowNegativeAndZero)
+    {
+        if (!is_integer($number))
+        {
+            throw new \InvalidArgumentException(sprintf("The %s must be an integer", $variable));
+        }
+
+        if (($disallowNegativeAndZero && $number <= 0) || (!$disallowNegativeAndZero && $number < 0))
+        {
+            $comparison = ($disallowNegativeAndZero) ? "less than or equal to" : "less than";
+            $message = sprintf("The %s cannot be %s 0.", $variable, $comparison);
+
+            throw new \OutOfBoundsException($message, 1);
+        }
     }
 }
