@@ -30,6 +30,10 @@ $soql->select("date_posted", "state", "sample_type")
 $results = $ds->getDataset($soql);
 ```
 
+## Getting Help
+
+There are a few different ways to get help with and discuss this library. You may either [create an issue](https://github.com/allejo/PhpSoda/issues) or stop by IRC. Join the **#socrata-soda** channel on the Freenode network and look for 'allejo'.
+
 ## Thank You
 
 - [Official Socrata PHP Library](https://github.com/socrata/soda-php)
