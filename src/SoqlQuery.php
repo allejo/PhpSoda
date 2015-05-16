@@ -36,7 +36,7 @@ class SoqlQuery
     private $selectColumns;
     private $whereClause;
     private $orderDirection;
-    private $orderByColumn;
+    private $orderByColumns;
     private $groupByColumns;
     private $limitValue;
     private $offsetValue;
@@ -49,7 +49,7 @@ class SoqlQuery
     public function __construct ()
     {
         $this->selectColumns  = array(self::DefaultSelect);
-        $this->orderByColumn  = self::DefaultOrder;
+        $this->orderByColumns = self::DefaultOrder;
         $this->orderDirection = self::DefaultOrderDirection;
     }
 
@@ -80,7 +80,7 @@ class SoqlQuery
             $soql_query .= implode(self::Delimiter, $selectedColumns);
         }
 
-        $soql_query .= sprintf("&%s=%s", self::OrderKey, urlencode($this->orderByColumn . " " . $this->orderDirection));
+        $soql_query .= sprintf("&%s=%s", self::OrderKey, urlencode($this->orderByColumns . " " . $this->orderDirection));
 
         if (!StringUtilities::isNullOrEmpty($this->whereClause))
         {
@@ -170,20 +170,20 @@ class SoqlQuery
      *
      * @link    http://dev.socrata.com/docs/queries.html#the-order-parameter SoQL $order Parameter
      *
-     * @param   string  $column     The column that determines how the results should be sorted
-     * @param   string  $direction  The direction the results should be sorted in, either ascending or descending. The
-     *                              {@link SoqlOrderDirection} class provides constants to use should these values ever change
-     *                              in the future. The only accepted values are: `ASC` and `DESC`
+     * @param   string|array  $column     The column that determines how the results should be sorted
+     * @param   string        $direction  The direction the results should be sorted in, either ascending or descending. The
+     *                                    {@link SoqlOrderDirection} class provides constants to use should these values ever change
+     *                                    in the future. The only accepted values are: `ASC` and `DESC`
      *
-     * @see     SoqlOrderDirection  View convenience constants
+     * @see     SoqlOrderDirection        View convenience constants
      *
      * @since   0.1.0
      *
-     * @return  $this   A SoqlQuery object that can continue to be changed
+     * @return  $this         A SoqlQuery object that can continue to be changed
      */
     public function order ($column, $direction = self::DefaultOrderDirection)
     {
-        $this->orderByColumn = $column;
+        $this->orderByColumns = (is_array($column)) ? implode(self::Delimiter, $column) : $column;
         $this->orderDirection = SoqlOrderDirection::parseOrder($direction);
 
         return $this;
