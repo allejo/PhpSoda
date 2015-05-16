@@ -4,12 +4,6 @@ namespace allejo\Socrata;
 
 use allejo\Socrata\Utilities\StringUtilities;
 
-abstract class SoqlOrderDirection
-{
-    const ASC  = 'ASC';
-    const DESC = 'DESC';
-}
-
 class SoqlQuery
 {
     const Delimiter = ',';
@@ -40,8 +34,6 @@ class SoqlQuery
         $this->selectColumns  = array(self::DefaultSelect);
         $this->orderByColumns = array(self::DefaultOrder);
         $this->orderDirection = self::DefaultOrderDirection;
-
-        return $this;
     }
 
     public function __tostring ()
