@@ -32,21 +32,25 @@ class SodaDataset
     }
 
     /**
-     * Fetch a data set based on a resource ID.
-     *
-     * Warning: Passing a default SoqlQuery object is **not** the same passing no arguments. The sorting provided by
-     * Socrata is different than what a SoqlQuery object does by default.
+     * Fetch a dataset based on a resource ID.
      *
      * @param  string|SoqlQuery $filterOrSoqlQuery A simple filter or a SoqlQuery to filter the results
      *
      * @see    SodaClient::enableAssociativeArrays()
      * @see    SodaClient::disableAssociativeArrays()
      *
+     * @since  0.1.0
+     *
      * @return array The data set as a PHP array. The array will contain associative arrays or stdClass objects from
      *               the decoded JSON received from the data set.
      */
     public function getDataset ($filterOrSoqlQuery = "")
     {
+        if (StringUtilities::isNullOrEmpty($filterOrSoqlQuery))
+        {
+            $filterOrSoqlQuery = new SoqlQuery();
+        }
+
         return $this->urlQuery->sendGet($filterOrSoqlQuery, $this->sodaClient->associativeArrayEnabled());
     }
 
