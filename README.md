@@ -1,6 +1,6 @@
 # PhpSoda [![Build Status](https://magnum.travis-ci.com/allejo/PhpSoda.svg?token=N8pP5syRDREGy8yzpAqR&branch=master)](https://magnum.travis-ci.com/allejo/PhpSoda)
 
-A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Compared to Socrata's official implementation, this library takes more of an object-oriented approach to working with the API instead of manually creating requests to submit.
+A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Provided as an alternative to Socrata's official implementation, this library takes more of an object-oriented approach to working with the API instead of manually creating requests; autocomplete for IDEs will be more useful.
 
 This library fully supports interacting with the API by getting datasets and handling tokens or authentication in order to write or modify datasets.
 
@@ -23,7 +23,7 @@ $ds = new SodaDataset($sc, "pkfj-5jsd");
 $soql = new SoqlQuery();
 
 // Write a SoqlQuery naturally
-$soql->select(array("date_posted", "state", "sample_type"))
+$soql->select("date_posted", "state", "sample_type")
      ->where("state = 'AR'");
 
 // Finally, get the results
