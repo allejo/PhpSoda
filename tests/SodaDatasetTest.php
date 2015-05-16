@@ -13,7 +13,12 @@ class SodaDatasetTest extends PHPUnit_Framework_TestCase
 
     public static function invalidResourceIDs ()
     {
-        return array(array("pkfj5jsd"), array("pk#j-5j!d"), array("1234-werwe"), array("123--4545"));
+        return array(
+            array("pkfj5jsd"),
+            array("pk#j-5j!d"),
+            array("1234-werwe"),
+            array("123--4545")
+        );
     }
 
     public function setUp ()

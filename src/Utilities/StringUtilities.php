@@ -30,7 +30,7 @@ class StringUtilities
      */
     public static function isJson ($string)
     {
-        return is_string($string) && is_object(json_decode($string)) && (json_last_error() == JSON_ERROR_NONE);
+        return is_string($string) && !is_null(json_decode($string)) && (json_last_error() == JSON_ERROR_NONE);
     }
 
     /**
@@ -42,6 +42,6 @@ class StringUtilities
      */
     public static function isNullOrEmpty ($string)
     {
-        return (!isset($string) || ctype_space($string));
+        return (!isset($string) || empty($string) || ctype_space($string));
     }
 }
