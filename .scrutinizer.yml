@@ -1,0 +1,39 @@
+filter:
+    excluded_paths:
+        - 'tests/*'
+checks:
+    php: true
+coding_style:
+    php:
+        spaces:
+            before_parentheses:
+                function_declaration: true
+                closure_definition: true
+            around_operators:
+                concatenation: false
+        braces:
+            classes_functions:
+                class: new-line
+                function: new-line
+                closure: new-line
+            if:
+                opening: new-line
+                else_on_new_line: true
+            for:
+                opening: new-line
+            while:
+                opening: new-line
+            do_while:
+                opening: new-line
+            switch:
+                opening: new-line
+            try:
+                opening: new-line
+                catch_on_new_line: true
+                finally_on_new_line: true
+        upper_lower_casing:
+            keywords:
+                general: lower
+            constants:
+                true_false_null: lower
+
