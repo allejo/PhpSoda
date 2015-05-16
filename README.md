@@ -1,4 +1,4 @@
-# PhpSoda [![Build Status](https://magnum.travis-ci.com/allejo/PhpSoda.svg?token=N8pP5syRDREGy8yzpAqR&branch=master)](https://magnum.travis-ci.com/allejo/PhpSoda)
+# PhpSoda [![Build Status](https://travis-ci.org/allejo/PhpSoda.svg?branch=master)](https://travis-ci.org/allejo/PhpSoda)
 
 A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Provided as an alternative to Socrata's official implementation, this library takes more of an object-oriented approach to working with the API instead of manually creating requests; autocomplete for IDEs will be more useful.
 
