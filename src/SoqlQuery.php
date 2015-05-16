@@ -45,6 +45,8 @@ class SoqlQuery
     /**
      * Write a SoQL query by chaining functions. This object will handle encoding the final query in order for it to be
      * used properly as a URL
+     *
+     * @since 0.1.0
      */
     public function __construct ()
     {
@@ -53,6 +55,13 @@ class SoqlQuery
         $this->orderDirection = self::DefaultOrderDirection;
     }
 
+    /**
+     * Convert the current information into a URL encoded query that can be appended to the domain
+     *
+     * @since 0.1.0
+     *
+     * @return string The SoQL query ready to be appended to a URL
+     */
     public function __tostring ()
     {
         $soql_query = sprintf("%s=", self::SelectKey);
