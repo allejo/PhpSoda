@@ -17,4 +17,5 @@ after_script:
  - php vendor/bin/coveralls -v
 
 notifications:
-  irc: "chat.freenode.net#sujevo-dev"
+  webhooks:
+    - http://helit.org:8093/+sujevo-dev/showSuccessfulBuildMessages=always
