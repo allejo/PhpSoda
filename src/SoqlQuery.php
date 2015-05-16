@@ -134,6 +134,8 @@ class SoqlQuery
     {
         $this->orderByColumns = $columns;
         $this->orderDirection = $direction;
+        $this->orderByColumn = $column;
+        $this->orderDirection = SoqlOrderDirection::parseOrder($direction);
 
         return $this;
     }
