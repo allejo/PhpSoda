@@ -1,85 +1,76 @@
 <?php
 
 use allejo\Socrata\SodaClient;
-use allejo\Socrata\SodaDataset;
-use allejo\Socrata\SoqlQuery;
 
 class SodaClientTest extends PHPUnit_Framework_TestCase
 {
-    private $id;
     private $domain;
     private $token;
 
-    public static function invalidResourceIDs()
-    {
-        return array(
-            array("pkfj5jsd"),
-            array("pk#j-5j!d"),
-            array("1234-werwe"),
-            array("123--4545")
-        );
-    }
-
     public function setUp ()
     {
-        $this->id = "pkfj-5jsd";
         $this->domain = "opendata.socrata.com";
-        $this->token = "khpKCi1wMz2bwXyMIHfb6ux73";
+        $this->token  = "khpKCi1wMz2bwXyMIHfb6ux73";
     }
 
-    /**
-     * @dataProvider invalidResourceIDs
-     * @expectedException \allejo\Socrata\Exceptions\InvalidResourceException
-     *
-     * @param $resourceID string The resource ID to be testing
-     *
-     * @throws \allejo\Socrata\Exceptions\InvalidResourceException
-     */
-    public function testInvalidResourceIDs($resourceID)
+    public function testDomainWithHttpPrefix ()
+    {
+        $sc = new SodaClient("http://opendata.socrata.com");
+
+        $this->assertEquals($this->domain, $sc->getDomain());
+    }
+
+    public function testDomainWithHttpsPrefix ()
     {
         $sc = new SodaClient("https://opendata.socrata.com");
-        $ds = new SodaDataset($sc, $resourceID);
+
+        $this->assertEquals($this->domain, $sc->getDomain());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidClient()
+    public function testDomainWithoutPrefix ()
     {
-        $sc = null;
-        $ds = new SodaDataset($sc, "qwer-1234");
+        $sc = new SodaClient($this->domain);
+
+        $this->assertEquals($this->domain, $sc->getDomain());
     }
 
-    /**
-     * @expectedException \allejo\Socrata\Exceptions\HttpException
-     * @expectedExceptionCode 403
-     */
-    public function testGetDatasetWithInvalidCredentials()
+    public function testDisablingAssociativeArrays ()
     {
-        $sc = new SodaClient($this->domain, $this->token, "fake@email.com", "foobar");
-        $ds = new SodaDataset($sc, "pkfj-5jsd");
+        $sc = new SodaClient($this->domain);
+        $sc->disableAssociativeArrays();
 
-        $ds->getDataset();
+        $this->assertFalse($sc->associativeArrayEnabled());
     }
 
-    public function testGetResourceWithToken()
+    public function testEnablingAssociativeArrays ()
     {
-        $sc = new SodaClient($this->domain, $this->token);
-        $ds = new SodaDataset($sc, "pkfj-5jsd");
+        $sc = new SodaClient($this->domain);
+        $sc->enableAssociativeArrays();
 
-        $ds->getDataset();
+        $this->assertTrue($sc->associativeArrayEnabled());
     }
 
-    public function testGetResourceWithSoqlQuery()
+    public function testAppToken ()
     {
-        $sc   = new SodaClient($this->domain, $this->token);
-        $ds   = new SodaDataset($sc, $this->id);
-        $soql = new SoqlQuery();
+        $token = md5("hello world");
+        $sc = new SodaClient($this->domain, $token);
 
-        $soql->select(array("date_posted", "state", "sample_type"))
-             ->where("state = 'AR'");
+        $this->assertEquals($token, $sc->getToken());
+    }
 
-        $results = $ds->getDataset($soql);
-        $this->assertEquals(2, count($results));
+    public function testEmail ()
+    {
+        $email = "email@example.org";
+        $sc = new SodaClient($this->domain, "", $email);
+
+        $this->assertEquals($email, $sc->getEmail());
+    }
+
+    public function testPassword ()
+    {
+        $password = "my super secret password";
+        $sc = new SodaClient($this->domain, "", "", $password);
+
+        $this->assertEquals($password, $sc->getPassword());
     }
 }

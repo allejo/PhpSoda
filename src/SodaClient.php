@@ -128,26 +128,52 @@ class SodaClient
         $this->associativeArray = false;
     }
 
+    /**
+     * Get whether or not the returned data should be associative arrays or as stdClass objects
+     *
+     * @return bool True if the data is returned as associative arrays
+     */
     public function associativeArrayEnabled()
     {
         return $this->associativeArray;
     }
 
+    /**
+     * Get the domain of the API endpoint. This function will **always** return just the domain without the protocol
+     * in order to let this library use the appropriate protocol
+     *
+     * @return string The domain of the API endpoint
+     */
     public function getDomain()
     {
         return $this->domain;
     }
 
+    /**
+     * Get the email of the account that will be used for authenticated actions
+     *
+     * @return string The user's email address. Returns an empty string if not set.
+     */
     public function getEmail()
     {
         return $this->email;
     }
 
+    /**
+     * Get the app token used by the library to bypass throttling and appear as a registered application
+     *
+     * @return string The app token used. Returns an empty string if not set.
+     */
     public function getToken()
     {
         return $this->token;
     }
 
+    /**
+     * Get the password of the account that will be used for authenticated actions
+     *
+     * @return string The password used. Returns an empty string if not set.
+     */
     public function getPassword()
     {
         return $this->password;
