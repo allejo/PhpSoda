@@ -10,6 +10,7 @@
     "zetacomponents/console-tools": "dev-master",
     "phpunit/phpunit": "~4.0",
     "phpdocumentor/phpdocumentor": "2.*",
+    "satooshi/php-coveralls": "dev-master",
     "theseer/autoload": "1.16.2"
   },
   "autoload": {
