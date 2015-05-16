@@ -2,6 +2,8 @@
 
 namespace allejo\Socrata;
 
+use allejo\Socrata\Utilities\StringUtilities;
+
 abstract class SoqlOrderDirection
 {
     const ASC  = 'ASC';
@@ -71,7 +73,7 @@ class SoqlQuery
 
         $soql_query .= sprintf("&%s=%s", self::OrderKey, urlencode(implode(self::Delimiter, $this->orderByColumns) . " " . $this->orderDirection));
 
-        if (!$this->isNullOrEmpty($this->whereClause))
+        if (!StringUtilities::isNullOrEmpty($this->whereClause))
         {
             $soql_query .= sprintf("&%s=%s", self::WhereKey, urlencode($this->whereClause));
         }
@@ -91,17 +93,12 @@ class SoqlQuery
             $soql_query .= sprintf("&%s=%s", self::LimitKey, $this->limitValue);
         }
 
-        if (!$this->isNullOrEmpty($this->searchText))
+        if (!StringUtilities::isNullOrEmpty($this->searchText))
         {
             $soql_query .= sprintf("&%s=%s", self::SearchKey, urlencode($this->searchText));
         }
 
         return $soql_query;
-    }
-
-    private function isNullOrEmpty ($string)
-    {
-        return (!isset($string) || ctype_space($string));
     }
 
     /**

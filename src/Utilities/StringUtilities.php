@@ -32,4 +32,16 @@ class StringUtilities
     {
         return is_string($string) && is_object(json_decode($string)) && (json_last_error() == JSON_ERROR_NONE);
     }
+
+    /**
+     * Determine whether a string is null or empty
+     *
+     * @param  string $string The string to test
+     *
+     * @return bool True if string is null or empty
+     */
+    public static function isNullOrEmpty ($string)
+    {
+        return (!isset($string) || ctype_space($string));
+    }
 }
