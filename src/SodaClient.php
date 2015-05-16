@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains the content of the SodaClient object
+ * This file contains the SodaClient class
  *
  * @copyright 2015 Vladimir Jimenez
  * @license   https://www.gnu.org/licenses/lgpl-2.1.html LGPL-2.1
@@ -10,9 +10,10 @@
 namespace allejo\Socrata;
 
 /**
- * A client object to interact with the Socrata API
+ * An object provided to interact with the Socrata API by handling tokens and authentication
  *
  * @package allejo\Socrata
+ * @since   0.1.0
  */
 class SodaClient
 {

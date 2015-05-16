@@ -1,9 +1,22 @@
 <?php
 
+/**
+ * This file contains the SoqlQuery class and the respective constants and default values that belong to SoQL.
+ *
+ * @copyright 2015 Vladimir Jimenez
+ * @license   https://www.gnu.org/licenses/lgpl-2.1.html LGPL-2.1
+ */
+
 namespace allejo\Socrata;
 
 use allejo\Socrata\Utilities\StringUtilities;
 
+/**
+ * An object provided for the creation and handling of SoQL queries in an object-oriented fashion.
+ *
+ * @package allejo\Socrata
+ * @since   0.1.0
+ */
 class SoqlQuery
 {
     const Delimiter = ',';
@@ -23,16 +36,20 @@ class SoqlQuery
     private $selectColumns;
     private $whereClause;
     private $orderDirection;
-    private $orderByColumns;
+    private $orderByColumn;
     private $groupByColumns;
     private $limitValue;
     private $offsetValue;
     private $searchText;
 
+    /**
+     * Write a SoQL query by chaining functions. This object will handle encoding the final query in order for it to be
+     * used properly as a URL
+     */
     public function __construct ()
     {
         $this->selectColumns  = array(self::DefaultSelect);
-        $this->orderByColumns = array(self::DefaultOrder);
+        $this->orderByColumn  = self::DefaultOrder;
         $this->orderDirection = self::DefaultOrderDirection;
     }
 
@@ -63,7 +80,7 @@ class SoqlQuery
             $soql_query .= implode(self::Delimiter, $selectedColumns);
         }
 
-        $soql_query .= sprintf("&%s=%s", self::OrderKey, urlencode(implode(self::Delimiter, $this->orderByColumns) . " " . $this->orderDirection));
+        $soql_query .= sprintf("&%s=%s", self::OrderKey, urlencode($this->orderByColumn . " " . $this->orderDirection));
 
         if (!StringUtilities::isNullOrEmpty($this->whereClause))
         {
@@ -95,19 +112,23 @@ class SoqlQuery
 
     /**
      * Select only specific columns in your Soql Query. When this function is given no parameters or is not used in a
-     * query, the Soql Query will return all of the columns
+     * query, the Soql Query will return all of the columns by default.
      *
      * ```
      * // These are all valid usages
      * $soqlQuery->select();
-     * $soqlQuery->select(array("foo", "bar", "baz"));
      * $soqlQuery->select("foo", "bar", "baz");
+     * $soqlQuery->select(array("foo", "bar", "baz"));
      * ```
+     *
+     * @link    http://dev.socrata.com/docs/queries.html#the-select-parameter SoQL $select Parameter
      *
      * @param   array|mixed $columns   The columns to select from the dataset. The columns can be specified as an array
      *                                 of values or it can be specified as multiple parameters separated by commas.
      *
-     * @return  $this  The SoqlQuery object that can be chained
+     * @since   0.1.0
+     *
+     * @return  $this  A SoqlQuery object that can continue to be chained
      */
     public function select ($columns = self::DefaultSelect)
     {
@@ -123,6 +144,20 @@ class SoqlQuery
         return $this;
     }
 
+    /**
+     * Create a filter to selectively choose data based on certain parameters.
+     *
+     * Multiple calls to this function in a chain will overwrite the previous statement. To combine multiple where
+     * clauses, use the supported SoQL operators; e.g. `magnitude > 3.0 AND source = 'pr'`
+     *
+     * @link    http://dev.socrata.com/docs/queries.html#the-where-parameter SoQL $where Parameter
+     *
+     * @param   string $statement  The `where` clause that will be used to filter data
+     *
+     * @since   0.1.0
+     *
+     * @return  $this  A SoqlQuery object that can continue to be changed
+     */
     public function where ($statement)
     {
         $this->whereClause = $statement;
@@ -130,10 +165,24 @@ class SoqlQuery
         return $this;
     }
 
-    public function order ($columns, $direction = self::DefaultOrderDirection)
+    /**
+     * Determines the order the results should be sorted in.
+     *
+     * @link    http://dev.socrata.com/docs/queries.html#the-order-parameter SoQL $order Parameter
+     *
+     * @param   string  $column     The column that determines how the results should be sorted
+     * @param   string  $direction  The direction the results should be sorted in, either ascending or descending. The
+     *                              {@link SoqlOrderDirection} class provides constants to use should these values ever change
+     *                              in the future. The only accepted values are: `ASC` and `DESC`
+     *
+     * @see     SoqlOrderDirection  View convenience constants
+     *
+     * @since   0.1.0
+     *
+     * @return  $this   A SoqlQuery object that can continue to be changed
+     */
+    public function order ($column, $direction = self::DefaultOrderDirection)
     {
-        $this->orderByColumns = $columns;
-        $this->orderDirection = $direction;
         $this->orderByColumn = $column;
         $this->orderDirection = SoqlOrderDirection::parseOrder($direction);
 
@@ -151,7 +200,7 @@ class SoqlQuery
     {
         if (!is_integer($limit))
         {
-            throw new \InvalidArgumentException("An limit must be an integer");
+            throw new \InvalidArgumentException("A limit must be an integer");
         }
 
         if ($limit <= 0)
@@ -171,9 +220,9 @@ class SoqlQuery
             throw new \InvalidArgumentException("An offset must be an integer");
         }
 
-        if ($offset <= 0)
+        if ($offset < 0)
         {
-            throw new \OutOfBoundsException("An offset cannot be less than or equal to 0.", 1);
+            throw new \OutOfBoundsException("An offset cannot be less than 0.", 1);
         }
 
         $this->offsetValue = $offset;
