@@ -23,9 +23,9 @@ class SodaDataset
 
         $this->sodaClient = $sodaClient;
         $this->resourceId = $resourceID;
-        $this->urlQuery = new UrlQuery($this->buildResourceUrl(), $this->sodaClient->getToken());
+        $this->urlQuery   = new UrlQuery($this->buildResourceUrl(), $this->sodaClient->getToken());
 
-        if ($this->sodaClient->getEmail() != null && $this->sodaClient->getPassword() != null)
+        if ($this->sodaClient->getEmail() != NULL && $this->sodaClient->getPassword() != NULL)
         {
             $this->urlQuery->setAuthentication($this->sodaClient->getEmail(), $this->sodaClient->getPassword());
         }

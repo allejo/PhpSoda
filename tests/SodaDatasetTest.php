@@ -13,19 +13,14 @@ class SodaDatasetTest extends PHPUnit_Framework_TestCase
 
     public static function invalidResourceIDs ()
     {
-        return array(
-            array("pkfj5jsd"),
-            array("pk#j-5j!d"),
-            array("1234-werwe"),
-            array("123--4545")
-        );
+        return array(array("pkfj5jsd"), array("pk#j-5j!d"), array("1234-werwe"), array("123--4545"));
     }
 
     public function setUp ()
     {
-        $this->id = "pkfj-5jsd";
+        $this->id     = "pkfj-5jsd";
         $this->domain = "opendata.socrata.com";
-        $this->token = "khpKCi1wMz2bwXyMIHfb6ux73";
+        $this->token  = "khpKCi1wMz2bwXyMIHfb6ux73";
 
         $this->client = new SodaClient($this->domain, $this->token);
     }
@@ -35,7 +30,7 @@ class SodaDatasetTest extends PHPUnit_Framework_TestCase
      */
     public function testInvalidClient ()
     {
-        new SodaDataset(null, "qwer-1234");
+        new SodaDataset(NULL, "qwer-1234");
     }
 
     /**
@@ -63,18 +58,17 @@ class SodaDatasetTest extends PHPUnit_Framework_TestCase
 
     public function testGetResource ()
     {
-        $ds = new SodaDataset($this->client, "pkfj-5jsd");
+        $ds = new SodaDataset($this->client, $this->id);
 
         $this->assertTrue(count($ds->getDataset()) > 5);
     }
 
-    public function testGetResourceWithSoqlQuery()
+    public function testGetResourceWithSoqlQuery ()
     {
         $ds   = new SodaDataset($this->client, $this->id);
         $soql = new SoqlQuery();
 
-        $soql->select("date_posted", "state", "sample_type")
-             ->where("state = 'AR'");
+        $soql->select("date_posted", "state", "sample_type")->where("state = 'AR'");
 
         $results = $ds->getDataset($soql);
         $this->assertTrue(count($results) > 1);

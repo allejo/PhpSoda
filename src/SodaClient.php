@@ -62,10 +62,10 @@ class SodaClient
      */
     public function __construct ($url, $token = "", $email = "", $password = "")
     {
-        $this->domain   = rtrim(preg_replace('/http(s)?:\/\//', "", $url), '/');
-        $this->token    = $token;
-        $this->email    = $email;
-        $this->password = $password;
+        $this->domain           = rtrim(preg_replace('/http(s)?:\/\//', "", $url), '/');
+        $this->token            = $token;
+        $this->email            = $email;
+        $this->password         = $password;
         $this->associativeArray = true;
     }
 
@@ -93,7 +93,7 @@ class SodaClient
      *
      *     $myVariable = $results['bar']['baz']; // Testing
      */
-    public function enableAssociativeArrays()
+    public function enableAssociativeArrays ()
     {
         $this->associativeArray = true;
     }
@@ -123,7 +123,7 @@ class SodaClient
      *     $myVariable = $results->bar->baz; // Testing
      *
      */
-    public function disableAssociativeArrays()
+    public function disableAssociativeArrays ()
     {
         $this->associativeArray = false;
     }
@@ -133,7 +133,7 @@ class SodaClient
      *
      * @return bool True if the data is returned as associative arrays
      */
-    public function associativeArrayEnabled()
+    public function associativeArrayEnabled ()
     {
         return $this->associativeArray;
     }
@@ -144,7 +144,7 @@ class SodaClient
      *
      * @return string The domain of the API endpoint
      */
-    public function getDomain()
+    public function getDomain ()
     {
         return $this->domain;
     }
@@ -154,7 +154,7 @@ class SodaClient
      *
      * @return string The user's email address. Returns an empty string if not set.
      */
-    public function getEmail()
+    public function getEmail ()
     {
         return $this->email;
     }
@@ -164,7 +164,7 @@ class SodaClient
      *
      * @return string The app token used. Returns an empty string if not set.
      */
-    public function getToken()
+    public function getToken ()
     {
         return $this->token;
     }
@@ -174,7 +174,7 @@ class SodaClient
      *
      * @return string The password used. Returns an empty string if not set.
      */
-    public function getPassword()
+    public function getPassword ()
     {
         return $this->password;
     }

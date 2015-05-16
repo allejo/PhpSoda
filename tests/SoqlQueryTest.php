@@ -22,11 +22,11 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
 
     public function setUp ()
     {
-        $this->id = "pkfj-5jsd";
+        $this->id     = "pkfj-5jsd";
         $this->domain = "opendata.socrata.com";
-        $this->token = "khpKCi1wMz2bwXyMIHfb6ux73";
+        $this->token  = "khpKCi1wMz2bwXyMIHfb6ux73";
 
-        $this->client = new SodaClient($this->domain, $this->token);
+        $this->client  = new SodaClient($this->domain, $this->token);
         $this->dataset = new SodaDataset($this->client, $this->id);
     }
 

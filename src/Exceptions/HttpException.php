@@ -10,8 +10,8 @@ class HttpException extends \Exception
 
         if (is_null($json))
         {
-            $status  = ucfirst($json['code']);
-            $message = $json['message'];
+            $status        = ucfirst($json['code']);
+            $message       = $json['message'];
             $this->message = sprintf("HTTP %s %d: %s", $status, $code, $message);
         }
         else

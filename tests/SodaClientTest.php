@@ -53,7 +53,7 @@ class SodaClientTest extends PHPUnit_Framework_TestCase
     public function testAppToken ()
     {
         $token = md5("hello world");
-        $sc = new SodaClient($this->domain, $token);
+        $sc    = new SodaClient($this->domain, $token);
 
         $this->assertEquals($token, $sc->getToken());
     }
@@ -61,7 +61,7 @@ class SodaClientTest extends PHPUnit_Framework_TestCase
     public function testEmail ()
     {
         $email = "email@example.org";
-        $sc = new SodaClient($this->domain, "", $email);
+        $sc    = new SodaClient($this->domain, "", $email);
 
         $this->assertEquals($email, $sc->getEmail());
     }
@@ -69,7 +69,7 @@ class SodaClientTest extends PHPUnit_Framework_TestCase
     public function testPassword ()
     {
         $password = "my super secret password";
-        $sc = new SodaClient($this->domain, "", "", $password);
+        $sc       = new SodaClient($this->domain, "", "", $password);
 
         $this->assertEquals($password, $sc->getPassword());
     }

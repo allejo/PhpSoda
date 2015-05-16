@@ -6,7 +6,7 @@ class CurlException extends \Exception
 {
     public function __construct ($code, $message)
     {
-        $this->code = $code;
+        $this->code    = $code;
         $this->message = sprintf("cURL Error %d: %s", $code, $message);
     }
 }

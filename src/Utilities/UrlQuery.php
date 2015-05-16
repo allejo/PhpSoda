@@ -21,33 +21,22 @@ class UrlQuery
         $this->cURL  = curl_init();
 
         // Build up the headers we'll need to pass
-        $headers = array(
-            'Accept: application/json',
-            'Content-type: application/json',
-            "X-App-Token: " . $this->token
-        );
+        $headers = array('Accept: application/json', 'Content-type: application/json', "X-App-Token: " . $this->token);
 
-        curl_setopt_array($this->cURL, array(
-            CURLOPT_URL => $this->url,
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_RETURNTRANSFER => true
-        ));
+        curl_setopt_array($this->cURL, array(CURLOPT_URL => $this->url, CURLOPT_HTTPHEADER => $headers, CURLOPT_RETURNTRANSFER => true));
     }
 
-    public function __destruct()
+    public function __destruct ()
     {
         curl_close($this->cURL);
     }
 
-    public function setAuthentication($username, $password)
+    public function setAuthentication ($username, $password)
     {
-        curl_setopt_array($this->cURL, array(
-            CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-            CURLOPT_USERPWD => $username . ":" . $password
-        ));
+        curl_setopt_array($this->cURL, array(CURLOPT_HTTPAUTH => CURLAUTH_BASIC, CURLOPT_USERPWD => $username . ":" . $password));
     }
 
-    public function setParameters($params)
+    public function setParameters ($params)
     {
         $this->parameters = array();
 
@@ -57,7 +46,7 @@ class UrlQuery
         }
     }
 
-    public function sendGet($params, $associativeArray)
+    public function sendGet ($params, $associativeArray)
     {
         if (is_array($params))
         {
@@ -77,28 +66,21 @@ class UrlQuery
         return $this->handleQuery($associativeArray);
     }
 
-    public function sendPost($data_as_json, $associativeArray)
+    public function sendPost ($data_as_json, $associativeArray)
     {
-        curl_setopt_array($this->cURL, array(
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $data_as_json,
-            CURLOPT_CUSTOMREQUEST => "POST"
-        ));
+        curl_setopt_array($this->cURL, array(CURLOPT_POST => true, CURLOPT_POSTFIELDS => $data_as_json, CURLOPT_CUSTOMREQUEST => "POST"));
 
         return $this->handleQuery($associativeArray);
     }
 
-    public function sendPut($data_as_json, $associativeArray)
+    public function sendPut ($data_as_json, $associativeArray)
     {
-        curl_setopt_array($this->cURL, array(
-            CURLOPT_POSTFIELDS => $data_as_json,
-            CURLOPT_CUSTOMREQUEST => "PUT"
-        ));
+        curl_setopt_array($this->cURL, array(CURLOPT_POSTFIELDS => $data_as_json, CURLOPT_CUSTOMREQUEST => "PUT"));
 
         return $this->handleQuery($associativeArray);
     }
 
-    private function handleQuery($associativeArray)
+    private function handleQuery ($associativeArray)
     {
         $result = curl_exec($this->cURL);
 
@@ -117,7 +99,7 @@ class UrlQuery
         return json_decode($result, $associativeArray);
     }
 
-    public static function buildQuery($url, $params = array())
+    public static function buildQuery ($url, $params = array())
     {
         $full_url = $url;
 
