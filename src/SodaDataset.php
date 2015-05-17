@@ -11,6 +11,7 @@ class SodaDataset
     private $sodaClient;
     private $urlQuery;
     private $resourceId;
+    private $apiVersion;
 
     public function __construct ($sodaClient, $resourceID)
     {
@@ -21,9 +22,30 @@ class SodaDataset
             throw new \InvalidArgumentException("The first variable is expected to be a SodaClient object");
         }
 
+        $this->apiVersion = 0;
         $this->sodaClient = $sodaClient;
         $this->resourceId = $resourceID;
         $this->urlQuery   = new UrlQuery($this->buildResourceUrl(), $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
+    }
+
+    /**
+     * Get the API version this dataset is using
+     *
+     * @return int The API version number
+     */
+    public function getApiVersion ()
+    {
+        // If we don't have the API version set, send a dummy query with limit 0 since we only care about the headers
+        if ($this->apiVersion == 0)
+        {
+            $soql = new SoqlQuery();
+            $soql->limit(0);
+
+            // When we fetch a dataset, the API version is stored
+            $this->getDataset($soql);
+        }
+
+        return $this->apiVersion;
     }
 
     /**
@@ -59,12 +81,22 @@ class SodaDataset
      */
     public function getDataset ($filterOrSoqlQuery = "")
     {
+        $headers = array();
+
         if (!($filterOrSoqlQuery instanceof SoqlQuery) && StringUtilities::isNullOrEmpty($filterOrSoqlQuery))
         {
             $filterOrSoqlQuery = new SoqlQuery();
         }
 
-        return $this->urlQuery->sendGet($filterOrSoqlQuery, $this->sodaClient->associativeArrayEnabled());
+        $dataset = $this->urlQuery->sendGet($filterOrSoqlQuery, $this->sodaClient->associativeArrayEnabled(), $headers);
+
+        // Only set the API version number if it hasn't been set yet
+        if ($this->apiVersion == 0)
+        {
+            $this->apiVersion = self::parseApiVersion($headers);
+        }
+
+        return $dataset;
     }
 
     /**
@@ -122,5 +154,27 @@ class SodaDataset
     private function buildApiUrl ($location)
     {
         return sprintf("%s://%s/%s/%s.json", UrlQuery::DEFAULT_PROTOCOL, $this->sodaClient->getDomain(), $location, $this->resourceId);
+    }
+
+    /**
+     * Determine the version number of the API this dataset is using
+     *
+     * @param  array  $responseHeaders  An array with the cURL headers received
+     *
+     * @return int    The Socrata API version number this dataset uses
+     */
+    private static function parseApiVersion ($responseHeaders)
+    {
+        // A header that's unique to the legacy API
+        if (array_key_exists('X-SODA2-Legacy-Types', $responseHeaders) && $responseHeaders['X-SODA2-Legacy-Types'])
+        {
+            return 1;
+        }
+
+        // A header that's unique to the new API
+        if (array_key_exists('X-SODA2-Truth-Last-Modified', $responseHeaders))
+        {
+            return 2;
+        }
     }
 }

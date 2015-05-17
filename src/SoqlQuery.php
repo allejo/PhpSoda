@@ -176,7 +176,7 @@ class SoqlQuery
      */
     public function limit ($limit)
     {
-        $this->handleInteger("limit", $limit, true);
+        $this->handleInteger("limit", $limit);
 
         $this->queryElements[self::LIMIT_KEY] = min(self::MAXIMUM_LIMIT, $limit);
 
@@ -201,7 +201,7 @@ class SoqlQuery
      */
     public function offset ($offset)
     {
-        $this->handleInteger("offset", $offset, false);
+        $this->handleInteger("offset", $offset);
 
         $this->queryElements[self::OFFSET_KEY] = $offset;
 
@@ -253,25 +253,22 @@ class SoqlQuery
      *
      * @param   string  $variable                 The literal name of this field
      * @param   int     $number                   The value to analyze
-     * @param   bool    $disallowNegativeAndZero  When set to true, it will disallow numbers that are less than or equal
-     *                                            to 0. When set to false, it will disallow numbers that are less than 0
      *
      * @since   0.1.0
      *
      * @throws  \InvalidArgumentException         If the given argument is not an integer
      * @throws  \OutOfBoundsException             If the given argument is less than 0
      */
-    private function handleInteger ($variable, $number, $disallowNegativeAndZero)
+    private function handleInteger ($variable, $number)
     {
         if (!is_integer($number))
         {
             throw new \InvalidArgumentException(sprintf("The %s must be an integer", $variable));
         }
 
-        if (($disallowNegativeAndZero && $number <= 0) || (!$disallowNegativeAndZero && $number < 0))
+        if ($number < 0)
         {
-            $comparison = ($disallowNegativeAndZero) ? "less than or equal to" : "less than";
-            $message = sprintf("The %s cannot be %s 0.", $variable, $comparison);
+            $message = sprintf("The %s cannot be less than 0.", $variable, $comparison);
 
             throw new \OutOfBoundsException($message, 1);
         }

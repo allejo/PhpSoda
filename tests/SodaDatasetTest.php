@@ -86,6 +86,13 @@ class SodaDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($md->createdAt);
     }
 
+    public function testGetApiVersion ()
+    {
+        $ds = new SodaDataset($this->client, $this->id);
+
+        $this->assertEquals(1, $ds->getApiVersion());
+    }
+
     public function testGetResource ()
     {
         $ds = new SodaDataset($this->client, $this->id);

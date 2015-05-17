@@ -29,6 +29,7 @@ class UrlQuery
 
         curl_setopt_array($this->cURL, array(
             CURLOPT_URL => $this->url,
+            CURLOPT_HEADER => true,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_RETURNTRANSFER => true
         ));
@@ -57,7 +58,7 @@ class UrlQuery
         }
     }
 
-    public function sendGet ($params, $associativeArray)
+    public function sendGet ($params, $associativeArray, &$headers = null)
     {
         if (is_array($params))
         {
@@ -74,10 +75,10 @@ class UrlQuery
 
         curl_setopt($this->cURL, CURLOPT_URL, $full_url);
 
-        return $this->handleQuery($associativeArray);
+        return $this->handleQuery($associativeArray, $headers);
     }
 
-    public function sendPost ($dataAsJson, $associativeArray)
+    public function sendPost ($dataAsJson, $associativeArray, &$headers = null)
     {
         curl_setopt_array($this->cURL, array(
             CURLOPT_POST => true,
@@ -85,20 +86,20 @@ class UrlQuery
             CURLOPT_CUSTOMREQUEST => "POST"
         ));
 
-        return $this->handleQuery($associativeArray);
+        return $this->handleQuery($associativeArray, $headers);
     }
 
-    public function sendPut ($dataAsJson, $associativeArray)
+    public function sendPut ($dataAsJson, $associativeArray, &$headers = null)
     {
         curl_setopt_array($this->cURL, array(
             CURLOPT_POSTFIELDS => $dataAsJson,
             CURLOPT_CUSTOMREQUEST => "PUT"
         ));
 
-        return $this->handleQuery($associativeArray);
+        return $this->handleQuery($associativeArray, $headers);
     }
 
-    private function handleQuery ($associativeArray)
+    private function handleQuery ($associativeArray, &$headers)
     {
         $result = curl_exec($this->cURL);
 
@@ -114,7 +115,21 @@ class UrlQuery
             throw new HttpException($httpCode, $result);
         }
 
-        return json_decode($result, $associativeArray);
+        list($header, $body) = explode("\r\n\r\n", $result, 2);
+
+        if ($headers !== null)
+        {
+            $header = explode("\r\n", $header);
+            $headers = array();
+
+            for ($i = 1; $i < count($header); $i++)
+            {
+                list($k, $v) = explode(":", $header[$i]);
+                $headers[$k] = trim($v);
+            }
+        }
+
+        return json_decode($body, $associativeArray);
     }
 
     public static function buildQuery ($url, $params = array())
