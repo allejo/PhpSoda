@@ -121,11 +121,12 @@ class UrlQuery
         {
             $header = explode("\r\n", $header);
             $headers = array();
+            $headerLength = count($header);
 
-            for ($i = 1; $i < count($header); $i++)
+            for ($i = 1; $i < $headerLength; $i++)
             {
-                list($k, $v) = explode(":", $header[$i]);
-                $headers[$k] = trim($v);
+                list($key, $val) = explode(":", $header[$i]);
+                $headers[$key] = trim($val);
             }
         }
 
