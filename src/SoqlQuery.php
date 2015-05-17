@@ -17,23 +17,73 @@ namespace allejo\Socrata;
  */
 class SoqlQuery
 {
+    /**
+     * The default delimiter used to separate multiple values.
+     */
     const DELIMITER  = ',';
+
+    /**
+     * The SELECT clause in SoQL
+     */
     const SELECT_KEY = '$select';
+
+    /**
+     * The WHERE clause in SoQL
+     */
     const WHERE_KEY  = '$where';
+
+    /**
+     * The ORDER clause in SoQL
+     */
     const ORDER_KEY  = '$order';
+
+    /**
+     * The GROUP clause in SoQL
+     */
     const GROUP_KEY  = '$group';
+
+    /**
+     * The LIMIT clause in SoQL
+     */
     const LIMIT_KEY  = '$limit';
+
+    /**
+     * The OFFSET clause in SoQL
+     */
     const OFFSET_KEY = '$offset';
+
+    /**
+     * The SEARCH clause in SoQL
+     */
     const SEARCH_KEY = '$q';
 
-    const DEFAULT_SELECT          = '*';
+    /**
+     * The default value for the `$select` clause in a SoQL query. By default, select all the columns
+     */
+    const DEFAULT_SELECT = '*';
+
+    /**
+     * The default order for the `$order` clause in a SoQL query. By default, order in ascending order
+     */
     const DEFAULT_ORDER_DIRECTION = SoqlOrderDirection::ASC;
-    const DEFAULT_ORDER           = ':id';
-    const MAXIMUM_LIMIT           = 1000;
+
+    /**
+     * The default column we'll be ordering by in the `$order` clause of a SoQL query. By default, order by the `:id`
+     * column as this is the recommendation when paging through elements.
+     */
+    const DEFAULT_ORDER = ':id';
+
+    /**
+     * The maximum number of results that can be retrieved from a dataset per request. This is a restriction set by the
+     * Socrata API
+     *
+     * @see http://dev.socrata.com/docs/queries.html#the-limit-parameter Maximum $limit request
+     */
+    const MAXIMUM_LIMIT = 1000;
 
     /**
      * This array contains all of the parts to a SoqlQuery being converted into a URL where the key of an element is the
-     * SoQL statement (e.g. $select) and the value of an element is the value to the SoQL statement (e.g. *).
+     * SoQL clause (e.g. $select) and the value of an element is the value to the SoQL clause (e.g. *).
      *
      * @var string[]
      */
@@ -93,11 +143,11 @@ class SoqlQuery
      * Select only specific columns in your Soql Query. When this function is given no parameters or is not used in a
      * query, the Soql Query will return all of the columns by default.
      *
-     * ```
+     * ```php
      * // These are all valid usages
      * $soqlQuery->select();
      * $soqlQuery->select("foo", "bar", "baz");
-     * $soqlQuery->select(array("foo" => "foo_alias, "bar" => "bar_alias", "baz"));
+     * $soqlQuery->select(array("foo" => "foo_alias", "bar" => "bar_alias", "baz"));
      * ```
      *
      * @link    http://dev.socrata.com/docs/queries.html#the-select-parameter SoQL $select Parameter
@@ -135,7 +185,7 @@ class SoqlQuery
      *
      * @since   0.1.0
      *
-     * @return  $this  A SoqlQuery object that can continue to be changed
+     * @return  $this  A SoqlQuery object that can continue to be chained
      */
     public function where ($statement)
     {
@@ -164,7 +214,7 @@ class SoqlQuery
      *
      * @since   0.1.0
      *
-     * @return  $this   A SoqlQuery object that can continue to be changed
+     * @return  $this   A SoqlQuery object that can continue to be chained
      */
     public function order ($column, $direction = self::DEFAULT_ORDER_DIRECTION)
     {
@@ -181,6 +231,24 @@ class SoqlQuery
         return $this;
     }
 
+    /**
+     * Group the resulting dataset based on a specific column. This function must be used in conjunction with `select()`.
+     *
+     * For example, to find the strongest earthquake by region, we want to group() by region and provide a select of
+     * region, MAX(magnitude).
+     *
+     * ```php
+     * $soql->select("region", "MAX(magnitude)")->group("region");
+     * ```
+     *
+     * @link    http://dev.socrata.com/docs/queries.html#the-group-parameter  The $group Parameter
+     *
+     * @param   string  $column  The column that will be used to group the dataset
+     *
+     * @since   0.1.0
+     *
+     * @return  $this   A SoqlQuery object that can continue to be chained
+     */
     public function group ($column)
     {
         $this->queryElements[self::GROUP_KEY][] = $column;
@@ -198,11 +266,11 @@ class SoqlQuery
      * @param   int    $limit  The number of results the dataset should be limited to when returned
      *
      * @throws  \InvalidArgumentException  If the given argument is not an integer
-     * @throws  \OutOfBoundsException      If the given argument is less than or equal to 0
+     * @throws  \OutOfBoundsException      If the given argument is less than 0
      *
      * @since   0.1.0
      *
-     * @return  $this          A SoqlQuery object that can continue to be changed
+     * @return  $this          A SoqlQuery object that can continue to be chained
      */
     public function limit ($limit)
     {
@@ -227,7 +295,7 @@ class SoqlQuery
      *
      * @since   0.1.0
      *
-     * @return  $this           A SoqlQuery object that can continue to be changed
+     * @return  $this           A SoqlQuery object that can continue to be chained
      */
     public function offset ($offset)
     {
@@ -246,7 +314,7 @@ class SoqlQuery
      *
      * @since   0.1.0
      *
-     * @return  $this            A SoqlQuery object that can continue to be changed
+     * @return  $this            A SoqlQuery object that can continue to be chained
      */
     public function fullTextSearch ($needle)
     {
