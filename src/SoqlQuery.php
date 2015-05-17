@@ -240,7 +240,7 @@ class SoqlQuery
      */
     private function formatAssociativeArray ($format, $array)
     {
-        $formattedValues = [];
+        $formattedValues = array();
 
         foreach ($array as $key => $value)
         {
