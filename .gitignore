@@ -117,3 +117,4 @@ output/
 
 ### Grunt ###
 node_modules/
+.idea/encodings.xml
