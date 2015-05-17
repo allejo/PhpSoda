@@ -31,7 +31,23 @@ class SoqlQuery
     const DEFAULT_ORDER           = ':id';
     const MAXIMUM_LIMIT           = 1000;
 
+    /**
+     * This array contains all of the parts to a SoqlQuery being converted into a URL where the key of an element is the
+     * SoQL statement (e.g. $select) and the value of an element is the value to the SoQL statement (e.g. *).
+     *
+     * @var string[]
+     */
     private $queryElements;
+
+    /**
+     * This variable stores whether or not we are using the default sorting order. If no order() statements exist in a
+     * SoqlQuery chain, then we have no issue using the default sort. If an order() statement does exist, we need to
+     * clear the default sorting because that would take precedent; this value will then be set to false so we can know
+     * that we are no longer using the default sort.
+     *
+     * @var bool
+     */
+    private $defaultSort;
 
     /**
      * Write a SoQL query by chaining functions. This object will handle encoding the final query in order for it to be
@@ -42,8 +58,9 @@ class SoqlQuery
      */
     public function __construct ()
     {
-        $this->queryElements[self::SELECT_KEY] = self::DEFAULT_SELECT;
-        $this->queryElements[self::ORDER_KEY]  = self::DEFAULT_ORDER . urlencode(" ") . self::DEFAULT_ORDER_DIRECTION;
+        $this->queryElements[self::SELECT_KEY]  = self::DEFAULT_SELECT;
+        $this->queryElements[self::ORDER_KEY][] = self::DEFAULT_ORDER . urlencode(" ") . self::DEFAULT_ORDER_DIRECTION;
+        $this->defaultSort = true;
     }
 
     /**
@@ -55,6 +72,11 @@ class SoqlQuery
      */
     public function __tostring ()
     {
+        if (empty($this->queryElements[self::ORDER_KEY]))
+        {
+
+        }
+
         $query = array();
 
         foreach ($this->queryElements as $soqlKey => $value)
@@ -146,7 +168,15 @@ class SoqlQuery
      */
     public function order ($column, $direction = self::DEFAULT_ORDER_DIRECTION)
     {
-        $this->queryElements[self::ORDER_KEY][] = $column . " " . $direction;
+        // We have not had any custom "order" statements, so let's clear the default value and only use the specified
+        // "order" statements
+        if ($this->defaultSort)
+        {
+            $this->queryElements[self::ORDER_KEY] = array();
+            $this->defaultSort = false;
+        }
+
+        $this->queryElements[self::ORDER_KEY][] = urlencode($column . " " . $direction);
 
         return $this;
     }

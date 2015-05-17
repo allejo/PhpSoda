@@ -2,6 +2,7 @@
 
 use allejo\Socrata\SodaClient;
 use allejo\Socrata\SodaDataset;
+use allejo\Socrata\SoqlOrderDirection;
 use allejo\Socrata\SoqlQuery;
 
 class SoqlQueryTest extends PHPUnit_Framework_TestCase
@@ -19,6 +20,15 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
     private $id;
     private $domain;
     private $token;
+
+    public function invalidStringLimits ()
+    {
+        return array(
+            array("7"),
+            array("foo"),
+            array("!")
+        );
+    }
 
     public function setUp ()
     {
@@ -89,6 +99,27 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($limit, count($results));
     }
 
+    /**
+     * @dataProvider invalidStringLimits
+     * @expectedException \InvalidArgumentException
+     */
+    public function testStringLimitQuery ($limit)
+    {
+        $soql = new SoqlQuery();
+        $soql->limit($limit);
+    }
+
+    /**
+     * @expectedException \OutOfBoundsException
+     */
+    public function testNegativeLimitQuery ()
+    {
+        $limit = -10;
+
+        $soql = new SoqlQuery();
+        $soql->limit($limit);
+    }
+
     public function testOffsetQuery ()
     {
         $offset = 5;
@@ -99,6 +130,39 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
         $normal_results = $this->dataset->getDataset();
         $offset_results = $this->dataset->getDataset($soql);
 
-        $this->assertEquals($normal_results[$offset], $offset_results[0]);
+        for ($i = 0; $i < 5; $i++)
+        {
+            $this->assertEquals($normal_results[$offset + $i], $offset_results[$i]);
+        }
+    }
+
+    public function testOrderAscQuery ()
+    {
+        $soql = new SoqlQuery();
+        $soql->order("state", SoqlOrderDirection::ASC)
+             ->limit(5);
+
+        $results = $this->dataset->getDataset($soql);
+        $loop_iterations = count($results) - 1;
+
+        for ($i = 0; $i < $loop_iterations; $i++)
+        {
+            $this->assertLessThanOrEqual($results[$i + 1]['state'], $results[$i]['state']);
+        }
+    }
+
+    public function testOrderDescQuery ()
+    {
+        $soql = new SoqlQuery();
+        $soql->order("state", SoqlOrderDirection::DESC)
+             ->limit(5);
+
+        $results = $this->dataset->getDataset($soql);
+        $loop_iterations = count($results) - 1;
+
+        for ($i = 0; $i < $loop_iterations; $i++)
+        {
+            $this->assertGreaterThanOrEqual($results[$i + 1]['state'], $results[$i]['state']);
+        }
     }
 }
