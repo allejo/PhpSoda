@@ -23,12 +23,25 @@ class SodaDataset
 
         $this->sodaClient = $sodaClient;
         $this->resourceId = $resourceID;
-        $this->urlQuery   = new UrlQuery($this->buildResourceUrl(), $this->sodaClient->getToken());
+        $this->urlQuery   = new UrlQuery($this->buildResourceUrl(), $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
+    }
 
-        if ($this->sodaClient->getEmail() != NULL && $this->sodaClient->getPassword() != NULL)
-        {
-            $this->urlQuery->setAuthentication($this->sodaClient->getEmail(), $this->sodaClient->getPassword());
-        }
+    /**
+     * Get the metadata of a dataset
+     *
+     * @see    SodaClient::enableAssociativeArrays()
+     * @see    SodaClient::disableAssociativeArrays()
+     *
+     * @since  0.1.0
+     *
+     * @return array The metadata as a PHP array. The array will contain associative arrays or stdClass objects from
+     *               the decoded JSON received from the data set.
+     */
+    public function getMetadata ()
+    {
+        $metadataUrlQuery = new UrlQuery($this->buildViewUrl(), $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
+
+        return $metadataUrlQuery->sendGet("", $this->sodaClient->associativeArrayEnabled());
     }
 
     /**
@@ -80,12 +93,34 @@ class SodaDataset
     }
 
     /**
-     * Build the URL that will be used to access the API
+     * Build the API URL that will be used to access the dataset
      *
-     * @return string The API URL
+     * @return string The apt API URL
      */
     private function buildResourceUrl ()
     {
-        return sprintf("%s://%s/resource/%s.json", UrlQuery::DefaultProtocol, $this->sodaClient->getDomain(), $this->resourceId);
+        return $this->buildApiUrl("resource");
+    }
+
+    /**
+     * Build the API URL that will be used to access the metadata for the dataset
+     *
+     * @return string The apt API URL
+     */
+    private function buildViewUrl ()
+    {
+        return $this->buildApiUrl("views");
+    }
+
+    /**
+     * Build the URL that will be used to access the API for the respective action
+     *
+     * @param  string $location The location of where to get information from
+     *
+     * @return string The API URL
+     */
+    private function buildApiUrl ($location)
+    {
+        return sprintf("%s://%s/%s/%s.json", UrlQuery::DefaultProtocol, $this->sodaClient->getDomain(), $location, $this->resourceId);
     }
 }

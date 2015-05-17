@@ -9,8 +9,6 @@
 
 namespace allejo\Socrata;
 
-use allejo\Socrata\Utilities\StringUtilities;
-
 /**
  * An object provided for the creation and handling of SoQL queries in an object-oriented fashion.
  *

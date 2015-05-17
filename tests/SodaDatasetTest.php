@@ -6,8 +6,12 @@ use allejo\Socrata\SoqlQuery;
 
 class SodaDatasetTest extends PHPUnit_Framework_TestCase
 {
-    private $id;
+    /**
+     * @var SodaClient
+     */
     private $client;
+
+    private $id;
     private $domain;
     private $token;
 
@@ -59,6 +63,27 @@ class SodaDatasetTest extends PHPUnit_Framework_TestCase
         $ds = new SodaDataset($sc, "pkfj-5jsd");
 
         $ds->getDataset();
+    }
+
+    public function testGetMetadata ()
+    {
+        $ds = new SodaDataset($this->client, $this->id);
+        $md = $ds->getMetadata();
+
+        $this->assertNotNull($md);
+        $this->assertEquals(1301955963, $md['createdAt']);
+        $this->assertEquals("PUBLIC_DOMAIN", $md['licenseId']);
+    }
+
+    public function testGetMetadataAsObject ()
+    {
+        $this->client->disableAssociativeArrays();
+
+        $ds = new SodaDataset($this->client, $this->id);
+        $md = $ds->getMetadata();
+
+        $this->assertInstanceOf("stdClass", $md);
+        $this->assertNotNull($md->createdAt);
     }
 
     public function testGetResource ()

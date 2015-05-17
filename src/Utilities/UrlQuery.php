@@ -14,7 +14,7 @@ class UrlQuery
     private $token;
     private $parameters;
 
-    public function __construct ($url, $token)
+    public function __construct ($url, $token = "", $email = "", $password = "")
     {
         $this->url   = $url;
         $this->token = $token;
@@ -24,26 +24,27 @@ class UrlQuery
         $headers = array(
             'Accept: application/json',
             'Content-type: application/json',
-            "X-App-Token: " . $this->token);
+            "X-App-Token: " . $this->token
+        );
 
         curl_setopt_array($this->cURL, array(
             CURLOPT_URL => $this->url,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_RETURNTRANSFER => true
         ));
+
+        if (!StringUtilities::isNullOrEmpty($email) && !StringUtilities::isNullOrEmpty($password))
+        {
+            curl_setopt_array($this->cURL, array(
+                CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+                CURLOPT_USERPWD => $email . ":" . $password
+            ));
+        }
     }
 
     public function __destruct ()
     {
         curl_close($this->cURL);
-    }
-
-    public function setAuthentication ($username, $password)
-    {
-        curl_setopt_array($this->cURL, array(
-            CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-            CURLOPT_USERPWD => $username . ":" . $password
-        ));
     }
 
     public function setParameters ($params)
