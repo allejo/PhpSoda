@@ -57,7 +57,7 @@ class SoqlQuery
      */
     public function __tostring ()
     {
-        $query = [];
+        $query = array();
 
         foreach ($this->queryElements as $soqlKey => $value)
         {
