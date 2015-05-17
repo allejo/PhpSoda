@@ -1,6 +1,6 @@
 # PhpSoda [![Build Status](https://travis-ci.org/allejo/PhpSoda.svg?branch=master)](https://travis-ci.org/allejo/PhpSoda) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/allejo/PhpSoda/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/allejo/PhpSoda/?branch=master) [![Coverage Status](https://coveralls.io/repos/allejo/PhpSoda/badge.svg)](https://coveralls.io/r/allejo/PhpSoda)
 
-A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Provided as an alternative to Socrata's official implementation, this library takes more of an object-oriented approach to working with the API instead of manually creating requests; autocomplete for IDEs will be more useful.
+A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Provided as an alternative to Socrata's official implementation, this library takes more of an object-oriented approach to working with the API instead of manually creating requests and aims to fill some of the short-comings of the official library.
 
 This library fully supports interacting with the API by getting datasets and handling tokens or authentication in order to write or modify datasets.
 
@@ -24,15 +24,23 @@ $soql = new SoqlQuery();
 
 // Write a SoqlQuery naturally
 $soql->select("date_posted", "state", "sample_type")
-     ->where("state = 'AR'");
+     ->where("state = 'AR'")
+     ->limit(1);
 
-// Finally, get the results
+// Fetch the dataset into an associative array
 $results = $ds->getDataset($soql);
 ```
 
 ## Getting Help
 
-There are a few different ways to get help with and discuss this library. You may either [create an issue](https://github.com/allejo/PhpSoda/issues) or stop by IRC. Join the **#socrata-soda** channel on the Freenode network and look for 'allejo'.
+To get help, you may either [create an issue](https://github.com/allejo/PhpSoda/issues) or stop by IRC; I'm available on IRC as "allejo" so feel free to ping me. I recommend creating an issue in case others have the same question but for quick help, IRC works just fine.
+
+To report a bug or request a feature, please submit an issue.
+
+### IRC
+
+Channel: **#socrata-soda**  
+Network: irc.freenode.net
 
 ## Thank You
 
