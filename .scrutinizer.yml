@@ -37,8 +37,6 @@ coding_style:
             before_parentheses:
                 function_declaration: true
                 closure_definition: true
-            around_operators:
-                concatenation: false
         braces:
             classes_functions:
                 class: new-line
