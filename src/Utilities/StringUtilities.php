@@ -9,13 +9,13 @@ class StringUtilities
     /**
      * Validate a resource ID to be sure if matches the criteria
      *
-     * @param  string $resourceID The 4x4 resource ID of a data set
+     * @param  string $resourceId The 4x4 resource ID of a data set
      *
      * @throws InvalidResourceException If the resource ID isn't in the format of xxxx-xxxx
      */
-    public static function validateResourceID ($resourceID)
+    public static function validateResourceId ($resourceId)
     {
-        if (!preg_match('/^[a-z0-9]{4}-[a-z0-9]{4}$/', $resourceID))
+        if (!preg_match('/^[a-z0-9]{4}-[a-z0-9]{4}$/', $resourceId))
         {
             throw new InvalidResourceException("The resource ID given didn't fit the expected criteria");
         }

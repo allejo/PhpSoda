@@ -59,7 +59,7 @@ class SodaDataset
      */
     public function getDataset ($filterOrSoqlQuery = "")
     {
-        if (StringUtilities::isNullOrEmpty($filterOrSoqlQuery))
+        if (!($filterOrSoqlQuery instanceof SoqlQuery) && StringUtilities::isNullOrEmpty($filterOrSoqlQuery))
         {
             $filterOrSoqlQuery = new SoqlQuery();
         }
@@ -121,6 +121,6 @@ class SodaDataset
      */
     private function buildApiUrl ($location)
     {
-        return sprintf("%s://%s/%s/%s.json", UrlQuery::DefaultProtocol, $this->sodaClient->getDomain(), $location, $this->resourceId);
+        return sprintf("%s://%s/%s/%s.json", UrlQuery::DEFAULT_PROTOCOL, $this->sodaClient->getDomain(), $location, $this->resourceId);
     }
 }

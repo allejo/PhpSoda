@@ -7,7 +7,7 @@ use allejo\Socrata\Exceptions\HttpException;
 
 class UrlQuery
 {
-    const DefaultProtocol = "https";
+    const DEFAULT_PROTOCOL = "https";
 
     private $url;
     private $cURL;
@@ -77,21 +77,21 @@ class UrlQuery
         return $this->handleQuery($associativeArray);
     }
 
-    public function sendPost ($data_as_json, $associativeArray)
+    public function sendPost ($dataAsJson, $associativeArray)
     {
         curl_setopt_array($this->cURL, array(
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $data_as_json,
+            CURLOPT_POSTFIELDS => $dataAsJson,
             CURLOPT_CUSTOMREQUEST => "POST"
         ));
 
         return $this->handleQuery($associativeArray);
     }
 
-    public function sendPut ($data_as_json, $associativeArray)
+    public function sendPut ($dataAsJson, $associativeArray)
     {
         curl_setopt_array($this->cURL, array(
-            CURLOPT_POSTFIELDS => $data_as_json,
+            CURLOPT_POSTFIELDS => $dataAsJson,
             CURLOPT_CUSTOMREQUEST => "PUT"
         ));
 

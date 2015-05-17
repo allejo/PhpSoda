@@ -17,19 +17,19 @@ namespace allejo\Socrata;
  */
 class SoqlQuery
 {
-    const Delimiter = ',';
-    const SelectKey = '$select';
-    const WhereKey  = '$where';
-    const OrderKey  = '$order';
-    const GroupKey  = '$group';
-    const LimitKey  = '$limit';
-    const OffsetKey = '$offset';
-    const SearchKey = '$q';
+    const DELIMITER  = ',';
+    const SELECT_KEY = '$select';
+    const WHERE_KEY  = '$where';
+    const ORDER_KEY  = '$order';
+    const GROUP_KEY  = '$group';
+    const LIMIT_KEY  = '$limit';
+    const OFFSET_KEY = '$offset';
+    const SEARCH_KEY = '$q';
 
-    const DefaultSelect         = '*';
-    const DefaultOrderDirection = SoqlOrderDirection::ASC;
-    const DefaultOrder          = ':id';
-    const MaximumLimit          = 1000;
+    const DEFAULT_SELECT          = '*';
+    const DEFAULT_ORDER_DIRECTION = SoqlOrderDirection::ASC;
+    const DEFAULT_ORDER           = ':id';
+    const MAXIMUM_LIMIT           = 1000;
 
     private $queryElements;
 
@@ -42,8 +42,8 @@ class SoqlQuery
      */
     public function __construct ()
     {
-        $this->queryElements[self::SelectKey] = self::DefaultSelect;
-        $this->queryElements[self::OrderKey]  = self::DefaultOrder . urlencode(" ") . self::DefaultOrderDirection;
+        $this->queryElements[self::SELECT_KEY] = self::DEFAULT_SELECT;
+        $this->queryElements[self::ORDER_KEY]  = self::DEFAULT_ORDER . urlencode(" ") . self::DEFAULT_ORDER_DIRECTION;
     }
 
     /**
@@ -59,7 +59,7 @@ class SoqlQuery
 
         foreach ($this->queryElements as $soqlKey => $value)
         {
-            $value = (is_array($value)) ? implode(self::Delimiter, $value) : $value;
+            $value = (is_array($value)) ? implode(self::DELIMITER, $value) : $value;
 
             $query[] = sprintf("%s=%s", $soqlKey, $value);
         }
@@ -87,15 +87,15 @@ class SoqlQuery
      *
      * @return  $this       A SoqlQuery object that can continue to be chained
      */
-    public function select ($columns = self::DefaultSelect)
+    public function select ($columns = self::DEFAULT_SELECT)
     {
         if (func_num_args() == 1)
         {
-            $this->queryElements[self::SelectKey] = (is_array($columns)) ? $this->formatAssociativeArray("%s AS %s", $columns) : array($columns);
+            $this->queryElements[self::SELECT_KEY] = (is_array($columns)) ? $this->formatAssociativeArray("%s AS %s", $columns) : array($columns);
         }
         else if (func_num_args() > 1)
         {
-            $this->queryElements[self::SelectKey] = func_get_args();
+            $this->queryElements[self::SELECT_KEY] = func_get_args();
         }
 
         return $this;
@@ -117,7 +117,7 @@ class SoqlQuery
      */
     public function where ($statement)
     {
-        $this->queryElements[self::WhereKey] = urlencode($statement);
+        $this->queryElements[self::WHERE_KEY] = urlencode($statement);
 
         return $this;
     }
@@ -144,16 +144,16 @@ class SoqlQuery
      *
      * @return  $this   A SoqlQuery object that can continue to be changed
      */
-    public function order ($column, $direction = self::DefaultOrderDirection)
+    public function order ($column, $direction = self::DEFAULT_ORDER_DIRECTION)
     {
-        $this->queryElements[self::OrderKey][] = $column . " " . $direction;
+        $this->queryElements[self::ORDER_KEY][] = $column . " " . $direction;
 
         return $this;
     }
 
     public function group ($column)
     {
-        $this->queryElements[self::GroupKey][] = $column;
+        $this->queryElements[self::GROUP_KEY][] = $column;
 
         return $this;
     }
@@ -178,7 +178,7 @@ class SoqlQuery
     {
         $this->handleInteger("limit", $limit, true);
 
-        $this->queryElements[self::LimitKey] = min(self::MaximumLimit, $limit);
+        $this->queryElements[self::LIMIT_KEY] = min(self::MAXIMUM_LIMIT, $limit);
 
         return $this;
     }
@@ -203,7 +203,7 @@ class SoqlQuery
     {
         $this->handleInteger("offset", $offset, false);
 
-        $this->queryElements[self::OffsetKey] = $offset;
+        $this->queryElements[self::OFFSET_KEY] = $offset;
 
         return $this;
     }
@@ -220,7 +220,7 @@ class SoqlQuery
      */
     public function fullTextSearch ($needle)
     {
-        $this->queryElements[self::SearchKey] = $needle;
+        $this->queryElements[self::SEARCH_KEY] = $needle;
 
         return $this;
     }
