@@ -268,7 +268,7 @@ class SoqlQuery
 
         if ($number < 0)
         {
-            $message = sprintf("The %s cannot be less than 0.", $variable, $comparison);
+            $message = sprintf("The %s cannot be less than 0.", $variable);
 
             throw new \OutOfBoundsException($message, 1);
         }
