@@ -33,14 +33,7 @@ class SoqlQuery
     const DefaultOrder          = ':id';
     const MaximumLimit          = 1000;
 
-    private $selectColumns;
-    private $whereClause;
-    private $orderDirection;
-    private $orderByColumns;
-    private $groupByColumns;
-    private $limitValue;
-    private $offsetValue;
-    private $searchText;
+    private $queryElements;
 
     /**
      * Write a SoQL query by chaining functions. This object will handle encoding the final query in order for it to be
@@ -51,9 +44,8 @@ class SoqlQuery
      */
     public function __construct ()
     {
-        $this->selectColumns  = array(self::DefaultSelect);
-        $this->orderByColumns = self::DefaultOrder;
-        $this->orderDirection = self::DefaultOrderDirection;
+        $this->queryElements[self::SelectKey] = self::DefaultSelect;
+        $this->queryElements[self::OrderKey]  = self::DefaultOrder . urlencode(" ") . self::DefaultOrderDirection;
     }
 
     /**
@@ -65,59 +57,16 @@ class SoqlQuery
      */
     public function __tostring ()
     {
-        $soql_query = sprintf("%s=", self::SelectKey);
+        $query = [];
 
-        if (count($this->selectColumns) === 1 && $this->selectColumns[0] === "*")
+        foreach ($this->queryElements as $soqlKey => $value)
         {
-            $soql_query .= $this->selectColumns[0];
-        }
-        else
-        {
-            $selectedColumns = array();
+            $value = (is_array($value)) ? implode(self::Delimiter, $value) : $value;
 
-            foreach ($this->selectColumns as $key => $value)
-            {
-                if (is_string($key))
-                {
-                    $selectedColumns[] = urlencode(sprintf("%s AS %s", $key, $value));
-                }
-                else
-                {
-                    $selectedColumns[] = $value;
-                }
-            }
-
-            $soql_query .= implode(self::Delimiter, $selectedColumns);
+            $query[] = sprintf("%s=%s", $soqlKey, $value);
         }
 
-        $soql_query .= sprintf("&%s=%s", self::OrderKey, urlencode($this->orderByColumns . " " . $this->orderDirection));
-
-        if (!StringUtilities::isNullOrEmpty($this->whereClause))
-        {
-            $soql_query .= sprintf("&%s=%s", self::WhereKey, urlencode($this->whereClause));
-        }
-
-        if (count($this->groupByColumns) > 0)
-        {
-            $soql_query .= sprintf("&%s=%s", self::GroupKey, implode(self::Delimiter, $this->groupByColumns));
-        }
-
-        if ($this->offsetValue > 0)
-        {
-            $soql_query .= sprintf("&%s=%s", self::OffsetKey, $this->offsetValue);
-        }
-
-        if ($this->limitValue > 0)
-        {
-            $soql_query .= sprintf("&%s=%s", self::LimitKey, $this->limitValue);
-        }
-
-        if (!StringUtilities::isNullOrEmpty($this->searchText))
-        {
-            $soql_query .= sprintf("&%s=%s", self::SearchKey, urlencode($this->searchText));
-        }
-
-        return $soql_query;
+        return implode("&", $query);
     }
 
     /**
@@ -128,7 +77,7 @@ class SoqlQuery
      * // These are all valid usages
      * $soqlQuery->select();
      * $soqlQuery->select("foo", "bar", "baz");
-     * $soqlQuery->select(array("foo", "bar", "baz"));
+     * $soqlQuery->select(array("foo" => "foo_alias, "bar" => "bar_alias", "baz"));
      * ```
      *
      * @link    http://dev.socrata.com/docs/queries.html#the-select-parameter SoQL $select Parameter
@@ -138,17 +87,17 @@ class SoqlQuery
      *
      * @since   0.1.0
      *
-     * @return  $this  A SoqlQuery object that can continue to be chained
+     * @return  $this       A SoqlQuery object that can continue to be chained
      */
     public function select ($columns = self::DefaultSelect)
     {
         if (func_num_args() == 1)
         {
-            $this->selectColumns = (is_array($columns)) ? $columns : array($columns);
+            $this->queryElements[self::SelectKey] = (is_array($columns)) ? $this->formatAssociativeArray("%s AS %s", $columns) : array($columns);
         }
         else if (func_num_args() > 1)
         {
-            $this->selectColumns = func_get_args();
+            $this->queryElements[self::SelectKey] = func_get_args();
         }
 
         return $this;
@@ -170,42 +119,43 @@ class SoqlQuery
      */
     public function where ($statement)
     {
-        $this->whereClause = $statement;
+        $this->queryElements[self::WhereKey] = urlencode($statement);
 
         return $this;
     }
 
     /**
-     * Determines the order the results should be sorted in.
+     * Determines the order and the column the results should be sorted by. This function may be used more than once in
+     * a chain so duplicate entries in the first column will be sorted by the second specified column specified. If this
+     * function is called more than once in a chain, the order does matter in which order() you call first.
      *
      * @link    http://dev.socrata.com/changelog/2015/04/27/new-higher-performance-apis.html New Higher Performance API
      * @link    http://dev.socrata.com/docs/queries.html#the-order-parameter SoQL $order Parameter
      *
-     * @param   string|array  $column     The column(s) that determines how the results should be sorted. This information
-     *                                    can be given as an array of values, a single column, or a comma separated string.
-     *                                    In order to support sorting by multiple columns, you need to use the latest version
-     *                                    of the dataset API.
-     * @param   string        $direction  The direction the results should be sorted in, either ascending or descending. The
-     *                                    {@link SoqlOrderDirection} class provides constants to use should these values ever change
-     *                                    in the future. The only accepted values are: `ASC` and `DESC`
+     * @param   string  $column     The column(s) that determines how the results should be sorted. This information
+     *                              can be given as an array of values, a single column, or a comma separated string.
+     *                              In order to support sorting by multiple columns, you need to use the latest version
+     *                              of the dataset API.
+     * @param   string  $direction  The direction the results should be sorted in, either ascending or descending. The
+     *                              {@link SoqlOrderDirection} class provides constants to use should these values ever change
+     *                              in the future. The only accepted values are: `ASC` and `DESC`
      *
-     * @see     SoqlOrderDirection        View convenience constants
+     * @see     SoqlOrderDirection  View convenience constants
      *
      * @since   0.1.0
      *
-     * @return  $this         A SoqlQuery object that can continue to be changed
+     * @return  $this   A SoqlQuery object that can continue to be changed
      */
     public function order ($column, $direction = self::DefaultOrderDirection)
     {
-        $this->orderByColumns = $this->handlePossibleArray($column);
-        $this->orderDirection = SoqlOrderDirection::parseOrder($direction);
+        $this->queryElements[self::OrderKey][] = $column . " " . $direction;
 
         return $this;
     }
 
-    public function group ($columns)
+    public function group ($column)
     {
-        $this->groupByColumns = $columns;
+        $this->queryElements[self::GroupKey][] = $column;
 
         return $this;
     }
@@ -230,7 +180,7 @@ class SoqlQuery
     {
         $this->handleInteger("limit", $limit, true);
 
-        $this->limitValue = min(self::MaximumLimit, $limit);
+        $this->queryElements[self::LimitKey] = min(self::MaximumLimit, $limit);
 
         return $this;
     }
@@ -255,7 +205,7 @@ class SoqlQuery
     {
         $this->handleInteger("offset", $offset, false);
 
-        $this->offsetValue = $offset;
+        $this->queryElements[self::OffsetKey] = $offset;
 
         return $this;
     }
@@ -272,23 +222,32 @@ class SoqlQuery
      */
     public function fullTextSearch ($needle)
     {
-        $this->searchText = $needle;
+        $this->queryElements[self::SearchKey] = $needle;
 
         return $this;
     }
 
     /**
-     * Convert an array argument into a comma separated value or just return the string as it was
+     * Create an array of values that have already been formatted and are ready to be converted into a comma separated
+     * list that will be used as a parameter for selectors such was `$select`, `$order`, or `$group` in SoQL
      *
-     * @param   string|array  $mixed  Multiple values given as an array or a comma separated list in a string
+     * @param   string  $format  The format used in sprintf() for keys and values of an array to be formatted to
+     * @param   array   $array   The array that will be formatted appropriately for usage within this class
      *
      * @since   0.1.0
      *
-     * @return  string        A comma separated list or a single value
+     * @return  array
      */
-    private function handlePossibleArray ($mixed)
+    private function formatAssociativeArray ($format, $array)
     {
-        return (is_array($mixed)) ? implode(self::Delimiter, $mixed) : $mixed;
+        $formattedValues = [];
+
+        foreach ($array as $key => $value)
+        {
+            $formattedValues[] = (is_string($key)) ? sprintf($format, trim($key), trim($value)) : $value;
+        }
+
+        return $formattedValues;
     }
 
     /**
