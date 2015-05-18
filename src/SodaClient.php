@@ -73,7 +73,7 @@ class SodaClient
     /**
      * When fetching a data set, the returned data will be in an array of associative arrays.
      *
-     * ```
+     * ```php
      * Array
      * (
      *     [foo] => Test data
