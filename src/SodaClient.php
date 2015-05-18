@@ -90,9 +90,11 @@ class SodaClient
      * )
      * ```
      *
-     * When returned in this format, all of the children elements are objects and are accessed as such.
+     * When returned in this format, all of the children elements are array elements and are accessed as such.
      *
+     * ```php
      *     $myVariable = $results['bar']['baz']; // Testing
+     * ```
      */
     public function enableAssociativeArrays ()
     {
@@ -103,7 +105,7 @@ class SodaClient
      * When fetching a data set, the returned data will be in an array of stdClass objects. When AssociativeArrays is
      * disabled, the returned data will in the follow format:
      *
-     * ```
+     * ```php
      * stdClass Object
      * (
      *     [foo] => Test data
@@ -121,8 +123,9 @@ class SodaClient
      *
      * When returned in this format, all of the children elements are objects and are accessed as such.
      *
+     * ```php
      *     $myVariable = $results->bar->baz; // Testing
-     *
+     * ```
      */
     public function disableAssociativeArrays ()
     {
