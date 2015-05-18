@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c02f956040c2898d8764ef642704402b",
+    "hash": "41930fc0e4513dd7862ccac0ad2c6bb0",
     "packages": [],
     "packages-dev": [
         {
@@ -3290,92 +3290,6 @@
             "time": "2015-05-02 15:18:45"
         },
         {
-            "name": "theseer/autoload",
-            "version": "1.16.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/theseer/Autoload.git",
-                "reference": "2a47cae1efaf0b395f72e748cfbcbd2f54399616"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/theseer/Autoload/zipball/2a47cae1efaf0b395f72e748cfbcbd2f54399616",
-                "reference": "2a47cae1efaf0b395f72e748cfbcbd2f54399616",
-                "shasum": ""
-            },
-            "require": {
-                "theseer/directoryscanner": "~1.3.0",
-                "zetacomponents/console-tools": "dev-master"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "*",
-                "squizlabs/php_codesniffer": "*"
-            },
-            "bin": [
-                "composer/bin/phpab"
-            ],
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD License"
-            ],
-            "authors": [
-                {
-                    "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de"
-                }
-            ],
-            "description": "A tool and library to generate autoload code.",
-            "time": "2014-11-25 14:50:39"
-        },
-        {
-            "name": "theseer/directoryscanner",
-            "version": "1.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/theseer/DirectoryScanner.git",
-                "reference": "b1406a99f5e4b1761c84d9e98127c03871bb7b0e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/theseer/DirectoryScanner/zipball/b1406a99f5e4b1761c84d9e98127c03871bb7b0e",
-                "reference": "b1406a99f5e4b1761c84d9e98127c03871bb7b0e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A recursive directory scanner and filter",
-            "time": "2014-11-25 14:27:49"
-        },
-        {
             "name": "twig/twig",
             "version": "v1.18.1",
             "source": {
@@ -4043,72 +3957,6 @@
             "time": "2014-09-19 03:28:34"
         },
         {
-            "name": "zetacomponents/console-tools",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zetacomponents/ConsoleTools.git",
-                "reference": "ca0375a7204ba7ddb9c9338cd74556fccc10bc9a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zetacomponents/ConsoleTools/zipball/ca0375a7204ba7ddb9c9338cd74556fccc10bc9a",
-                "reference": "ca0375a7204ba7ddb9c9338cd74556fccc10bc9a",
-                "shasum": ""
-            },
-            "require": {
-                "zetacomponents/base": "~1.8"
-            },
-            "require-dev": {
-                "zetacomponents/unit-test": "*"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Sergey Alexeev"
-                },
-                {
-                    "name": "Sebastian Bergmann"
-                },
-                {
-                    "name": "Jan Borsodi"
-                },
-                {
-                    "name": "Raymond Bosman"
-                },
-                {
-                    "name": "Frederik Holljen"
-                },
-                {
-                    "name": "Kore Nordmann"
-                },
-                {
-                    "name": "Derick Rethans"
-                },
-                {
-                    "name": "Vadym Savchuk"
-                },
-                {
-                    "name": "Tobias Schlitt"
-                },
-                {
-                    "name": "Alexandru Stanoi"
-                }
-            ],
-            "description": "A set of classes to do different actions with the console (also called shell). It can render a progress bar, tables and a status bar and contains a class for parsing command line options.",
-            "homepage": "https://github.com/zetacomponents",
-            "time": "2014-10-24 16:32:46"
-        },
-        {
             "name": "zetacomponents/document",
             "version": "1.3.1",
             "source": {
@@ -4163,7 +4011,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "zetacomponents/console-tools": 20,
         "satooshi/php-coveralls": 20
     },
     "prefer-stable": false,
