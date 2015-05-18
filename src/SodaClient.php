@@ -73,7 +73,7 @@ class SodaClient
     /**
      * When fetching a data set, the returned data will be in an array of associative arrays.
      *
-     * ```php
+     * ```
      * Array
      * (
      *     [foo] => Test data
@@ -105,7 +105,7 @@ class SodaClient
      * When fetching a data set, the returned data will be in an array of stdClass objects. When AssociativeArrays is
      * disabled, the returned data will in the follow format:
      *
-     * ```php
+     * ```
      * stdClass Object
      * (
      *     [foo] => Test data
