@@ -165,4 +165,17 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
             $this->assertGreaterThanOrEqual($results[$i + 1]['state'], $results[$i]['state']);
         }
     }
+
+    /**
+     * @expectedException allejo\Socrata\Exceptions\SodaException
+     */
+    public function testMultipleOrderQueryWithApiV1 ()
+    {
+        $soql = new SoqlQuery();
+        $soql->order("state", SoqlOrderDirection::DESC)
+             ->order("date_posted", SoqlOrderDirection::ASC)
+             ->limit(5);
+
+        $this->dataset->getDataset($soql);
+    }
 }

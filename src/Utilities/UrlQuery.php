@@ -4,6 +4,7 @@ namespace allejo\Socrata\Utilities;
 
 use allejo\Socrata\Exceptions\CurlException;
 use allejo\Socrata\Exceptions\HttpException;
+use allejo\Socrata\Exceptions\SodaException;
 
 class UrlQuery
 {
@@ -108,13 +109,6 @@ class UrlQuery
             throw new CurlException(curl_errno($this->cURL), curl_error($this->cURL));
         }
 
-        $httpCode = curl_getinfo($this->cURL, CURLINFO_HTTP_CODE);
-
-        if ($httpCode != "200")
-        {
-            throw new HttpException($httpCode, $result);
-        }
-
         list($header, $body) = explode("\r\n\r\n", $result, 2);
 
         if ($headers !== null)
@@ -130,7 +124,24 @@ class UrlQuery
             }
         }
 
-        return json_decode($body, $associativeArray);
+        if (StringUtilities::isNullOrEmpty($body))
+        {
+            $httpCode = curl_getinfo($this->cURL, CURLINFO_HTTP_CODE);
+
+            if ($httpCode != "200")
+            {
+                throw new HttpException($httpCode, $result);
+            }
+        }
+
+        $resultArray = json_decode($body, true);
+
+        if (array_key_exists('error', $resultArray) && $resultArray['error'])
+        {
+            throw new SodaException($resultArray);
+        }
+
+        return ($associativeArray) ? $resultArray : json_decode($body, false);
     }
 
     public static function buildQuery ($url, $params = array())

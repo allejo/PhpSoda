@@ -54,8 +54,8 @@ class SodaDatasetTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException allejo\Socrata\Exceptions\HttpException
-     * @expectedExceptionCode 403
+     * @expectedException allejo\Socrata\Exceptions\SodaException
+     * @expectedExceptionCode authentication_required
      */
     public function testGetDatasetWithInvalidCredentials ()
     {
