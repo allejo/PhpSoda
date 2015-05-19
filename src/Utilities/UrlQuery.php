@@ -109,36 +109,44 @@ class UrlQuery
             throw new CurlException($this->cURL);
         }
 
-        $httpCode = curl_getinfo($this->cURL, CURLINFO_HTTP_CODE);
-
         list($header, $body) = explode("\r\n\r\n", $result, 2);
 
-        if ($headers !== null)
-        {
-            $header = explode("\r\n", $header);
-            $headers = array();
-            $headerLength = count($header);
+        $this->saveHeaders($header, $headers);
 
-            for ($i = 1; $i < $headerLength; $i++)
-            {
-                list($key, $val) = explode(":", $header[$i]);
-                $headers[$key] = trim($val);
-            }
+        // We somehow got a server error from Socrata without a JSON object with details
+        if (!StringUtilities::isJson($body))
+        {
+            $httpCode = curl_getinfo($this->cURL, CURLINFO_HTTP_CODE);
+
+            throw new HttpException($httpCode, $result);
         }
 
         $resultArray = json_decode($body, true);
 
-        if (is_null($resultArray))
-        {
-            throw new HttpException($httpCode, $result);
-        }
-
+        // We got an error JSON object back from Socrata
         if (array_key_exists('error', $resultArray) && $resultArray['error'])
         {
             throw new SodaException($resultArray);
         }
 
         return ($associativeArray) ? $resultArray : json_decode($body, false);
+    }
+
+    private function saveHeaders ($header, &$headers)
+    {
+        if ($headers !== null)
+        {
+            $header = explode("\r\n", $header);
+            $headers = array();
+            $headerLength = count($header);
+
+            // The 1st element is the HTTP code, so we can safely skip it
+            for ($i = 1; $i < $headerLength; $i++)
+            {
+                list($key, $val) = explode(":", $header[$i]);
+                $headers[$key] = trim($val);
+            }
+        }
     }
 
     public static function buildQuery ($url, $params = array())
