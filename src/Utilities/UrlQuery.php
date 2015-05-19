@@ -106,8 +106,10 @@ class UrlQuery
 
         if (!$result)
         {
-            throw new CurlException(curl_errno($this->cURL), curl_error($this->cURL));
+            throw new CurlException($this->cURL);
         }
+
+        $httpCode = curl_getinfo($this->cURL, CURLINFO_HTTP_CODE);
 
         list($header, $body) = explode("\r\n\r\n", $result, 2);
 
@@ -124,17 +126,12 @@ class UrlQuery
             }
         }
 
-        if (StringUtilities::isNullOrEmpty($body))
-        {
-            $httpCode = curl_getinfo($this->cURL, CURLINFO_HTTP_CODE);
-
-            if ($httpCode != "200")
-            {
-                throw new HttpException($httpCode, $result);
-            }
-        }
-
         $resultArray = json_decode($body, true);
+
+        if (is_null($resultArray))
+        {
+            throw new HttpException($httpCode, $result);
+        }
 
         if (array_key_exists('error', $resultArray) && $resultArray['error'])
         {

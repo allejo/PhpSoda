@@ -40,6 +40,17 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
         $this->dataset = new SodaDataset($this->client, $this->id);
     }
 
+    /**
+     * @expectedException \allejo\Socrata\Exceptions\HttpException
+     */
+    public function testBadUrl ()
+    {
+        $client  = new SodaClient("www.example.com");
+        $dataset = new SodaDataset($client, "qwer-trew");
+
+        $dataset->getDataset();
+    }
+
     public function testSelectColumnsWithNoParamQuery ()
     {
         $soql_one = new SoqlQuery();

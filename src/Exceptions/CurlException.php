@@ -4,9 +4,12 @@ namespace allejo\Socrata\Exceptions;
 
 class CurlException extends \Exception
 {
-    public function __construct ($code, $message)
+    /**
+     * @param resource $cURLObject
+     */
+    public function __construct ($cURLObject)
     {
-        $this->code    = $code;
-        $this->message = sprintf("cURL Error %d: %s", $code, $message);
+        $this->code    = curl_errno($cURLObject);
+        $this->message = sprintf("cURL Error %d: %s", $this->code, curl_error($cURLObject));
     }
 }
