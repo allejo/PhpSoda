@@ -20,7 +20,7 @@ class SoqlQuery
     /**
      * The default delimiter used to separate multiple values.
      */
-    const DELIMITER  = ',';
+    const DELIMITER = ',';
 
     /**
      * The SELECT clause in SoQL
@@ -30,22 +30,22 @@ class SoqlQuery
     /**
      * The WHERE clause in SoQL
      */
-    const WHERE_KEY  = '$where';
+    const WHERE_KEY = '$where';
 
     /**
      * The ORDER clause in SoQL
      */
-    const ORDER_KEY  = '$order';
+    const ORDER_KEY = '$order';
 
     /**
      * The GROUP clause in SoQL
      */
-    const GROUP_KEY  = '$group';
+    const GROUP_KEY = '$group';
 
     /**
      * The LIMIT clause in SoQL
      */
-    const LIMIT_KEY  = '$limit';
+    const LIMIT_KEY = '$limit';
 
     /**
      * The OFFSET clause in SoQL
@@ -122,11 +122,6 @@ class SoqlQuery
      */
     public function __tostring ()
     {
-        if (empty($this->queryElements[self::ORDER_KEY]))
-        {
-
-        }
-
         $query = array();
 
         foreach ($this->queryElements as $soqlKey => $value)
