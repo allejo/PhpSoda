@@ -29,7 +29,7 @@ class UrlQuery
                              'X-App-Token: ' . $this->token
                          );
 
-        $this->configureCURL($email, $password);
+        $this->configureCurl($email, $password);
     }
 
     public function __destruct ()
@@ -90,7 +90,7 @@ class UrlQuery
 
     private function handleQuery ($associativeArray, &$headers)
     {
-        $result = $this->executeCURL();
+        $result = $this->executeCurl();
 
         list($header, $body) = explode("\r\n\r\n", $result, 2);
 
@@ -101,7 +101,7 @@ class UrlQuery
         return ($associativeArray) ? $resultArray : json_decode($body, false);
     }
 
-    private function configureCURL ($email, $password)
+    private function configureCurl ($email, $password)
     {
         curl_setopt_array($this->cURL, array(
             CURLOPT_URL => $this->url,
@@ -119,7 +119,7 @@ class UrlQuery
         }
     }
 
-    private function executeCURL ()
+    private function executeCurl ()
     {
         $result = curl_exec($this->cURL);
 
