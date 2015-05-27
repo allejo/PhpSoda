@@ -13,6 +13,7 @@ class UrlQuery
     private $url;
     private $cURL;
     private $token;
+    private $headers;
     private $parameters;
 
     public function __construct ($url, $token = "", $email = "", $password = "")
@@ -22,26 +23,13 @@ class UrlQuery
         $this->cURL  = curl_init();
 
         // Build up the headers we'll need to pass
-        $headers = array(
-            'Accept: application/json',
-            'Content-type: application/json',
-            "X-App-Token: " . $this->token
-        );
+        $this->headers = array(
+                             'Accept: application/json',
+                             'Content-type: application/json',
+                             'X-App-Token: ' . $this->token
+                         );
 
-        curl_setopt_array($this->cURL, array(
-            CURLOPT_URL => $this->url,
-            CURLOPT_HEADER => true,
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_RETURNTRANSFER => true
-        ));
-
-        if (!StringUtilities::isNullOrEmpty($email) && !StringUtilities::isNullOrEmpty($password))
-        {
-            curl_setopt_array($this->cURL, array(
-                CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-                CURLOPT_USERPWD => $email . ":" . $password
-            ));
-        }
+        $this->configureCURL($email, $password);
     }
 
     public function __destruct ()
@@ -102,6 +90,37 @@ class UrlQuery
 
     private function handleQuery ($associativeArray, &$headers)
     {
+        $result = $this->executeCURL();
+
+        list($header, $body) = explode("\r\n\r\n", $result, 2);
+
+        $this->saveHeaders($header, $headers);
+
+        $resultArray = $this->handleResponseBody($body, $result);
+
+        return ($associativeArray) ? $resultArray : json_decode($body, false);
+    }
+
+    private function configureCURL ($email, $password)
+    {
+        curl_setopt_array($this->cURL, array(
+            CURLOPT_URL => $this->url,
+            CURLOPT_HEADER => true,
+            CURLOPT_HTTPHEADER => $this->headers,
+            CURLOPT_RETURNTRANSFER => true
+        ));
+
+        if (!StringUtilities::isNullOrEmpty($email) && !StringUtilities::isNullOrEmpty($password))
+        {
+            curl_setopt_array($this->cURL, array(
+                CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+                CURLOPT_USERPWD => $email . ":" . $password
+            ));
+        }
+    }
+
+    private function executeCURL ()
+    {
         $result = curl_exec($this->cURL);
 
         if (!$result)
@@ -109,10 +128,11 @@ class UrlQuery
             throw new CurlException($this->cURL);
         }
 
-        list($header, $body) = explode("\r\n\r\n", $result, 2);
+        return $result;
+    }
 
-        $this->saveHeaders($header, $headers);
-
+    private function handleResponseBody ($body, $result)
+    {
         // We somehow got a server error from Socrata without a JSON object with details
         if (!StringUtilities::isJson($body))
         {
@@ -129,7 +149,7 @@ class UrlQuery
             throw new SodaException($resultArray);
         }
 
-        return ($associativeArray) ? $resultArray : json_decode($body, false);
+        return $resultArray;
     }
 
     private function saveHeaders ($header, &$headers)
