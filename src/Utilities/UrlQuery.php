@@ -154,18 +154,20 @@ class UrlQuery
 
     private function saveHeaders ($header, &$headers)
     {
-        if ($headers !== null)
+        if ($headers === null)
         {
-            $header = explode("\r\n", $header);
-            $headers = array();
-            $headerLength = count($header);
+            return;
+        }
 
-            // The 1st element is the HTTP code, so we can safely skip it
-            for ($i = 1; $i < $headerLength; $i++)
-            {
-                list($key, $val) = explode(":", $header[$i]);
-                $headers[$key] = trim($val);
-            }
+        $header = explode("\r\n", $header);
+        $headers = array();
+        $headerLength = count($header);
+
+        // The 1st element is the HTTP code, so we can safely skip it
+        for ($i = 1; $i < $headerLength; $i++)
+        {
+            list($key, $val) = explode(":", $header[$i]);
+            $headers[$key] = trim($val);
         }
     }
 
