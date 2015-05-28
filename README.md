@@ -31,6 +31,20 @@ $soql->select("date_posted", "state", "sample_type")
 $results = $ds->getDataset($soql);
 ```
 
+**Upserting a dataset**
+
+```php
+// Create a client with information about the API to handle tokens and authentication
+$sc = new SodaClient("opendata.socrata.com", "<token here>", "email@example.com", "muffin button");
+
+// The dataset to upload
+$data = file_get_contents("dataset.json");
+
+// Access a dataset based on the API end point
+$ds = new SodaDataset($sc, "1234-abcd");
+$ds->upsert($data);
+```
+
 ## Getting Help
 
 To get help, you may either [create an issue](https://github.com/allejo/PhpSoda/issues) or stop by IRC; I'm available on IRC as "allejo" so feel free to ping me. I recommend creating an issue in case others have the same question but for quick help, IRC works just fine.
