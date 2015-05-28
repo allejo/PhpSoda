@@ -189,4 +189,41 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
 
         $this->dataset->getDataset($soql);
     }
+
+    public function testMultipleSelectsQuery ()
+    {
+        $soql = new SoqlQuery();
+        $soql->select("first", "second")
+             ->select("third");
+
+        $expected = '$select=third';
+
+        $this->assertContains($expected, (string)$soql);
+    }
+
+    public function testGroupingQuery ()
+    {
+        $columnToGroup = "myGroup";
+
+        $soql = new SoqlQuery();
+        $soql->group($columnToGroup);
+
+        $expected = '$group=' . $columnToGroup;
+
+        $this->assertContains($expected, (string)$soql);
+    }
+
+    public function testMultipleGroupingQuery ()
+    {
+        $firstColumnToGroup = "1stGroup";
+        $secondColumnToGroup = "2ndGroup";
+
+        $soql = new SoqlQuery();
+        $soql->group($firstColumnToGroup)
+             ->group($secondColumnToGroup);
+
+        $expected = '$group=' . implode(',', array($firstColumnToGroup, $secondColumnToGroup));
+
+        $this->assertContains($expected, (string)$soql);
+    }
 }
