@@ -100,7 +100,20 @@ class SodaDataset
     }
 
     /**
-     * @param $data
+     * Create, update, and delete rows in a single operation, using their row identifiers.
+     *
+     * Data will always be transmitted as JSON to Socrata even though different forms are accepted. In order to pass
+     * other forms of data, you must use a Converter class that has a `toJson()` method, such as the CsvConverter.
+     *
+     * @param  array|Converter|JSON $data  The data that will be upserted to the Socrata dataset as a PHP array, an
+     *                                     instance of a Converter child class, or a JSON string
+     *
+     * @link   http://dev.socrata.com/publishers/upsert.html Updating Rows in Bulk with Upsert
+     *
+     * @see    Converter
+     * @see    CsvConverter
+     *
+     * @since  0.1.0
      *
      * @return mixed
      */
