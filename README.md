@@ -31,7 +31,7 @@ $soql->select("date_posted", "state", "sample_type")
 $results = $ds->getDataset($soql);
 ```
 
-**Upserting a dataset**
+**Updating a dataset**
 
 ```php
 // Create a client with information about the API to handle tokens and authentication
@@ -42,7 +42,12 @@ $data = file_get_contents("dataset.json");
 
 // Access a dataset based on the API end point
 $ds = new SodaDataset($sc, "1234-abcd");
+
+// To upsert a dataset
 $ds->upsert($data);
+
+// To replace a dataset
+$ds->replace($data);
 ```
 
 ## Getting Help
