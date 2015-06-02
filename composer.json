@@ -13,7 +13,8 @@
   },
   "autoload": {
     "classmap": [
-      "src/"
+      "src/",
+      "tests/utilities"
     ]
   },
   "authors": [

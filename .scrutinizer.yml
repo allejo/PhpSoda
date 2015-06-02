@@ -1,6 +1,6 @@
 filter:
     excluded_paths:
-        - 'tests/*'
+        - 'tests/*Test.php'
 checks:
     php:
         uppercase_constants: true

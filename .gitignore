@@ -118,3 +118,6 @@ output/
 ### Grunt ###
 node_modules/
 .idea/encodings.xml
+
+### Project Files ###
+phpunit-auth.json
