@@ -100,13 +100,38 @@ class SodaDataset
     }
 
     /**
+     * Replace the entire dataset with the new payload provided
+     *
+     * Data will always be transmitted as JSON to Socrata even though different forms are accepted. In order to pass
+     * other forms of data, you must use a Converter class that has a `toJson()` method, such as the CsvConverter.
+     *
+     * @param  array|Converter|JSON $payload  The data that will be upserted to the Socrata dataset as a PHP array, an
+     *                                        instance of a Converter child class, or a JSON string
+     *
+     * @link   http://dev.socrata.com/publishers/replace.html Replacing a dataset with Replace
+     *
+     * @see    Converter
+     * @see    CsvConverter
+     *
+     * @since  0.1.0
+     *
+     * @return mixed
+     */
+    public function replace ($payload)
+    {
+        $upsertData = $this->handleJson($payload);
+
+        return $this->urlQuery->sendPut($upsertData, $this->sodaClient->associativeArrayEnabled());
+    }
+
+    /**
      * Create, update, and delete rows in a single operation, using their row identifiers.
      *
      * Data will always be transmitted as JSON to Socrata even though different forms are accepted. In order to pass
      * other forms of data, you must use a Converter class that has a `toJson()` method, such as the CsvConverter.
      *
-     * @param  array|Converter|JSON $data  The data that will be upserted to the Socrata dataset as a PHP array, an
-     *                                     instance of a Converter child class, or a JSON string
+     * @param  array|Converter|JSON $payload  The data that will be upserted to the Socrata dataset as a PHP array, an
+     *                                        instance of a Converter child class, or a JSON string
      *
      * @link   http://dev.socrata.com/publishers/upsert.html Updating Rows in Bulk with Upsert
      *
@@ -117,22 +142,9 @@ class SodaDataset
      *
      * @return mixed
      */
-    public function upsert ($data)
+    public function upsert ($payload)
     {
-        $upsertData = $data;
-
-        if (is_array($data))
-        {
-            $upsertData = json_encode($data);
-        }
-        else if ($data instanceof Converter)
-        {
-            $upsertData = $data->toJson();
-        }
-        else if (!StringUtilities::isJson($data))
-        {
-            throw new \InvalidArgumentException("The given data is not valid JSON");
-        }
+        $upsertData = $this->handleJson($payload);
 
         return $this->urlQuery->sendPost($upsertData, $this->sodaClient->associativeArrayEnabled());
     }
@@ -167,6 +179,36 @@ class SodaDataset
     private function buildApiUrl ($location)
     {
         return sprintf("%s://%s/%s/%s.json", UrlQuery::DEFAULT_PROTOCOL, $this->sodaClient->getDomain(), $location, $this->resourceId);
+    }
+
+    /**
+     * Handle different forms of data to be returned in JSON format so it can be sent to Socrata.
+     *
+     * Data will always be transmitted as JSON to Socrata even though different forms are accepted.
+     *
+     * @param  array|Converter|JSON $payload  The data that will be upserted to the Socrata dataset as a PHP array, an
+     *                                        instance of a Converter child class, or a JSON string
+     *
+     * @return string A JSON encoded string available to be used for UrlQuery requsts
+     */
+    private function handleJson ($payload)
+    {
+        $uploadData = $payload;
+
+        if (is_array($payload))
+        {
+            $uploadData = json_encode($payload);
+        }
+        else if ($payload instanceof Converter)
+        {
+            $uploadData = $payload->toJson();
+        }
+        else if (!StringUtilities::isJson($payload))
+        {
+            throw new \InvalidArgumentException("The given data is not valid JSON");
+        }
+
+        return $uploadData;
     }
 
     /**
