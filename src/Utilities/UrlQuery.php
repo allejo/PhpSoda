@@ -14,7 +14,6 @@ class UrlQuery
     private $cURL;
     private $token;
     private $headers;
-    private $parameters;
 
     public function __construct ($url, $token = "", $email = "", $password = "")
     {
@@ -39,19 +38,22 @@ class UrlQuery
 
     public function setParameters ($params)
     {
-        $this->parameters = array();
+        $parameters = array();
 
         foreach ($params as $key => $value)
         {
-            $this->parameters[] = urlencode($key) . "=" . urlencode($value);
+            $parameters[] = urlencode($key) . "=" . urlencode($value);
         }
+
+        return $parameters;
     }
 
     public function sendGet ($params, $associativeArray, &$headers = null)
     {
         if (is_array($params))
         {
-            $full_url = self::buildQuery($this->url, $params);
+            $parameters = $this->setParameters($params);
+            $full_url = self::buildQuery($this->url, $parameters);
         }
         else if (!empty($params))
         {

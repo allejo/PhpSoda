@@ -110,4 +110,30 @@ class SodaDatasetTest extends PHPUnit_Framework_TestCase
         $results = $ds->getDataset($soql);
         $this->assertTrue(count($results) > 1);
     }
+
+    public function testGetDatasetWithSimpleFilter ()
+    {
+        $simpleFilter = "state=AR";
+        $ds = new SodaDataset($this->client, $this->id);
+
+        $results = $ds->getDataset($simpleFilter);
+
+        foreach ($results as $result)
+        {
+            $this->assertEquals("AR", $result['state']);
+        }
+    }
+
+    public function testGetDatasetWithArrayFilter ()
+    {
+        $arrayFilter = array("state" => "AZ");
+        $ds = new SodaDataset($this->client, $this->id);
+
+        $results = $ds->getDataset($arrayFilter);
+
+        foreach ($results as $result)
+        {
+            $this->assertEquals("AZ", $result['state']);
+        }
+    }
 }
