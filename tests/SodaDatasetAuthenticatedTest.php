@@ -71,4 +71,13 @@ class SodaDatasetAuthenticatedTest extends PHPUnit_Framework_TestCase
 
         $ds->upsert("muffin and buttons");
     }
+
+    public function testReplaceJson ()
+    {
+        $ds = new SodaDataset($this->client, $this->id);
+
+        $json = file_get_contents("tests/datasets/dataset.json");
+
+        $ds->replace($json);
+    }
 }
