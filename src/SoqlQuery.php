@@ -79,7 +79,7 @@ class SoqlQuery
      *
      * @see http://dev.socrata.com/docs/queries.html#the-limit-parameter Maximum $limit request
      */
-    const MAXIMUM_LIMIT = 1000;
+    const MAXIMUM_LIMIT = 50000;
 
     /**
      * This array contains all of the parts to a SoqlQuery being converted into a URL where the key of an element is the
