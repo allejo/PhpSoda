@@ -313,7 +313,7 @@ class SoqlQuery
      */
     public function fullTextSearch ($needle)
     {
-        $this->queryElements[self::SEARCH_KEY] = $needle;
+        $this->queryElements[self::SEARCH_KEY] = rawurlencode($needle);
 
         return $this;
     }
