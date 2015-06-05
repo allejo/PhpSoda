@@ -42,7 +42,7 @@ class UrlQuery
 
         foreach ($params as $key => $value)
         {
-            $parameters[] = urlencode($key) . "=" . urlencode($value);
+            $parameters[] = rawurlencode($key) . "=" . rawurlencode($value);
         }
 
         return $parameters;

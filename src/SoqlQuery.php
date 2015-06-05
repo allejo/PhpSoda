@@ -109,7 +109,7 @@ class SoqlQuery
     public function __construct ()
     {
         $this->queryElements[self::SELECT_KEY]  = self::DEFAULT_SELECT;
-        $this->queryElements[self::ORDER_KEY][] = self::DEFAULT_ORDER . urlencode(" ") . self::DEFAULT_ORDER_DIRECTION;
+        $this->queryElements[self::ORDER_KEY][] = self::DEFAULT_ORDER . rawurlencode(" ") . self::DEFAULT_ORDER_DIRECTION;
         $this->defaultSort = true;
     }
 
@@ -184,7 +184,7 @@ class SoqlQuery
      */
     public function where ($statement)
     {
-        $this->queryElements[self::WHERE_KEY] = urlencode($statement);
+        $this->queryElements[self::WHERE_KEY] = rawurlencode($statement);
 
         return $this;
     }
@@ -221,7 +221,7 @@ class SoqlQuery
             $this->defaultSort = false;
         }
 
-        $this->queryElements[self::ORDER_KEY][] = urlencode($column . " " . $direction);
+        $this->queryElements[self::ORDER_KEY][] = rawurlencode($column . " " . $direction);
 
         return $this;
     }
