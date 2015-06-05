@@ -2,13 +2,21 @@
 
 A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Provided as an alternative to Socrata's official implementation, this library takes more of an object-oriented approach to working with the API instead of manually creating requests and aims to fill some of the short-comings of the official library.
 
-This library fully supports interacting with the API by getting datasets and handling tokens or authentication in order to write or modify datasets.
+This library fully supports interacting with the API by getting datasets and handling tokens/authentication in order to write or modify datasets.
 
-## Requires
+## Requirements
 
 - PHP 5.3+
 
+## Installation
+
+This library is on Packagist as [`allejo/php-soda`](https://packagist.org/packages/allejo/php-soda), add it using [Composer](https://getcomposer.org/).
+
+Check out our [wiki article](https://github.com/allejo/PhpSoda/wiki/Installation) if you require assistance.
+
 ## Sample Usage
+
+Here are some quick examples on how PhpSoda works, but there's a lot more you can do. Check out our [wiki](https://github.com/allejo/PhpSoda/wiki) to see everything else.
 
 **Get a dataset**
 
@@ -52,7 +60,7 @@ $ds->replace($data);
 
 ## Getting Help
 
-To get help, you may either [create an issue](https://github.com/allejo/PhpSoda/issues) or stop by IRC; I'm available on IRC as "allejo" so feel free to ping me. I recommend creating an issue in case others have the same question but for quick help, IRC works just fine.
+To get help, see if our [wiki](https://github.com/allejo/PhpSoda/wiki) has any information regarding your question. If the wiki can't help you, you may either [create an issue](https://github.com/allejo/PhpSoda/issues) or stop by IRC; I'm available on IRC as "allejo" so feel free to ping me. I recommend creating an issue in case others have the same question but for quick help, IRC works just fine.
 
 To report a bug or request a feature, please submit an issue.
 

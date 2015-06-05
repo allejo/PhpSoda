@@ -26,7 +26,8 @@
   ],
   "support": {
     "issues": "https://github.com/allejo/PhpSoda/issues",
-    "irc": "irc://irc.freenode.net/sujevo",
+    "irc": "irc://irc.freenode.net/socrata-soda",
+    "wiki": "https://github.com/allejo/PhpSoda/wiki",
     "source": "https://github.com/allejo/PhpSoda"
   }
 }
