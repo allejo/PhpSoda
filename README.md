@@ -10,9 +10,11 @@ This library fully supports interacting with the API by getting datasets and han
 
 ## Installation
 
-This library is on Packagist as [`allejo/php-soda`](https://packagist.org/packages/allejo/php-soda), add it using [Composer](https://getcomposer.org/).
+This library is available on Packagist as [`allejo/php-soda`](https://packagist.org/packages/allejo/php-soda), add it using [Composer](https://getcomposer.org/).
 
-Check out our [wiki article](https://github.com/allejo/PhpSoda/wiki/Installation) if you require assistance.
+You're not using Composer? Don't worry, this library is also provided as a Phar archive for you include in your code. Get the latest Phar archive from our [Releases](https://github.com/allejo/PhpSoda/releases).
+
+Check out our [wiki article](https://github.com/allejo/PhpSoda/wiki/Installation) if you require assistance with using this library.
 
 ## Sample Usage
 
