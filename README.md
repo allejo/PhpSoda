@@ -45,7 +45,7 @@ $results = $ds->getDataset($soql);
 
 ```php
 // Create a client with information about the API to handle tokens and authentication
-$sc = new SodaClient("opendata.socrata.com", "<token here>", "email@example.com", "muffin button");
+$sc = new SodaClient("opendata.socrata.com", "<token here>", "email@example.com", "password");
 
 // The dataset to upload
 $data = file_get_contents("dataset.json");
