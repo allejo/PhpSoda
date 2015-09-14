@@ -14,6 +14,7 @@ class UrlQuery
     private $cURL;
     private $token;
     private $headers;
+    private $oauth2_token;
 
     public function __construct ($url, $token = "", $email = "", $password = "")
     {
@@ -34,6 +35,15 @@ class UrlQuery
     public function __destruct ()
     {
         curl_close($this->cURL);
+    }
+
+    public function setOAuth2Token($token)
+    {
+        if (!StringUtilities::isNullOrEmpty($token))
+        {
+            $this->oauth2_token = $token;
+            $this->headers[] = "Authorization: OAuth " . $this->oauth2_token;
+        }
     }
 
     public function setParameters ($params)

@@ -46,6 +46,13 @@ class SodaClient
     private $password;
 
     /**
+     * The OAuth 2.0 Access Token to be used with requests
+     *
+     * @var string
+     */
+    private $oauth2_token;
+
+    /**
      * Whether or not to return the decoded JSON as an associative array. When set to false, it will return stdClass
      * objects
      *
@@ -60,6 +67,8 @@ class SodaClient
      * @param string $token    The AppToken used to access this information
      * @param string $email    Username for authentication
      * @param string $password Password for authentication
+     *
+     * @since 0.1.0
      */
     public function __construct ($url, $token = "", $email = "", $password = "")
     {
@@ -67,6 +76,7 @@ class SodaClient
         $this->token            = $token;
         $this->email            = $email;
         $this->password         = $password;
+        $this->oauth2_token     = "";
         $this->associativeArray = true;
     }
 
@@ -95,6 +105,8 @@ class SodaClient
      * ```php
      *     $myVariable = $results['bar']['baz']; // Testing
      * ```
+     *
+     * @since 0.1.0
      */
     public function enableAssociativeArrays ()
     {
@@ -126,6 +138,8 @@ class SodaClient
      * ```php
      *     $myVariable = $results->bar->baz; // Testing
      * ```
+     *
+     * @since 0.1.0
      */
     public function disableAssociativeArrays ()
     {
@@ -134,6 +148,8 @@ class SodaClient
 
     /**
      * Get whether or not the returned data should be associative arrays or as stdClass objects
+     *
+     * @since 0.1.0
      *
      * @return bool True if the data is returned as associative arrays
      */
@@ -146,6 +162,8 @@ class SodaClient
      * Get the domain of the API endpoint. This function will **always** return just the domain without the protocol
      * in order to let this library use the appropriate protocol
      *
+     * @since 0.1.0
+     *
      * @return string The domain of the API endpoint
      */
     public function getDomain ()
@@ -155,6 +173,8 @@ class SodaClient
 
     /**
      * Get the email of the account that will be used for authenticated actions
+     *
+     * @since 0.1.0
      *
      * @return string The user's email address. Returns an empty string if not set.
      */
@@ -166,6 +186,8 @@ class SodaClient
     /**
      * Get the app token used by the library to bypass throttling and appear as a registered application
      *
+     * @since 0.1.0
+     *
      * @return string The app token used. Returns an empty string if not set.
      */
     public function getToken ()
@@ -176,10 +198,36 @@ class SodaClient
     /**
      * Get the password of the account that will be used for authenticated actions
      *
+     * @since 0.1.0
+     *
      * @return string The password used. Returns an empty string if not set.
      */
     public function getPassword ()
     {
         return $this->password;
+    }
+
+    /**
+     * Get the access token being used for OAuth 2.0
+     *
+     * @return string The access token being used
+     *
+     * @since 0.1.1
+     */
+    public function getOAuth2Token ()
+    {
+        return $this->oauth2_token;
+    }
+
+    /**
+     * Set the OAuth 2.0 access token
+     *
+     * @param string $token The access token to be used in queries
+     *
+     * @since 0.1.1
+     */
+    public function setOAuth2Token ($token)
+    {
+        $this->oauth2_token = $token;
     }
 }
