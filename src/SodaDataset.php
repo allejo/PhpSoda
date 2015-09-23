@@ -199,9 +199,9 @@ class SodaDataset
     /**
      * Build the URL that will be used to access the API for the respective action
      *
-     * @param  string $location    The location of where to get information from
-     * @param  string $identifier  The part of the URL that will end with .json. This will either be the resource ID or
-     *                             or it will be a row ID prepended with the resource ID
+     * @param  string      $location    The location of where to get information from
+     * @param  string|null $identifier  The part of the URL that will end with .json. This will either be the resource ID
+     *                                  or it will be a row ID prepended with the resource ID
      *
      * @return string The API URL
      */
@@ -248,7 +248,7 @@ class SodaDataset
     /**
      * Determine and save the API version if it does not exist for easy access later
      *
-     * @param string $headers An array with the cURL headers received
+     * @param array $headers An array with the cURL headers received
      */
     private function setApiVersion ($headers)
     {
