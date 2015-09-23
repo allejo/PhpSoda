@@ -50,7 +50,7 @@ class SodaClient
      *
      * @var string
      */
-    private $oauth2_token;
+    private $oAuth2Token;
 
     /**
      * Whether or not to return the decoded JSON as an associative array. When set to false, it will return stdClass
@@ -76,7 +76,7 @@ class SodaClient
         $this->token            = $token;
         $this->email            = $email;
         $this->password         = $password;
-        $this->oauth2_token     = "";
+        $this->oAuth2Token     = "";
         $this->associativeArray = true;
     }
 
@@ -216,7 +216,7 @@ class SodaClient
      */
     public function getOAuth2Token ()
     {
-        return $this->oauth2_token;
+        return $this->oAuth2Token;
     }
 
     /**
@@ -228,6 +228,6 @@ class SodaClient
      */
     public function setOAuth2Token ($token)
     {
-        $this->oauth2_token = $token;
+        $this->oAuth2Token = $token;
     }
 }

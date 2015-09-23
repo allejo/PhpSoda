@@ -14,7 +14,7 @@ class UrlQuery
     private $cURL;
     private $token;
     private $headers;
-    private $oauth2_token;
+    private $oAuth2Token;
 
     public function __construct ($url, $token = "", $email = "", $password = "")
     {
@@ -41,8 +41,8 @@ class UrlQuery
     {
         if (!StringUtilities::isNullOrEmpty($token))
         {
-            $this->oauth2_token = $token;
-            $this->headers[] = "Authorization: OAuth " . $this->oauth2_token;
+            $this->oAuth2Token = $token;
+            $this->headers[] = "Authorization: OAuth " . $this->oAuth2Token;
         }
     }
 
@@ -81,9 +81,10 @@ class UrlQuery
 
     public function sendPost ($dataAsJson, $associativeArray, &$headers = null)
     {
+        $this->setPostFields($dataAsJson);
+
         curl_setopt_array($this->cURL, array(
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $dataAsJson,
             CURLOPT_CUSTOMREQUEST => "POST"
         ));
 
@@ -92,22 +93,25 @@ class UrlQuery
 
     public function sendPut ($dataAsJson, $associativeArray, &$headers = null)
     {
-        curl_setopt_array($this->cURL, array(
-            CURLOPT_POSTFIELDS => $dataAsJson,
-            CURLOPT_CUSTOMREQUEST => "PUT"
-        ));
+        $this->setPostFields($dataAsJson);
+
+        curl_setopt($this->cURL, CURLOPT_CUSTOMREQUEST, "PUT");
 
         return $this->handleQuery($associativeArray, $headers);
     }
 
     public function sendDelete ($dataAsJson, $associativeArray, &$headers = null)
     {
-        curl_setopt_array($this->cURL, array(
-            CURLOPT_POSTFIELDS => $dataAsJson,
-            CURLOPT_CUSTOMREQUEST => "DELETE"
-        ));
+        $this->setPostFields($dataAsJson);
+
+        curl_setopt($this->cURL, CURLOPT_CUSTOMREQUEST, "DELETE");
 
         return $this->handleQuery($associativeArray, $headers);
+    }
+
+    private function setPostFields ($dataAsJson)
+    {
+        curl_setopt($this->cURL, CURLOPT_POSTFIELDS, $dataAsJson);
     }
 
     private function handleQuery ($associativeArray, &$headers)
