@@ -111,6 +111,24 @@ class SodaDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(count($results) > 1);
     }
 
+    public function testGetIndividualRow ()
+    {
+        $ds = new SodaDataset($this->client, $this->id);
+
+        $this->assertCount(6, $ds->getRow(416));
+    }
+
+    /**
+     * @expectedException allejo\Socrata\Exceptions\SodaException
+     * @expectedExceptionCode row.missing
+     */
+    public function testGetInvalidIndividualRow ()
+    {
+        $ds = new SodaDataset($this->client, $this->id);
+
+        $ds->getRow(1);
+    }
+
     public function testGetDatasetWithSimpleFilter ()
     {
         $simpleFilter = "state=AR";

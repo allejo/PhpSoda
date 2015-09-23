@@ -33,6 +33,8 @@ class SodaDataset
     /**
      * Get the API version this dataset is using
      *
+     * @since  0.1.0
+     *
      * @return int The API version number
      */
     public function getApiVersion ()
@@ -92,11 +94,34 @@ class SodaDataset
 
         $dataset = $this->urlQuery->sendGet($filterOrSoqlQuery, $this->sodaClient->associativeArrayEnabled(), $headers);
 
-        // Only set the API version number if it hasn't been set yet
-        if ($this->apiVersion == 0)
-        {
-            $this->apiVersion = self::parseApiVersion($headers);
-        }
+        $this->setApiVersion($headers);
+
+        return $dataset;
+    }
+
+    /**
+     * Fetch an individual row from a dataset.
+     *
+     * @param  int|string $rowID The row identifier of the row to fetch; if no identifier is set for the dataset, the
+     *                           internal row identifier should be used
+     *
+     * @see    SodaClient::enableAssociativeArrays()
+     * @see    SodaClient::disableAssociativeArrays()
+     *
+     * @since  0.1.2
+     *
+     * @return array The data set as a PHP array. The array will contain associative arrays or stdClass objects from
+     *               the decoded JSON received from the data set.
+     */
+    public function getRow ($rowID)
+    {
+        $headers = array();
+        $apiEndPoint = $this->buildApiUrl("resource", $this->resourceId . "/" . $rowID);
+        $urlQuery = new UrlQuery($apiEndPoint, $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
+
+        $dataset = $urlQuery->sendGet("", $this->sodaClient->associativeArrayEnabled(), $headers);
+
+        $this->setApiVersion($headers);
 
         return $dataset;
     }
@@ -174,13 +199,20 @@ class SodaDataset
     /**
      * Build the URL that will be used to access the API for the respective action
      *
-     * @param  string $location The location of where to get information from
+     * @param  string $location    The location of where to get information from
+     * @param  string $identifier  The part of the URL that will end with .json. This will either be the resource ID or
+     *                             or it will be a row ID prepended with the resource ID
      *
      * @return string The API URL
      */
-    private function buildApiUrl ($location)
+    private function buildApiUrl ($location, $identifier = null)
     {
-        return sprintf("%s://%s/%s/%s.json", UrlQuery::DEFAULT_PROTOCOL, $this->sodaClient->getDomain(), $location, $this->resourceId);
+        if ($identifier === null)
+        {
+            $identifier = $this->resourceId;
+        }
+
+        return sprintf("%s://%s/%s/%s.json", UrlQuery::DEFAULT_PROTOCOL, $this->sodaClient->getDomain(), $location, $identifier);
     }
 
     /**
@@ -211,6 +243,20 @@ class SodaDataset
         }
 
         return $uploadData;
+    }
+
+    /**
+     * Determine and save the API version if it does not exist for easy access later
+     *
+     * @param string $headers An array with the cURL headers received
+     */
+    private function setApiVersion ($headers)
+    {
+        // Only set the API version number if it hasn't been set yet
+        if ($this->apiVersion == 0)
+        {
+            $this->apiVersion = self::parseApiVersion($headers);
+        }
     }
 
     /**
