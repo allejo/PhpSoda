@@ -100,6 +100,16 @@ class UrlQuery
         return $this->handleQuery($associativeArray, $headers);
     }
 
+    public function sendDelete ($dataAsJson, $associativeArray, &$headers = null)
+    {
+        curl_setopt_array($this->cURL, array(
+            CURLOPT_POSTFIELDS => $dataAsJson,
+            CURLOPT_CUSTOMREQUEST => "DELETE"
+        ));
+
+        return $this->handleQuery($associativeArray, $headers);
+    }
+
     private function handleQuery ($associativeArray, &$headers)
     {
         $result = $this->executeCurl();
