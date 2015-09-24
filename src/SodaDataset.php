@@ -10,9 +10,9 @@
 namespace allejo\Socrata;
 
 use allejo\Socrata\Converters\Converter;
+use allejo\Socrata\Exceptions\InvalidResourceException;
 use allejo\Socrata\Utilities\StringUtilities;
 use allejo\Socrata\Utilities\UrlQuery;
-use allejo\Socrata\Exceptions\InvalidResourceException;
 
 /**
  * An object provided to interact with a Socrata dataset directly. Provides functionality for fetching the dataset, an
@@ -54,8 +54,8 @@ class SodaDataset
     /**
      * Create an object for interacting with a Socrata dataset
      *
-     * @param  SodaClient $sodaClient   The SodaClient with all of the authentication information and settings for access
-     * @param  string     $resourceID   The 4x4 resource ID of the dataset that will be referenced
+     * @param  SodaClient $sodaClient The SodaClient with all of the authentication information and settings for access
+     * @param  string     $resourceID The 4x4 resource ID of the dataset that will be referenced
      *
      * @throws InvalidResourceException If the given resource ID does not match the pattern of a resource ID
      *
@@ -149,7 +149,8 @@ class SodaDataset
     }
 
     /**
-     * Delete an individual row based on their row identifier. For deleting more than a single row, use an upsert instead.
+     * Delete an individual row based on their row identifier. For deleting more than a single row, use an upsert
+     * instead.
      *
      * @param  int|string $rowID The row identifier of the row to fetch; if no identifier is set for the dataset, the
      *                           internal row identifier should be used
@@ -176,7 +177,8 @@ class SodaDataset
      * @param  int|string $rowID The row identifier of the row to fetch; if no identifier is set for the dataset, the
      *                           internal row identifier should be used
      *
-     * @link   http://dev.socrata.com/publishers/direct-row-manipulation.html#retrieving-an-individual-row  Retrieving An Individual Row
+     * @link   http://dev.socrata.com/publishers/direct-row-manipulation.html#retrieving-an-individual-row  Retrieving
+     *         An Individual Row
      *
      * @see    SodaClient::enableAssociativeArrays()
      * @see    SodaClient::disableAssociativeArrays()
@@ -265,14 +267,14 @@ class SodaDataset
      * Build the URL that will be used to access the API for the respective action
      *
      * @param  string      $location    The location of where to get information from
-     * @param  string|null $identifier  The part of the URL that will end with .json. This will either be the resource ID
-     *                                  or it will be a row ID prepended with the resource ID
+     * @param  string|null $identifier  The part of the URL that will end with .json. This will either be the resource
+     *                                  ID or it will be a row ID prepended with the resource ID
      *
      * @return string The API URL
      */
-    private function buildApiUrl ($location, $identifier = null)
+    private function buildApiUrl ($location, $identifier = NULL)
     {
-        if ($identifier === null)
+        if ($identifier === NULL)
         {
             $identifier = $this->resourceId;
         }
@@ -364,7 +366,7 @@ class SodaDataset
     /**
      * Determine the version number of the API this dataset is using
      *
-     * @param  array  $responseHeaders  An array with the cURL headers received
+     * @param  array $responseHeaders An array with the cURL headers received
      *
      * @return int    The Socrata API version number this dataset uses
      */

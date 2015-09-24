@@ -37,12 +37,12 @@ class UrlQuery
         curl_close($this->cURL);
     }
 
-    public function setOAuth2Token($token)
+    public function setOAuth2Token ($token)
     {
         if (!StringUtilities::isNullOrEmpty($token))
         {
             $this->oAuth2Token = $token;
-            $this->headers[] = "Authorization: OAuth " . $this->oAuth2Token;
+            $this->headers[]   = "Authorization: OAuth " . $this->oAuth2Token;
         }
     }
 
@@ -58,12 +58,12 @@ class UrlQuery
         return $parameters;
     }
 
-    public function sendGet ($params, $associativeArray, &$headers = null)
+    public function sendGet ($params, $associativeArray, &$headers = NULL)
     {
         if (is_array($params))
         {
             $parameters = $this->setParameters($params);
-            $full_url = self::buildQuery($this->url, $parameters);
+            $full_url   = self::buildQuery($this->url, $parameters);
         }
         else if (!empty($params))
         {
@@ -79,7 +79,7 @@ class UrlQuery
         return $this->handleQuery($associativeArray, $headers);
     }
 
-    public function sendPost ($dataAsJson, $associativeArray, &$headers = null)
+    public function sendPost ($dataAsJson, $associativeArray, &$headers = NULL)
     {
         $this->setPostFields($dataAsJson);
 
@@ -91,7 +91,7 @@ class UrlQuery
         return $this->handleQuery($associativeArray, $headers);
     }
 
-    public function sendPut ($dataAsJson, $associativeArray, &$headers = null)
+    public function sendPut ($dataAsJson, $associativeArray, &$headers = NULL)
     {
         $this->setPostFields($dataAsJson);
 
@@ -100,7 +100,7 @@ class UrlQuery
         return $this->handleQuery($associativeArray, $headers);
     }
 
-    public function sendDelete ($dataAsJson, $associativeArray, &$headers = null)
+    public function sendDelete ($dataAsJson, $associativeArray, &$headers = NULL)
     {
         $this->setPostFields($dataAsJson);
 
@@ -180,13 +180,13 @@ class UrlQuery
 
     private function saveHeaders ($header, &$headers)
     {
-        if ($headers === null)
+        if ($headers === NULL)
         {
             return;
         }
 
-        $header = explode("\r\n", $header);
-        $headers = array();
+        $header       = explode("\r\n", $header);
+        $headers      = array();
         $headerLength = count($header);
 
         // The 1st element is the HTTP code, so we can safely skip it

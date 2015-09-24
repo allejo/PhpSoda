@@ -13,13 +13,11 @@ abstract class Converter
         $this->data = $formattedString;
     }
 
-    abstract public function toJson ();
-
     /**
      * A convenience method to create a Converter instance from a file name without having to read the file data and
      * then give it to the CsvConverter constructor.
      *
-     * @param  string  $filename  The path or filename of the CSV file to open and create a CsvConverter for
+     * @param  string $filename The path or filename of the CSV file to open and create a CsvConverter for
      *
      * @throws \allejo\Socrata\Exceptions\FileNotFoundException
      *
@@ -36,4 +34,11 @@ abstract class Converter
 
         return new static($data);
     }
+
+    /**
+     * Convert the current data stored into a JSON formatted string to be submitted to Socrata
+     *
+     * @return string A JSON formatted string
+     */
+    abstract public function toJson ();
 }

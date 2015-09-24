@@ -10,7 +10,7 @@ abstract class SoqlOrderDirection
     /**
      * Ensure that we have a proper sorting order, so return only valid ordering options
      *
-     * @param  string  $string            The order to be checked if valid
+     * @param  string $string The order to be checked if valid
      *
      * @throws \InvalidArgumentException  If an unsupported sort order was given
      *

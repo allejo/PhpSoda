@@ -76,7 +76,7 @@ class SodaClient
         $this->token            = $token;
         $this->email            = $email;
         $this->password         = $password;
-        $this->oAuth2Token     = "";
+        $this->oAuth2Token      = "";
         $this->associativeArray = true;
     }
 

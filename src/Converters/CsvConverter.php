@@ -13,9 +13,9 @@ class CsvConverter extends Converter
      */
     public function toJson ()
     {
-        $rows = array_map("str_getcsv", explode("\n", trim($this->data)));
+        $rows    = array_map("str_getcsv", explode("\n", trim($this->data)));
         $columns = array_shift($rows);
-        $csv = array();
+        $csv     = array();
 
         foreach ($rows as $row)
         {
