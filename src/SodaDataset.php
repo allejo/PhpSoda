@@ -149,10 +149,34 @@ class SodaDataset
     }
 
     /**
+     * Delete an individual row based on their row identifier. For deleting more than a single row, use an upsert instead.
+     *
+     * @param  int|string $rowID The row identifier of the row to fetch; if no identifier is set for the dataset, the
+     *                           internal row identifier should be used
+     *
+     * @link   http://dev.socrata.com/publishers/direct-row-manipulation.html#deleting-a-row Deleting a Row
+     *
+     * @see    SodaClient::enableAssociativeArrays()
+     * @see    SodaClient::disableAssociativeArrays()
+     * @see    upsert()
+     *
+     * @since  0.1.2
+     *
+     * @return mixed An object with information about the deletion. The array will contain associative arrays or
+     *               stdClass objects from the decoded JSON received from the data set.
+     */
+    public function deleteRow ($rowID)
+    {
+        return $this->individualRow($rowID, "delete");
+    }
+
+    /**
      * Fetch an individual row from a dataset.
      *
      * @param  int|string $rowID The row identifier of the row to fetch; if no identifier is set for the dataset, the
      *                           internal row identifier should be used
+     *
+     * @link   http://dev.socrata.com/publishers/direct-row-manipulation.html#retrieving-an-individual-row  Retrieving An Individual Row
      *
      * @see    SodaClient::enableAssociativeArrays()
      * @see    SodaClient::disableAssociativeArrays()
@@ -164,15 +188,7 @@ class SodaDataset
      */
     public function getRow ($rowID)
     {
-        $headers = array();
-        $apiEndPoint = $this->buildApiUrl("resource", $this->resourceId . "/" . $rowID);
-        $urlQuery = new UrlQuery($apiEndPoint, $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
-
-        $dataset = $urlQuery->sendGet("", $this->sodaClient->associativeArrayEnabled(), $headers);
-
-        $this->setApiVersion($headers);
-
-        return $dataset;
+        return $this->individualRow($rowID, "get");
     }
 
     /**
@@ -292,6 +308,43 @@ class SodaDataset
         }
 
         return $uploadData;
+    }
+
+    /**
+     * Interact with an individual row. Either to retrieve it or to delete it; both actions use the same API endpoint
+     * with the exception of what type of request is sent.
+     *
+     * @param  string $rowID  The 4x4 resource ID of the dataset to work with
+     * @param  string $method Either `get` or `delete`
+     *
+     * @return mixed
+     */
+    private function individualRow ($rowID, $method)
+    {
+        $headers = array();
+
+        // For a single row, the format is the `resourceID/rowID.json`, so we'll use that as the "location" of the Api URL
+        $apiEndPoint = $this->buildApiUrl("resource", $this->resourceId . "/" . $rowID);
+
+        $urlQuery = new UrlQuery($apiEndPoint, $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
+        $urlQuery->setOAuth2Token($this->sodaClient->getOAuth2Token());
+
+        if ($method === "get")
+        {
+            $result = $urlQuery->sendGet("", $this->sodaClient->associativeArrayEnabled(), $headers);
+        }
+        else if ($method === "delete")
+        {
+            $result = $urlQuery->sendDelete("", $this->sodaClient->associativeArrayEnabled(), $headers);
+        }
+        else
+        {
+            throw new \InvalidArgumentException("Invalid ");
+        }
+
+        $this->setApiVersion($headers);
+
+        return $result;
     }
 
     /**
