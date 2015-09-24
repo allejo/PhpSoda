@@ -1,18 +1,66 @@
 <?php
 
+/**
+ * This file contains the SodaDataset class
+ *
+ * @copyright 2015 Vladimir Jimenez
+ * @license   https://www.gnu.org/licenses/lgpl-2.1.html LGPL-2.1
+ */
+
 namespace allejo\Socrata;
 
 use allejo\Socrata\Converters\Converter;
 use allejo\Socrata\Utilities\StringUtilities;
 use allejo\Socrata\Utilities\UrlQuery;
+use allejo\Socrata\Exceptions\InvalidResourceException;
 
+/**
+ * An object provided to interact with a Socrata dataset directly. Provides functionality for fetching the dataset, an
+ * individual row, or updating/replacing a dataset.
+ *
+ * @package allejo\Socrata
+ * @since   0.1.0
+ */
 class SodaDataset
 {
+    /**
+     * The client with all the authentication and configuration set
+     *
+     * @var SodaClient
+     */
     private $sodaClient;
+
+    /**
+     * The object used to make URL jobs for common requests
+     *
+     * @var UrlQuery
+     */
     private $urlQuery;
+
+    /**
+     * The 4x4 resource ID of a dataset
+     *
+     * @var string
+     */
     private $resourceId;
+
+    /**
+     * The API version of the dataset being worked with
+     *
+     * @var int
+     */
     private $apiVersion;
 
+    /**
+     * Create an object for interacting with a Socrata dataset
+     *
+     * @param  SodaClient $sodaClient   The SodaClient with all of the authentication information and settings for access
+     * @param  string     $resourceID   The 4x4 resource ID of the dataset that will be referenced
+     *
+     * @throws InvalidResourceException If the given resource ID does not match the pattern of a resource ID
+     *
+     * @since 0.1.0
+     */
     public function __construct ($sodaClient, $resourceID)
     {
         StringUtilities::validateResourceID($resourceID);
@@ -66,6 +114,7 @@ class SodaDataset
     public function getMetadata ()
     {
         $metadataUrlQuery = new UrlQuery($this->buildViewUrl(), $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
+        $metadataUrlQuery->setOAuth2Token($this->sodaClient->getOAuth2Token());
 
         return $metadataUrlQuery->sendGet("", $this->sodaClient->associativeArrayEnabled());
     }
