@@ -111,6 +111,7 @@ output/
 
 # Build data
 /build/
+/docs/
 
 # Composer PHAR
 /composer.phar
