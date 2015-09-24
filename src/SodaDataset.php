@@ -331,22 +331,35 @@ class SodaDataset
         $urlQuery = new UrlQuery($apiEndPoint, $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
         $urlQuery->setOAuth2Token($this->sodaClient->getOAuth2Token());
 
-        if ($method === "get")
-        {
-            $result = $urlQuery->sendGet("", $this->sodaClient->associativeArrayEnabled(), $headers);
-        }
-        else if ($method === "delete")
-        {
-            $result = $urlQuery->sendDelete("", $this->sodaClient->associativeArrayEnabled(), $headers);
-        }
-        else
-        {
-            throw new \InvalidArgumentException("Invalid ");
-        }
+        $result = $this->sendIndividualRequest($urlQuery, $method, $this->sodaClient->associativeArrayEnabled(), $headers);
 
         $this->setApiVersion($headers);
 
         return $result;
+    }
+
+    /**
+     * Send the appropriate request header based on the method that's required
+     *
+     * @param UrlQuery $urlQuery          The object for the API endpoint
+     * @param string   $method            Either `get` or `delete`
+     * @param bool     $associativeArrays Whether or not to return the information as an associative array
+     * @param array    $headers           An array with the cURL headers received
+     *
+     * @return mixed
+     */
+    private function sendIndividualRequest ($urlQuery, $method, $associativeArrays, &$headers)
+    {
+        if ($method === "get")
+        {
+            return $urlQuery->sendGet("", $associativeArrays, $headers);
+        }
+        else if ($method === "delete")
+        {
+            return $urlQuery->sendDelete("", $associativeArrays, $headers);
+        }
+
+        throw new \InvalidArgumentException("Invalid request method");
     }
 
     /**
