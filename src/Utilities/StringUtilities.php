@@ -1,9 +1,22 @@
 <?php
 
+/**
+ * This file contains the StringUtilities class
+ *
+ * @copyright 2015 Vladimir Jimenez
+ * @license   https://www.gnu.org/licenses/lgpl-2.1.html LGPL-2.1
+ */
+
 namespace allejo\Socrata\Utilities;
 
 use allejo\Socrata\Exceptions\InvalidResourceException;
 
+/**
+ * This class contains static utilities used for validating strings
+ *
+ * @package allejo\Socrata\Utilities
+ * @since   0.1.0
+ */
 class StringUtilities
 {
     /**

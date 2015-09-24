@@ -10,7 +10,7 @@
 namespace allejo\Socrata;
 
 /**
- * An object provided to interact with the Socrata API by handling tokens and authentication
+ * An object provided to handle tokens, authentication, and configuration for interacting with the the Socrata API.
  *
  * @package allejo\Socrata
  * @since   0.1.0
