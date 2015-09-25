@@ -2,7 +2,7 @@
   "name": "allejo/php-soda",
   "description": "A PHP library for working with the Socrata API",
   "type": "library",
-  "license": "LGPL-2.1",
+  "license": "MIT",
   "require": {
     "php": ">=5.3.0"
   },

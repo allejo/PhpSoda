@@ -4,7 +4,7 @@
  * This file contains the SodaDataset class
  *
  * @copyright 2015 Vladimir Jimenez
- * @license   https://www.gnu.org/licenses/lgpl-2.1.html LGPL-2.1
+ * @license   https://github.com/allejo/PhpSoda/blob/master/LICENSE.md MIT
  */
 
 namespace allejo\Socrata;
