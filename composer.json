@@ -11,6 +11,8 @@
     "phpdocumentor/phpdocumentor": "2.*",
     "satooshi/php-coveralls": "dev-master",
     "zendframework/zend-cache": "2.5.1",
+    "zendframework/zend-eventmanager": "2.5.1",
+    "zendframework/zend-json": "2.5.1",
     "zendframework/zend-servicemanager": "2.5.1",
     "zendframework/zend-stdlib": "2.5.1"
   },
