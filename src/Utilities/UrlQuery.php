@@ -124,43 +124,6 @@ class UrlQuery
     }
 
     /**
-     * Format an array into a URL encoded values to be submitted in cURL requests
-     *
-     * **Input**
-     *
-     * ```php
-     * array(
-     *     "foo"   => "bar",
-     *     "param" => "value"
-     * )
-     * ```
-     *
-     * **Output**
-     *
-     * ```php
-     * array(
-     *     "foo=bar",
-     *     "param=value"
-     * )
-     * ```
-     *
-     * @param  array    $params An array containing parameter names as keys and parameter values as values in the array.
-     *
-     * @return string[]         A URL encoded and combined array of GET parameters to be sent
-     */
-    public function formatParameters ($params)
-    {
-        $parameters = array();
-
-        foreach ($params as $key => $value)
-        {
-            $parameters[] = rawurlencode($key) . "=" . rawurlencode($value);
-        }
-
-        return $parameters;
-    }
-
-    /**
      * Send a GET request
      *
      * @param  string $params           The GET parameters to be appended to the API endpoint
@@ -178,7 +141,7 @@ class UrlQuery
     {
         if (is_array($params))
         {
-            $parameters = $this->formatParameters($params);
+            $parameters = self::formatParameters($params);
             $full_url   = self::buildQuery($this->url, $parameters);
         }
         else if (!empty($params))
@@ -423,7 +386,7 @@ class UrlQuery
      *
      * @return string A URL with GET parameters
      */
-    public static function buildQuery ($url, $params = array())
+    private static function buildQuery ($url, $params = array())
     {
         $full_url = $url;
 
@@ -433,5 +396,42 @@ class UrlQuery
         }
 
         return $full_url;
+    }
+
+    /**
+     * Format an array into a URL encoded values to be submitted in cURL requests
+     *
+     * **Input**
+     *
+     * ```php
+     * array(
+     *     "foo"   => "bar",
+     *     "param" => "value"
+     * )
+     * ```
+     *
+     * **Output**
+     *
+     * ```php
+     * array(
+     *     "foo=bar",
+     *     "param=value"
+     * )
+     * ```
+     *
+     * @param  array    $params An array containing parameter names as keys and parameter values as values in the array.
+     *
+     * @return string[]         A URL encoded and combined array of GET parameters to be sent
+     */
+    private static function formatParameters ($params)
+    {
+        $parameters = array();
+
+        foreach ($params as $key => $value)
+        {
+            $parameters[] = rawurlencode($key) . "=" . rawurlencode($value);
+        }
+
+        return $parameters;
     }
 }
