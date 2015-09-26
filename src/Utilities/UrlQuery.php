@@ -28,7 +28,7 @@ use allejo\Socrata\Exceptions\SodaException;
 class UrlQuery
 {
     /**
-     * The default protocal the Soda API expects
+     * The default protocol the Soda API expects
      */
     const DEFAULT_PROTOCOL = "https";
 
