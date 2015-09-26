@@ -1,16 +1,50 @@
 <?php
 
+/**
+ * This file contains the base class for converters which PhpSoda will support
+ *
+ * @copyright 2015 Vladimir Jimenez
+ * @license   https://github.com/allejo/PhpSoda/blob/master/LICENSE.md MIT
+ */
+
 namespace allejo\Socrata\Converters;
 
 use allejo\Socrata\Exceptions\FileNotFoundException;
 
+/**
+ * The base class to support custom data formats other than JSON; this is so PhpSoda can support for your any data
+ * format.
+ *
+ * TosSupport custom data types other than JSON, you must provide a conversion method from your data format to JSON.
+ * This base class provides a method to create an instance of itself from a file and it defines the abstract method
+ * `toJson()` that must be implemented in your converter.
+ *
+ * As an example, PhpSoda's official support of CSV is a converter extended from this class and implements a conversion
+ * from CSV to JSON.
+ *
+ * @package allejo\Socrata\Converters
+ * @since   0.1.0
+ */
 abstract class Converter
 {
+    /**
+     * The data to be converted into the custom data format. For example, in the CSV converter, this variable stores
+     * the CSV formatted data.
+     *
+     * @var string
+     */
     protected $data;
 
-    public function __construct ($formattedString)
+    /**
+     * Create a converter that will convert data from your data format into JSON
+     *
+     * @param string $customFormattedData The data (in your custom data format) to be converted into JSON
+     *
+     * @since 0.1.0
+     */
+    public function __construct ($customFormattedData)
     {
-        $this->data = $formattedString;
+        $this->data = $customFormattedData;
     }
 
     /**
