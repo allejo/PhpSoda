@@ -224,7 +224,7 @@ class UrlQuery
     {
         curl_setopt($this->cURL, CURLOPT_CUSTOMREQUEST, "DELETE");
 
-        return $this->handleQuery($associativeArray, $headers);
+        $this->handleQuery($associativeArray, $headers, true);
     }
 
     /**
@@ -246,6 +246,7 @@ class UrlQuery
      * @param  bool  $associativeArray When true, the returned data will be associative arrays; otherwise, it'll be an
      *                                 StdClass object.
      * @param  array $headers          The reference to the array where the returned HTTP headers will be stored
+     * @param  bool  $ignoreReturn     True if the returned body should be ignored
      *
      * @since  0.1.0
      *
@@ -253,15 +254,20 @@ class UrlQuery
      * @throws \allejo\Socrata\Exceptions\HttpException An HTTP status of something other 200 is returned
      * @throws \allejo\Socrata\Exceptions\SodaException A SODA API error is returned
      *
-     * @return mixed
+     * @return mixed|NULL
      */
-    private function handleQuery ($associativeArray, &$headers)
+    private function handleQuery ($associativeArray, &$headers, $ignoreReturn = false)
     {
         $result = $this->executeCurl();
 
         list($header, $body) = explode("\r\n\r\n", $result, 2);
 
         $this->saveHeaders($header, $headers);
+
+        if ($ignoreReturn)
+        {
+            return NULL;
+        }
 
         $resultArray = $this->handleResponseBody($body, $result);
 

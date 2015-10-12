@@ -356,7 +356,7 @@ class SodaDataset
         }
         else if ($method === "delete")
         {
-            return $urlQuery->sendDelete("", $associativeArrays, $headers);
+            return $urlQuery->sendDelete($associativeArrays, $headers);
         }
 
         throw new \InvalidArgumentException("Invalid request method");

@@ -3,6 +3,7 @@
 use allejo\Socrata\SodaClient;
 use allejo\Socrata\SodaDataset;
 use allejo\Socrata\Converters\CsvConverter;
+use allejo\Socrata\SoqlQuery;
 
 class SodaDatasetAuthenticatedTest extends PHPUnit_Framework_TestCase
 {
@@ -79,5 +80,19 @@ class SodaDatasetAuthenticatedTest extends PHPUnit_Framework_TestCase
         $json = file_get_contents("tests/datasets/dataset.json");
 
         $ds->replace($json);
+    }
+
+    public function testDeleteRow ()
+    {
+        $ds   = new SodaDataset($this->client, $this->id);
+        $soql = new SoqlQuery();
+
+        $soql->select(":id,name,type");
+
+        $result = $ds->getDataset($soql);
+
+        $ds->deleteRow($result[0][":id"]);
+
+        $this->assertCount(2, $ds->getDataset());
     }
 }
