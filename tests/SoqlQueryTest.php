@@ -177,19 +177,6 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @expectedException allejo\Socrata\Exceptions\SodaException
-     */
-    public function testMultipleOrderQueryWithApiV1 ()
-    {
-        $soql = new SoqlQuery();
-        $soql->order("state", SoqlOrderDirection::DESC)
-             ->order("date_posted", SoqlOrderDirection::ASC)
-             ->limit(5);
-
-        $this->dataset->getDataset($soql);
-    }
-
     public function testMultipleSelectsQuery ()
     {
         $soql = new SoqlQuery();
