@@ -52,6 +52,13 @@ class SodaDataset
     private $apiVersion;
 
     /**
+     * The API's cached metadata
+     *
+     * @var array
+     */
+    private $metadata;
+
+    /**
      * Create an object for interacting with a Socrata dataset
      *
      * @param  SodaClient $sodaClient The SodaClient with all of the authentication information and settings for access
@@ -83,7 +90,7 @@ class SodaDataset
      *
      * @since  0.1.0
      *
-     * @return int The API version number
+     * @return double The API version number
      */
     public function getApiVersion ()
     {
@@ -103,6 +110,8 @@ class SodaDataset
     /**
      * Get the metadata of a dataset
      *
+     * @param bool $forceFetch Set to true if the cached metadata for the dataset is outdata or needs to be refreshed
+     *
      * @see    SodaClient::enableAssociativeArrays()
      * @see    SodaClient::disableAssociativeArrays()
      *
@@ -111,12 +120,17 @@ class SodaDataset
      * @return array The metadata as a PHP array. The array will contain associative arrays or stdClass objects from
      *               the decoded JSON received from the data set.
      */
-    public function getMetadata ()
+    public function getMetadata ($forceFetch = false)
     {
-        $metadataUrlQuery = new UrlQuery($this->buildViewUrl(), $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
-        $metadataUrlQuery->setOAuth2Token($this->sodaClient->getOAuth2Token());
+        if (empty($this->metadata) || $forceFetch)
+        {
+            $metadataUrlQuery = new UrlQuery($this->buildViewUrl(), $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
+            $metadataUrlQuery->setOAuth2Token($this->sodaClient->getOAuth2Token());
 
-        return $metadataUrlQuery->sendGet("", $this->sodaClient->associativeArrayEnabled());
+            $this->metadata = $metadataUrlQuery->sendGet("", $this->sodaClient->associativeArrayEnabled());
+        }
+
+        return $this->metadata;
     }
 
     /**
@@ -372,18 +386,18 @@ class SodaDataset
         // Only set the API version number if it hasn't been set yet
         if ($this->apiVersion == 0)
         {
-            $this->apiVersion = self::parseApiVersion($headers);
+            $this->apiVersion = $this->parseApiVersion($headers);
         }
     }
 
     /**
      * Determine the version number of the API this dataset is using
      *
-     * @param  array $responseHeaders An array with the cURL headers received
+     * @param  array  $responseHeaders An array with the cURL headers received
      *
-     * @return int    The Socrata API version number this dataset uses
+     * @return double The Socrata API version number this dataset uses
      */
-    private static function parseApiVersion ($responseHeaders)
+    private function parseApiVersion ($responseHeaders)
     {
         // A header that's unique to the legacy API
         if (array_key_exists('X-SODA2-Legacy-Types', $responseHeaders) && $responseHeaders['X-SODA2-Legacy-Types'])
@@ -394,6 +408,16 @@ class SodaDataset
         // A header that's unique to the new API
         if (array_key_exists('X-SODA2-Truth-Last-Modified', $responseHeaders))
         {
+            if (empty($this->metadata))
+            {
+                $this->getMetadata();
+            }
+
+            if ($this->metadata['newBackend'])
+            {
+                return 2.1;
+            }
+
             return 2;
         }
 
