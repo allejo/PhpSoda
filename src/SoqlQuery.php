@@ -74,14 +74,6 @@ class SoqlQuery
     const DEFAULT_ORDER = ':id';
 
     /**
-     * The maximum number of results that can be retrieved from a dataset per request. This is a restriction set by the
-     * Socrata API
-     *
-     * @see http://dev.socrata.com/docs/queries.html#the-limit-parameter Maximum $limit request
-     */
-    const MAXIMUM_LIMIT = 50000;
-
-    /**
      * This array contains all of the parts to a SoqlQuery being converted into a URL where the key of an element is the
      * SoQL clause (e.g. $select) and the value of an element is the value to the SoQL clause (e.g. *).
      *
@@ -296,7 +288,7 @@ class SoqlQuery
     {
         $this->handleInteger("limit", $limit);
 
-        $this->queryElements[self::LIMIT_KEY] = min(self::MAXIMUM_LIMIT, $limit);
+        $this->queryElements[self::LIMIT_KEY] = $limit;
 
         return $this;
     }
