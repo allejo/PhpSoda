@@ -126,7 +126,7 @@ class SoqlQuery
      * $soqlQuery->select(array("foo" => "foo_alias", "bar" => "bar_alias", "baz"));
      * ```
      *
-     * @link    http://dev.socrata.com/docs/queries.html#the-select-parameter SoQL $select Parameter
+     * @link    https://dev.socrata.com/docs/queries/select.html SoQL $select Parameter
      *
      * @param   array|mixed $columns   The columns to select from the dataset. The columns can be specified as an array
      *                                 of values or it can be specified as multiple parameters separated by commas.
@@ -178,7 +178,7 @@ class SoqlQuery
      * Multiple calls to this function in a chain will overwrite the previous statement. To combine multiple where
      * clauses, use the supported SoQL operators; e.g. `magnitude > 3.0 AND source = 'pr'`
      *
-     * @link    http://dev.socrata.com/docs/queries.html#the-where-parameter SoQL $where Parameter
+     * @link    https://dev.socrata.com/docs/queries/where.html SoQL $where Parameter
      *
      * @param   string $statement The `where` clause that will be used to filter data
      *
@@ -217,8 +217,8 @@ class SoqlQuery
      * this
      * function is called more than once in a chain, the order does matter in which order() you call first.
      *
-     * @link    http://dev.socrata.com/changelog/2015/04/27/new-higher-performance-apis.html New Higher Performance API
-     * @link    http://dev.socrata.com/docs/queries.html#the-order-parameter SoQL $order Parameter
+     * @link    https://dev.socrata.com/changelog/2015/04/27/new-higher-performance-apis.html New Higher Performance API
+     * @link    https://dev.socrata.com/docs/queries/order.html SoQL $order Parameter
      *
      * @param   string $column      The column(s) that determines how the results should be sorted. This information
      *                              can be given as an array of values, a single column, or a comma separated string.
@@ -252,7 +252,7 @@ class SoqlQuery
      * $soql->select("region", "MAX(magnitude)")->group("region");
      * ```
      *
-     * @link    http://dev.socrata.com/docs/queries.html#the-group-parameter  The $group Parameter
+     * @link    https://dev.socrata.com/docs/queries/group.html  The $group Parameter
      *
      * @param   string $column The column that will be used to group the dataset
      *
@@ -270,9 +270,7 @@ class SoqlQuery
     /**
      * Set the amount of results that can be retrieved from a dataset per query.
      *
-     * The maximum value is 1000 based on API restrictions; larger values will be ignored.
-     *
-     * @link    http://dev.socrata.com/docs/queries.html#the-limit-parameter  SoQL $limit Parameter
+     * @link    https://dev.socrata.com/docs/queries/limit.html  SoQL $limit Parameter
      *
      * @param   int $limit The number of results the dataset should be limited to when returned
      *
@@ -323,7 +321,7 @@ class SoqlQuery
      * the “4th page” of records (records 151 - 200) where you are using limit() to page 50 records at a time, you’d ask
      * for an $offset of 150.
      *
-     * @link    http://dev.socrata.com/docs/queries.html#the-offset-parameter  SoQL $offset Parameter
+     * @link    https://dev.socrata.com/docs/queries/offset.html  SoQL $offset Parameter
      *
      * @param   int $offset The number of results the dataset should be offset to when returned
      *
