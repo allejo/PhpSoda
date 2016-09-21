@@ -6,7 +6,7 @@ This library fully supports interacting with the API by getting datasets, handli
 
 ## Requirements
 
-- PHP 5.3+
+- PHP 5.6+
 
 ## Installation
 
