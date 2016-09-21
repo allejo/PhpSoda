@@ -48,6 +48,11 @@ class SoqlQuery
     const LIMIT_KEY = '$limit';
 
     /**
+     * The HAVING clause in SoQL
+     */
+    const HAVING_KEY = '$having';
+
+    /**
      * The OFFSET clause in SoQL
      */
     const OFFSET_KEY = '$offset';
@@ -200,6 +205,24 @@ class SoqlQuery
     public function where ($statement)
     {
         $this->queryElements[self::WHERE_KEY] = rawurlencode($statement);
+
+        return $this;
+    }
+
+    /**
+     * Create a filter to aggregate your results using boolean operators, similar to the HAVING clause in SQL.
+     *
+     * @link    https://dev.socrata.com/docs/queries/having.html SoQL $having Parameter
+     *
+     * @param   string $statement The `having` clause that will be used to filter data
+     *
+     * @since   0.2.0
+     *
+     * @return  $this  A SoqlQuery object that can continue to be chained
+     */
+    public function having ($statement)
+    {
+        $this->queryElements[self::HAVING_KEY] = rawurlencode($statement);
 
         return $this;
     }
