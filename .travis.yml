@@ -5,15 +5,17 @@ php:
   - hhvm
 
 before_script:
- - wget http://getcomposer.org/composer.phar
- - php composer.phar install --dev --no-interaction
+  - composer self-update -q
+  - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
+  - composer install --no-interaction --prefer-dist
 
 script:
  - mkdir -p build/logs
- - phpunit --coverage-clover build/logs/clover.xml
+ - vendor/bin/phpunit --coverage-clover coverage.clover
 
 after_script:
- - php vendor/bin/coveralls -v
+ - wget https://scrutinizer-ci.com/ocular.phar
+ - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 
 notifications:
   email: false

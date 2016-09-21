@@ -1,4 +1,9 @@
-# PhpSoda [![Stable Release](https://img.shields.io/packagist/v/allejo/php-soda.svg)](https://packagist.org/packages/allejo/php-soda) [![Build Status](https://travis-ci.org/allejo/PhpSoda.svg?branch=master)](https://travis-ci.org/allejo/PhpSoda) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/allejo/PhpSoda/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/allejo/PhpSoda/?branch=master) [![Coverage Status](https://coveralls.io/repos/allejo/PhpSoda/badge.svg?branch=master)](https://coveralls.io/r/allejo/PhpSoda?branch=master)
+# PhpSoda 
+
+[![Stable Release](https://img.shields.io/packagist/v/allejo/php-soda.svg)](https://packagist.org/packages/allejo/php-soda) 
+[![Build Status](https://img.shields.io/travis/allejo/PhpSoda.svg)](https://travis-ci.org/allejo/PhpSoda) 
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/allejo/PhpSoda.svg?maxAge=2592000)](https://scrutinizer-ci.com/g/allejo/PhpSoda/?branch=master) 
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/allejo/PhpSoda.svg?maxAge=2592000)](https://coveralls.io/r/allejo/PhpSoda?branch=master)
 
 A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Provided as an alternative to Socrata's official implementation, this library fills the short-comings of the official library by providing more functionality, a more object-oriented approach, documentation, and plenty of example code.
 

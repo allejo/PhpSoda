@@ -63,3 +63,5 @@ coding_style:
             constants:
                 true_false_null: lower
 
+tools:
+    external_code_coverage: true
