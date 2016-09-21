@@ -73,12 +73,6 @@ class SoqlQuery
     const DEFAULT_ORDER_DIRECTION = SoqlOrderDirection::ASC;
 
     /**
-     * The default column we'll be ordering by in the `$order` clause of a SoQL query. By default, order by the `:id`
-     * column as this is the recommendation when paging through elements.
-     */
-    const DEFAULT_ORDER = ':id';
-
-    /**
      * This array contains all of the parts to a SoqlQuery being converted into a URL where the key of an element is the
      * SoQL clause (e.g. $select) and the value of an element is the value to the SoQL clause (e.g. *).
      *
@@ -87,28 +81,13 @@ class SoqlQuery
     private $queryElements;
 
     /**
-     * This variable stores whether or not we are using the default sorting order. If no order() statements exist in a
-     * SoqlQuery chain, then we have no issue using the default sort. If an order() statement does exist, we need to
-     * clear the default sorting because that would take precedent; this value will then be set to false so we can know
-     * that we are no longer using the default sort.
-     *
-     * @var bool
-     */
-    private $defaultSort;
-
-    /**
      * Write a SoQL query by chaining functions. This object will handle encoding the final query in order for it to be
      * used properly as a URL. By default a SoqlQuery will select all columns (excluding socrata columns; e.g. :id) and
      * sort by `:id` in ascending order.
      *
      * @since 0.1.0
      */
-    public function __construct ()
-    {
-        $this->queryElements[self::SELECT_KEY]  = self::DEFAULT_SELECT;
-        $this->queryElements[self::ORDER_KEY][] = self::DEFAULT_ORDER . rawurlencode(" ") . self::DEFAULT_ORDER_DIRECTION;
-        $this->defaultSort                      = true;
-    }
+    public function __construct () {}
 
     /**
      * Convert the current information into a URL encoded query that can be appended to the domain
@@ -119,7 +98,12 @@ class SoqlQuery
      */
     public function __tostring ()
     {
-        $query = array();
+        if (is_null($this->queryElements))
+        {
+            return "";
+        }
+
+        $query = [];
 
         foreach ($this->queryElements as $soqlKey => $value)
         {
@@ -252,14 +236,6 @@ class SoqlQuery
      */
     public function order ($column, $direction = self::DEFAULT_ORDER_DIRECTION)
     {
-        // We have not had any custom "order" statements, so let's clear the default value and only use the specified
-        // "order" statements
-        if ($this->defaultSort)
-        {
-            $this->queryElements[self::ORDER_KEY] = array();
-            $this->defaultSort                    = false;
-        }
-
         $this->queryElements[self::ORDER_KEY][] = rawurlencode($column . " " . $direction);
 
         return $this;
