@@ -1,14 +1,992 @@
 [
   {
-    "name": "John Bar",
-    "type": "Ambulance Chaser"
+    "date": "2016-05-16",
+    "os": "Macintosh",
+    "visits": 13
   },
   {
-    "name": "Juan Foo",
-    "type": "Receptionist"
+    "date": "2016-05-16",
+    "os": "Windows",
+    "visits": 12
   },
   {
-    "name": "Kung Fury",
-    "type": "Probationary"
+    "date": "2016-05-16",
+    "os": "iOS",
+    "visits": 4
+  },
+  {
+    "date": "2016-05-16",
+    "os": "Android",
+    "visits": 2
+  },
+  {
+    "date": "2016-05-16",
+    "os": "Windows Phone",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-17",
+    "os": "Windows",
+    "visits": 17
+  },
+  {
+    "date": "2016-05-17",
+    "os": "iOS",
+    "visits": 6
+  },
+  {
+    "date": "2016-05-17",
+    "os": "Macintosh",
+    "visits": 5
+  },
+  {
+    "date": "2016-05-17",
+    "os": "Linux",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-18",
+    "os": "Windows",
+    "visits": 17
+  },
+  {
+    "date": "2016-05-18",
+    "os": "Macintosh",
+    "visits": 5
+  },
+  {
+    "date": "2016-05-18",
+    "os": "iOS",
+    "visits": 4
+  },
+  {
+    "date": "2016-05-18",
+    "os": "Android",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-19",
+    "os": "Windows",
+    "visits": 11
+  },
+  {
+    "date": "2016-05-19",
+    "os": "Macintosh",
+    "visits": 11
+  },
+  {
+    "date": "2016-05-19",
+    "os": "iOS",
+    "visits": 4
+  },
+  {
+    "date": "2016-05-20",
+    "os": "Windows",
+    "visits": 16
+  },
+  {
+    "date": "2016-05-20",
+    "os": "Macintosh",
+    "visits": 5
+  },
+  {
+    "date": "2016-05-20",
+    "os": "iOS",
+    "visits": 4
+  },
+  {
+    "date": "2016-05-20",
+    "os": "Linux",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-20",
+    "os": "Android",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-21",
+    "os": "Windows",
+    "visits": 4
+  },
+  {
+    "date": "2016-05-21",
+    "os": "iOS",
+    "visits": 4
+  },
+  {
+    "date": "2016-05-21",
+    "os": "Macintosh",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-22",
+    "os": "iOS",
+    "visits": 4
+  },
+  {
+    "date": "2016-05-22",
+    "os": "Macintosh",
+    "visits": 3
+  },
+  {
+    "date": "2016-05-22",
+    "os": "Windows",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-22",
+    "os": "Android",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-23",
+    "os": "Windows",
+    "visits": 11
+  },
+  {
+    "date": "2016-05-23",
+    "os": "iOS",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-23",
+    "os": "Macintosh",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-23",
+    "os": "Android",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-24",
+    "os": "Windows",
+    "visits": 8
+  },
+  {
+    "date": "2016-05-24",
+    "os": "Macintosh",
+    "visits": 5
+  },
+  {
+    "date": "2016-05-24",
+    "os": "iOS",
+    "visits": 2
+  },
+  {
+    "date": "2016-05-25",
+    "os": "Windows",
+    "visits": 19
+  },
+  {
+    "date": "2016-05-25",
+    "os": "Macintosh",
+    "visits": 8
+  },
+  {
+    "date": "2016-05-25",
+    "os": "iOS",
+    "visits": 5
+  },
+  {
+    "date": "2016-05-26",
+    "os": "Windows",
+    "visits": 10
+  },
+  {
+    "date": "2016-05-26",
+    "os": "Macintosh",
+    "visits": 5
+  },
+  {
+    "date": "2016-05-26",
+    "os": "iOS",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-27",
+    "os": "Windows",
+    "visits": 6
+  },
+  {
+    "date": "2016-05-27",
+    "os": "iOS",
+    "visits": 3
+  },
+  {
+    "date": "2016-05-27",
+    "os": "Macintosh",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-27",
+    "os": "Android",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-28",
+    "os": "Macintosh",
+    "visits": 4
+  },
+  {
+    "date": "2016-05-28",
+    "os": "Windows",
+    "visits": 2
+  },
+  {
+    "date": "2016-05-28",
+    "os": "iOS",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-28",
+    "os": "Android",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-29",
+    "os": "Macintosh",
+    "visits": 4
+  },
+  {
+    "date": "2016-05-29",
+    "os": "iOS",
+    "visits": 3
+  },
+  {
+    "date": "2016-05-29",
+    "os": "Windows",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-30",
+    "os": "Macintosh",
+    "visits": 7
+  },
+  {
+    "date": "2016-05-30",
+    "os": "Windows",
+    "visits": 4
+  },
+  {
+    "date": "2016-05-30",
+    "os": "Android",
+    "visits": 1
+  },
+  {
+    "date": "2016-05-31",
+    "os": "Windows",
+    "visits": 18
+  },
+  {
+    "date": "2016-05-31",
+    "os": "Macintosh",
+    "visits": 6
+  },
+  {
+    "date": "2016-05-31",
+    "os": "iOS",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-01",
+    "os": "Windows",
+    "visits": 8
+  },
+  {
+    "date": "2016-06-01",
+    "os": "Macintosh",
+    "visits": 4
+  },
+  {
+    "date": "2016-06-01",
+    "os": "iOS",
+    "visits": 2
+  },
+  {
+    "date": "2016-06-02",
+    "os": "Windows",
+    "visits": 3312
+  },
+  {
+    "date": "2016-06-02",
+    "os": "iOS",
+    "visits": 1926
+  },
+  {
+    "date": "2016-06-02",
+    "os": "Macintosh",
+    "visits": 1559
+  },
+  {
+    "date": "2016-06-02",
+    "os": "Android",
+    "visits": 721
+  },
+  {
+    "date": "2016-06-02",
+    "os": "Chrome OS",
+    "visits": 43
+  },
+  {
+    "date": "2016-06-02",
+    "os": "Linux",
+    "visits": 15
+  },
+  {
+    "date": "2016-06-02",
+    "os": "Windows Phone",
+    "visits": 8
+  },
+  {
+    "date": "2016-06-02",
+    "os": "(not set)",
+    "visits": 6
+  },
+  {
+    "date": "2016-06-02",
+    "os": "BlackBerry",
+    "visits": 3
+  },
+  {
+    "date": "2016-06-03",
+    "os": "Windows",
+    "visits": 2835
+  },
+  {
+    "date": "2016-06-03",
+    "os": "iOS",
+    "visits": 2048
+  },
+  {
+    "date": "2016-06-03",
+    "os": "Macintosh",
+    "visits": 1299
+  },
+  {
+    "date": "2016-06-03",
+    "os": "Android",
+    "visits": 726
+  },
+  {
+    "date": "2016-06-03",
+    "os": "Chrome OS",
+    "visits": 39
+  },
+  {
+    "date": "2016-06-03",
+    "os": "Linux",
+    "visits": 24
+  },
+  {
+    "date": "2016-06-03",
+    "os": "Windows Phone",
+    "visits": 9
+  },
+  {
+    "date": "2016-06-03",
+    "os": "BlackBerry",
+    "visits": 4
+  },
+  {
+    "date": "2016-06-03",
+    "os": "(not set)",
+    "visits": 3
+  },
+  {
+    "date": "2016-06-03",
+    "os": "Nintendo Wii",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-04",
+    "os": "iOS",
+    "visits": 2561
+  },
+  {
+    "date": "2016-06-04",
+    "os": "Windows",
+    "visits": 1273
+  },
+  {
+    "date": "2016-06-04",
+    "os": "Macintosh",
+    "visits": 1114
+  },
+  {
+    "date": "2016-06-04",
+    "os": "Android",
+    "visits": 891
+  },
+  {
+    "date": "2016-06-04",
+    "os": "Chrome OS",
+    "visits": 21
+  },
+  {
+    "date": "2016-06-04",
+    "os": "Linux",
+    "visits": 12
+  },
+  {
+    "date": "2016-06-04",
+    "os": "BlackBerry",
+    "visits": 6
+  },
+  {
+    "date": "2016-06-04",
+    "os": "Windows Phone",
+    "visits": 5
+  },
+  {
+    "date": "2016-06-04",
+    "os": "(not set)",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-05",
+    "os": "iOS",
+    "visits": 2571
+  },
+  {
+    "date": "2016-06-05",
+    "os": "Macintosh",
+    "visits": 1243
+  },
+  {
+    "date": "2016-06-05",
+    "os": "Windows",
+    "visits": 1236
+  },
+  {
+    "date": "2016-06-05",
+    "os": "Android",
+    "visits": 857
+  },
+  {
+    "date": "2016-06-05",
+    "os": "Chrome OS",
+    "visits": 31
+  },
+  {
+    "date": "2016-06-05",
+    "os": "Linux",
+    "visits": 13
+  },
+  {
+    "date": "2016-06-05",
+    "os": "BlackBerry",
+    "visits": 5
+  },
+  {
+    "date": "2016-06-05",
+    "os": "Windows Phone",
+    "visits": 5
+  },
+  {
+    "date": "2016-06-06",
+    "os": "Windows",
+    "visits": 3645
+  },
+  {
+    "date": "2016-06-06",
+    "os": "iOS",
+    "visits": 2083
+  },
+  {
+    "date": "2016-06-06",
+    "os": "Macintosh",
+    "visits": 1794
+  },
+  {
+    "date": "2016-06-06",
+    "os": "Android",
+    "visits": 767
+  },
+  {
+    "date": "2016-06-06",
+    "os": "Chrome OS",
+    "visits": 34
+  },
+  {
+    "date": "2016-06-06",
+    "os": "Linux",
+    "visits": 24
+  },
+  {
+    "date": "2016-06-06",
+    "os": "Windows Phone",
+    "visits": 6
+  },
+  {
+    "date": "2016-06-06",
+    "os": "BlackBerry",
+    "visits": 5
+  },
+  {
+    "date": "2016-06-06",
+    "os": "Nintendo Wii",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-07",
+    "os": "Windows",
+    "visits": 3556
+  },
+  {
+    "date": "2016-06-07",
+    "os": "iOS",
+    "visits": 2538
+  },
+  {
+    "date": "2016-06-07",
+    "os": "Macintosh",
+    "visits": 1833
+  },
+  {
+    "date": "2016-06-07",
+    "os": "Android",
+    "visits": 867
+  },
+  {
+    "date": "2016-06-07",
+    "os": "Chrome OS",
+    "visits": 35
+  },
+  {
+    "date": "2016-06-07",
+    "os": "Linux",
+    "visits": 16
+  },
+  {
+    "date": "2016-06-07",
+    "os": "Windows Phone",
+    "visits": 9
+  },
+  {
+    "date": "2016-06-07",
+    "os": "BlackBerry",
+    "visits": 8
+  },
+  {
+    "date": "2016-06-07",
+    "os": "(not set)",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-07",
+    "os": "FreeBSD",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-08",
+    "os": "Windows",
+    "visits": 3772
+  },
+  {
+    "date": "2016-06-08",
+    "os": "iOS",
+    "visits": 2284
+  },
+  {
+    "date": "2016-06-08",
+    "os": "Macintosh",
+    "visits": 1837
+  },
+  {
+    "date": "2016-06-08",
+    "os": "Android",
+    "visits": 850
+  },
+  {
+    "date": "2016-06-08",
+    "os": "Chrome OS",
+    "visits": 43
+  },
+  {
+    "date": "2016-06-08",
+    "os": "Linux",
+    "visits": 32
+  },
+  {
+    "date": "2016-06-08",
+    "os": "Windows Phone",
+    "visits": 9
+  },
+  {
+    "date": "2016-06-08",
+    "os": "(not set)",
+    "visits": 4
+  },
+  {
+    "date": "2016-06-08",
+    "os": "BlackBerry",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-09",
+    "os": "Windows",
+    "visits": 3528
+  },
+  {
+    "date": "2016-06-09",
+    "os": "iOS",
+    "visits": 2170
+  },
+  {
+    "date": "2016-06-09",
+    "os": "Macintosh",
+    "visits": 1675
+  },
+  {
+    "date": "2016-06-09",
+    "os": "Android",
+    "visits": 787
+  },
+  {
+    "date": "2016-06-09",
+    "os": "Chrome OS",
+    "visits": 41
+  },
+  {
+    "date": "2016-06-09",
+    "os": "Linux",
+    "visits": 17
+  },
+  {
+    "date": "2016-06-09",
+    "os": "Windows Phone",
+    "visits": 9
+  },
+  {
+    "date": "2016-06-09",
+    "os": "BlackBerry",
+    "visits": 3
+  },
+  {
+    "date": "2016-06-10",
+    "os": "Windows",
+    "visits": 2627
+  },
+  {
+    "date": "2016-06-10",
+    "os": "iOS",
+    "visits": 2212
+  },
+  {
+    "date": "2016-06-10",
+    "os": "Macintosh",
+    "visits": 1471
+  },
+  {
+    "date": "2016-06-10",
+    "os": "Android",
+    "visits": 820
+  },
+  {
+    "date": "2016-06-10",
+    "os": "Chrome OS",
+    "visits": 48
+  },
+  {
+    "date": "2016-06-10",
+    "os": "Linux",
+    "visits": 31
+  },
+  {
+    "date": "2016-06-10",
+    "os": "Windows Phone",
+    "visits": 10
+  },
+  {
+    "date": "2016-06-10",
+    "os": "BlackBerry",
+    "visits": 3
+  },
+  {
+    "date": "2016-06-10",
+    "os": "UNIX",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-10",
+    "os": "(not set)",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-11",
+    "os": "iOS",
+    "visits": 2555
+  },
+  {
+    "date": "2016-06-11",
+    "os": "Windows",
+    "visits": 1343
+  },
+  {
+    "date": "2016-06-11",
+    "os": "Macintosh",
+    "visits": 1157
+  },
+  {
+    "date": "2016-06-11",
+    "os": "Android",
+    "visits": 940
+  },
+  {
+    "date": "2016-06-11",
+    "os": "Chrome OS",
+    "visits": 31
+  },
+  {
+    "date": "2016-06-11",
+    "os": "Linux",
+    "visits": 12
+  },
+  {
+    "date": "2016-06-11",
+    "os": "Windows Phone",
+    "visits": 8
+  },
+  {
+    "date": "2016-06-11",
+    "os": "(not set)",
+    "visits": 2
+  },
+  {
+    "date": "2016-06-11",
+    "os": "BlackBerry",
+    "visits": 2
+  },
+  {
+    "date": "2016-06-12",
+    "os": "iOS",
+    "visits": 3028
+  },
+  {
+    "date": "2016-06-12",
+    "os": "Windows",
+    "visits": 1860
+  },
+  {
+    "date": "2016-06-12",
+    "os": "Macintosh",
+    "visits": 1498
+  },
+  {
+    "date": "2016-06-12",
+    "os": "Android",
+    "visits": 1101
+  },
+  {
+    "date": "2016-06-12",
+    "os": "Chrome OS",
+    "visits": 42
+  },
+  {
+    "date": "2016-06-12",
+    "os": "Linux",
+    "visits": 22
+  },
+  {
+    "date": "2016-06-12",
+    "os": "Windows Phone",
+    "visits": 14
+  },
+  {
+    "date": "2016-06-12",
+    "os": "(not set)",
+    "visits": 6
+  },
+  {
+    "date": "2016-06-12",
+    "os": "BlackBerry",
+    "visits": 2
+  },
+  {
+    "date": "2016-06-13",
+    "os": "Windows",
+    "visits": 4179
+  },
+  {
+    "date": "2016-06-13",
+    "os": "iOS",
+    "visits": 2310
+  },
+  {
+    "date": "2016-06-13",
+    "os": "Macintosh",
+    "visits": 2011
+  },
+  {
+    "date": "2016-06-13",
+    "os": "Android",
+    "visits": 938
+  },
+  {
+    "date": "2016-06-13",
+    "os": "Chrome OS",
+    "visits": 46
+  },
+  {
+    "date": "2016-06-13",
+    "os": "Linux",
+    "visits": 40
+  },
+  {
+    "date": "2016-06-13",
+    "os": "Windows Phone",
+    "visits": 10
+  },
+  {
+    "date": "2016-06-13",
+    "os": "BlackBerry",
+    "visits": 3
+  },
+  {
+    "date": "2016-06-13",
+    "os": "(not set)",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-14",
+    "os": "Windows",
+    "visits": 3954
+  },
+  {
+    "date": "2016-06-14",
+    "os": "iOS",
+    "visits": 2422
+  },
+  {
+    "date": "2016-06-14",
+    "os": "Macintosh",
+    "visits": 1953
+  },
+  {
+    "date": "2016-06-14",
+    "os": "Android",
+    "visits": 909
+  },
+  {
+    "date": "2016-06-14",
+    "os": "Chrome OS",
+    "visits": 54
+  },
+  {
+    "date": "2016-06-14",
+    "os": "Linux",
+    "visits": 25
+  },
+  {
+    "date": "2016-06-14",
+    "os": "Windows Phone",
+    "visits": 11
+  },
+  {
+    "date": "2016-06-14",
+    "os": "BlackBerry",
+    "visits": 3
+  },
+  {
+    "date": "2016-06-14",
+    "os": "(not set)",
+    "visits": 2
+  },
+  {
+    "date": "2016-06-15",
+    "os": "Windows",
+    "visits": 3970
+  },
+  {
+    "date": "2016-06-15",
+    "os": "iOS",
+    "visits": 2336
+  },
+  {
+    "date": "2016-06-15",
+    "os": "Macintosh",
+    "visits": 1817
+  },
+  {
+    "date": "2016-06-15",
+    "os": "Android",
+    "visits": 890
+  },
+  {
+    "date": "2016-06-15",
+    "os": "Chrome OS",
+    "visits": 48
+  },
+  {
+    "date": "2016-06-15",
+    "os": "Linux",
+    "visits": 38
+  },
+  {
+    "date": "2016-06-15",
+    "os": "Windows Phone",
+    "visits": 17
+  },
+  {
+    "date": "2016-06-15",
+    "os": "BlackBerry",
+    "visits": 3
+  },
+  {
+    "date": "2016-06-15",
+    "os": "(not set)",
+    "visits": 2
+  },
+  {
+    "date": "2016-06-15",
+    "os": "Nokia",
+    "visits": 1
+  },
+  {
+    "date": "2016-06-16",
+    "os": "Windows",
+    "visits": 3638
+  },
+  {
+    "date": "2016-06-16",
+    "os": "iOS",
+    "visits": 2203
+  },
+  {
+    "date": "2016-06-16",
+    "os": "Macintosh",
+    "visits": 1630
+  },
+  {
+    "date": "2016-06-16",
+    "os": "Android",
+    "visits": 915
+  },
+  {
+    "date": "2016-06-16",
+    "os": "Chrome OS",
+    "visits": 38
+  },
+  {
+    "date": "2016-06-16",
+    "os": "Linux",
+    "visits": 35
+  },
+  {
+    "date": "2016-06-16",
+    "os": "Windows Phone",
+    "visits": 7
+  },
+  {
+    "date": "2016-06-16",
+    "os": "BlackBerry",
+    "visits": 3
+  },
+  {
+    "date": "2016-06-16",
+    "os": "(not set)",
+    "visits": 1
   }
 ]
