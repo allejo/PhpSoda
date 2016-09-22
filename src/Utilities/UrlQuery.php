@@ -260,6 +260,14 @@ class UrlQuery
     {
         $result = $this->executeCurl();
 
+        // Ignore "100 Continue" headers
+        $continueHeader = "HTTP/1.1 100 Continue\r\n\r\n";
+
+        if (strpos($result, $continueHeader) === 0)
+        {
+            $result = str_replace($continueHeader, '', $result);
+        }
+
         list($header, $body) = explode("\r\n\r\n", $result, 2);
 
         $this->saveHeaders($header, $headers);
