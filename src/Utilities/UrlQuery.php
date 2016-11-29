@@ -296,7 +296,8 @@ class UrlQuery
             CURLOPT_URL => $this->url,
             CURLOPT_HEADER => true,
             CURLOPT_HTTPHEADER => $this->headers,
-            CURLOPT_RETURNTRANSFER => true
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSLVERSION => 6
         ));
 
         if (!StringUtilities::isNullOrEmpty($email) && !StringUtilities::isNullOrEmpty($password))
