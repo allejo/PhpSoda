@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+**Changes**
+
+- Enforce TLS 1.2, per [Socrata's announcement](https://github.com/allejo/PhpSoda/commit/63d01d48b51a6a20b0e29fcf1c5f739d78c21aa3)
+
 ## 1.0.0
 
 **Fixes**
