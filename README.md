@@ -5,6 +5,8 @@
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/allejo/PhpSoda.svg?maxAge=2592000)](https://scrutinizer-ci.com/g/allejo/PhpSoda/) 
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/allejo/PhpSoda.svg?maxAge=2592000)](https://scrutinizer-ci.com/g/allejo/PhpSoda/)
 
+[![Join the chat at https://gitter.im/allejo/PhpSoda](https://badges.gitter.im/allejo/PhpSoda.svg)](https://gitter.im/allejo/PhpSoda?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Provided as an alternative to Socrata's official implementation, this library fills the short-comings of the official library by providing more functionality, a more object-oriented approach, documentation, and plenty of example code.
 
 This library fully supports interacting with the API by getting datasets, handling tokens, handling basic authentication, and OAuth2.0 tokens in order to write or modify datasets.
