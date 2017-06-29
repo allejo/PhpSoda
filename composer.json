@@ -1,6 +1,6 @@
 {
   "name": "allejo/php-soda",
-  "description": "A PHP library for working with the Socrata API",
+  "description": "A PHP library for working with both the consumer and producer Socrata API",
   "type": "library",
   "license": "MIT",
   "require": {
@@ -8,13 +8,14 @@
   },
   "require-dev": {
     "phpunit/phpunit": "~5.5",
-    "phpdocumentor/phpdocumentor": "2.*"
+    "php-vcr/php-vcr": "^1.3",
+    "twig/twig": "~1.20",
+    "sami/sami": "^3.3.0"
   },
   "autoload": {
-    "classmap": [
-      "src/",
-      "tests/utilities"
-    ]
+     "psr-4": {
+      "allejo\\Socrata\\": "src/"
+    }
   },
   "authors": [
     {
@@ -28,5 +29,10 @@
     "irc": "irc://irc.freenode.net/socrata-soda",
     "wiki": "https://github.com/allejo/PhpSoda/wiki",
     "source": "https://github.com/allejo/PhpSoda"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.0-dev"
+    }
   }
 }
