@@ -1,21 +1,32 @@
 <?php
 
+use allejo\Socrata\Exceptions\InvalidResourceException;
+use allejo\Socrata\Exceptions\SodaException;
 use allejo\Socrata\SodaClient;
 use allejo\Socrata\SodaDataset;
 use allejo\Socrata\SoqlQuery;
+use GuzzleHttp\Exception\ClientException;
+use PHPUnit\Framework\TestCase;
 
-class SodaDatasetTest extends PHPUnit_Framework_TestCase
+class SodaDatasetTest extends TestCase
 {
-    /**
-     * @var SodaClient
-     */
+    /** @var SodaClient */
     private $client;
 
     private $id;
     private $domain;
     private $token;
 
-    public static function invalidResourceIDs ()
+    public function setUp()
+    {
+        $this->id     = 'pkfj-5jsd';
+        $this->domain = 'opendata.socrata.com';
+        $this->token  = 'khpKCi1wMz2bwXyMIHfb6ux73';
+
+        $this->client = new SodaClient($this->domain, $this->token);
+    }
+
+    public static function invalidResourceIDs()
     {
         return array(
             array("pkfj5jsd"),
@@ -25,133 +36,142 @@ class SodaDatasetTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function setUp ()
-    {
-        $this->id     = "pkfj-5jsd";
-        $this->domain = "opendata.socrata.com";
-        $this->token  = "khpKCi1wMz2bwXyMIHfb6ux73";
-
-        $this->client = new SodaClient($this->domain, $this->token);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidClient ()
-    {
-        new SodaDataset(NULL, "qwer-1234");
-    }
-
     /**
      * @dataProvider invalidResourceIDs
-     * @expectedException allejo\Socrata\Exceptions\InvalidResourceException
-     *
-     * @param $resourceID string The resource ID to be testing
+
+     * @param string $resourceID The resource ID to be testing
      */
-    public function testInvalidResourceIDs ($resourceID)
+    public function testInvalidResourceID($resourceID)
     {
+        $this->expectException(InvalidResourceException::class);
+
         new SodaDataset($this->client, $resourceID);
     }
 
-    /**
-     * @expectedException allejo\Socrata\Exceptions\SodaException
-     * @expectedExceptionCode authentication_required
-     */
-    public function testGetDatasetWithInvalidCredentials ()
+    public function testGetDatasetWithInvalidCredentials()
     {
-        $sc = new SodaClient($this->domain, $this->token, "email@example.org", "foobar");
-        $ds = new SodaDataset($sc, "pkfj-5jsd");
+        $this->expectException(ClientException::class);
 
-        $ds->getDataset();
+        $sc = new SodaClient($this->domain, $this->token, 'email@example.org', 'foobar');
+        $ds = new SodaDataset($sc, 'pkfj-5jsd');
+
+        $ds->getData();
     }
 
-    public function testGetMetadata ()
+    public function testGetDatasetWithInvalidCredentialsExceptionCast()
+    {
+        try
+        {
+            $sc = new SodaClient($this->domain, $this->token, 'email@example.org', 'foobar');
+            $ds = new SodaDataset($sc, 'pkfj-5jsd');
+
+            $ds->getData();
+        }
+        catch (ClientException $e)
+        {
+            $cast = SodaException::cast($e);
+            $this->assertEquals('authentication_required', $cast->getCode());
+        }
+    }
+
+    public function testGetMetadataAsArray()
     {
         $ds = new SodaDataset($this->client, $this->id);
         $md = $ds->getMetadata();
 
         $this->assertNotNull($md);
         $this->assertEquals(1301955963, $md['createdAt']);
-        $this->assertEquals("PUBLIC_DOMAIN", $md['licenseId']);
+        $this->assertEquals('PUBLIC_DOMAIN', $md['licenseId']);
     }
 
-    public function testGetMetadataAsObject ()
+    public function testGetMetadataAsObject()
     {
         $this->client->disableAssociativeArrays();
 
         $ds = new SodaDataset($this->client, $this->id);
         $md = $ds->getMetadata();
 
-        $this->assertInstanceOf("stdClass", $md);
+        $this->assertInstanceOf(stdClass::class, $md);
         $this->assertNotNull($md->createdAt);
     }
 
-    public function testGetApiVersion ()
+    public function testGetApiVersion()
     {
         $ds = new SodaDataset($this->client, $this->id);
 
         $this->assertEquals(1, $ds->getApiVersion());
     }
 
-    public function testGetResource ()
+    public function testGetResource()
     {
         $ds = new SodaDataset($this->client, $this->id);
 
-        $this->assertTrue(count($ds->getDataset()) > 5);
+        $this->assertTrue(count($ds->getData()) > 5);
     }
 
-    public function testGetResourceWithSoqlQuery ()
+    public function testGetResourceWithSoqlQuery()
     {
         $ds   = new SodaDataset($this->client, $this->id);
         $soql = new SoqlQuery();
 
-        $soql->select("date_posted", "state", "sample_type")->where("state = 'AR'");
+        $soql->select('date_posted', 'state', 'sample_type')->where("state = 'AR'");
 
-        $results = $ds->getDataset($soql);
+        $results = $ds->getData($soql);
         $this->assertTrue(count($results) > 1);
     }
 
-    public function testGetIndividualRow ()
+    public function testGetIndividualRow()
     {
         $ds = new SodaDataset($this->client, $this->id);
 
         $this->assertCount(6, $ds->getRow(416));
     }
 
-    /**
-     * @expectedException allejo\Socrata\Exceptions\SodaException
-     * @expectedExceptionCode row.missing
-     */
-    public function testGetInvalidIndividualRow ()
+    public function testGetInvalidIndividualRow()
     {
-        $ds = new SodaDataset($this->client, $this->id);
+        $this->expectException(ClientException::class);
 
+        $ds = new SodaDataset($this->client, $this->id);
         $ds->getRow(1);
     }
 
-    public function testGetDatasetWithSimpleFilter ()
+    public function testGetInvalidIndividualRowExceptionCast()
     {
-        $simpleFilter = "state=AR";
-        $ds = new SodaDataset($this->client, $this->id);
-
-        $results = $ds->getDataset($simpleFilter);
-
-        foreach ($results as $result)
+        try
         {
-            $this->assertEquals("AR", $result['state']);
+            $ds = new SodaDataset($this->client, $this->id);
+            $ds->getRow(1);
+        }
+        catch (ClientException $e)
+        {
+            $cast = SodaException::cast($e);
+            $this->assertEquals('row.missing', $cast->getCode());
         }
     }
 
-    public function testGetDatasetWithArrayFilter ()
+    public function testGetDatasetWithSimpleFilter()
     {
-        $arrayFilter = array("state" => "AZ");
+        $simpleFilter = 'state=AR';
         $ds = new SodaDataset($this->client, $this->id);
 
-        $results = $ds->getDataset($arrayFilter);
+        $results = $ds->getData($simpleFilter);
 
         foreach ($results as $result)
         {
-            $this->assertEquals("AZ", $result['state']);
+            $this->assertEquals('AR', $result['state']);
+        }
+    }
+
+    public function testGetDatasetWithArrayFilter()
+    {
+        $arrayFilter = ['state' => 'AZ'];
+        $ds = new SodaDataset($this->client, $this->id);
+
+        $results = $ds->getData($arrayFilter);
+
+        foreach ($results as $result)
+        {
+            $this->assertEquals('AZ', $result['state']);
         }
     }
 }

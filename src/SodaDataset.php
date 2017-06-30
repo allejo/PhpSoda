@@ -13,49 +13,35 @@ use allejo\Socrata\Converters\Converter;
 use allejo\Socrata\Exceptions\InvalidResourceException;
 use allejo\Socrata\Utilities\StringUtilities;
 use allejo\Socrata\Utilities\UrlQuery;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * An object provided to interact with a Socrata dataset directly. Provides functionality for fetching the dataset, an
  * individual row, or updating/replacing a dataset.
  *
- * @package allejo\Socrata
- * @since   0.1.0
+ * @api
+ * @since 0.1.0
  */
 class SodaDataset
 {
-    /**
-     * The client with all the authentication and configuration set
-     *
-     * @var SodaClient
-     */
+    /** @var SodaClient */
     private $sodaClient;
 
     /**
      * The object used to make URL jobs for common requests
      *
+     * @deprecated
      * @var UrlQuery
      */
     private $urlQuery;
 
-    /**
-     * The 4x4 resource ID of a dataset
-     *
-     * @var string
-     */
+    /** @var string */
     private $resourceId;
 
-    /**
-     * The API version of the dataset being worked with
-     *
-     * @var int
-     */
+    /** @var double */
     private $apiVersion;
 
-    /**
-     * The API's cached metadata
-     *
-     * @var array
-     */
+    /** @var array */
     private $metadata;
 
     /**
@@ -68,14 +54,9 @@ class SodaDataset
      *
      * @since 0.1.0
      */
-    public function __construct ($sodaClient, $resourceID)
+    public function __construct (SodaClient $sodaClient, $resourceID)
     {
         StringUtilities::validateResourceID($resourceID);
-
-        if (!($sodaClient instanceof SodaClient))
-        {
-            throw new \InvalidArgumentException("The first variable is expected to be a SodaClient object");
-        }
 
         $this->apiVersion = 0;
         $this->sodaClient = $sodaClient;
@@ -83,82 +64,172 @@ class SodaDataset
         $this->urlQuery   = new UrlQuery($this->buildResourceUrl(), $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
     }
 
+    //
+    // Getters
+    //
+
     /**
      * Get the API version this dataset is using
      *
+     * @api
+     *
      * @since  0.1.0
+     *
+     * @throws ClientException
      *
      * @return double The API version number
      */
     public function getApiVersion ()
     {
-        // If we don't have the API version set, send a dummy query with limit 0 since we only care about the headers
+        // If we don't have the API version set, send a dummy query with limit 0 since we only care about the headers and
+        // Socrata doesn't accept HEAD requests.
         if ($this->apiVersion == 0)
         {
             $soql = new SoqlQuery();
             $soql->limit(0);
 
             // When we fetch a dataset, the API version is stored
-            $this->getDataset($soql);
+            $this->getData($soql);
         }
 
         return $this->apiVersion;
     }
 
     /**
-     * Get the metadata of a dataset
+     * Get the metadata of a dataset.
      *
-     * @param bool $forceFetch Set to true if the cached metadata for the dataset is outdata or needs to be refreshed
+     * @api
+     *
+     * @param  bool $forceFetch Set to true if the cached metadata for the dataset is outdated or needs to be refreshed
      *
      * @see    SodaClient::enableAssociativeArrays()
      * @see    SodaClient::disableAssociativeArrays()
      *
      * @since  0.1.0
      *
-     * @return array The metadata as a PHP array. The array will contain associative arrays or stdClass objects from
-     *               the decoded JSON received from the data set.
+     * @throws ClientException
+     *
+     * @return array|\stdClass The metadata of the dataset
      */
-    public function getMetadata ($forceFetch = false)
+    public function getMetadata($forceFetch = false)
     {
         if (empty($this->metadata) || $forceFetch)
         {
-            $metadataUrlQuery = new UrlQuery($this->buildViewUrl(), $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
-            $metadataUrlQuery->setOAuth2Token($this->sodaClient->getOAuth2Token());
-
-            $this->metadata = $metadataUrlQuery->sendGet("", $this->sodaClient->associativeArrayEnabled());
+            $response = $this->sodaClient->getGuzzleClient()->get(sprintf('views/%s.json', $this->resourceId));
+            $this->metadata = json_decode(
+                $response->getBody()->getContents(),
+                $this->sodaClient->associativeArrayEnabled()
+            );
         }
 
         return $this->metadata;
     }
 
     /**
-     * Fetch a dataset based on a resource ID.
+     * Get the column structure of the dataset.
+     *
+     * @api
+     *
+     * @param  bool $forceFetch Set to true if the cached metadata for the dataset is outdated or needs to be refreshed
+     *
+     * @since  2.0.0
+     *
+     * @throws ClientException
+     *
+     * @return array
+     */
+    public function getColumns($forceFetch = false)
+    {
+        $metadata = $this->getMetadata($forceFetch);
+
+        if ($metadata instanceof \stdClass)
+        {
+            return $metadata->columns;
+        }
+
+        return $metadata['columns'];
+    }
+
+    /**
+     * Fetch the data belonging to this dataset.
+     *
+     * @api
+     *
+     * @param  array|string|SoqlQuery $filterOrSoqlQuery A simple filter or a SoqlQuery to filter the results
+     * @param  array                  $headers           A reference to an array where headers from the response can be stored
+     *
+     * @since  2.0.0 Renamed to getData() and introduces new $headers parameter
+     * @since  0.1.0
+     *
+     * @throws ClientException
+     *
+     * @return array
+     */
+    public function getData($filterOrSoqlQuery = '', array &$headers = null)
+    {
+        if ($filterOrSoqlQuery instanceof SoqlQuery)
+        {
+            $filterOrSoqlQuery = (string)$filterOrSoqlQuery;
+        }
+
+        $response = $this->sodaClient->getGuzzleClient()->get(sprintf('resource/%s.json', $this->resourceId), [
+            'query' => $filterOrSoqlQuery
+        ]);
+
+        if ($headers !== null)
+        {
+            $headers = $response->getHeaders();
+        }
+
+        $this->setApiVersion($response->getHeaders());
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    /**
+     * Fetch the data belonging to this dataset.
+     *
+     * @api
+     *
+     * @deprecated 1.0.2 Renamed to SodaDataset::getData() in 2.0.0
      *
      * @param  string|SoqlQuery $filterOrSoqlQuery A simple filter or a SoqlQuery to filter the results
      *
-     * @see    SodaClient::enableAssociativeArrays()
-     * @see    SodaClient::disableAssociativeArrays()
-     *
      * @since  0.1.0
      *
-     * @return array The data set as a PHP array. The array will contain associative arrays or stdClass objects from
-     *               the decoded JSON received from the data set.
+     * @return array
      */
-    public function getDataset ($filterOrSoqlQuery = "")
+    public function getDataset($filterOrSoqlQuery = '')
     {
-        $headers = array();
-
-        if (!($filterOrSoqlQuery instanceof SoqlQuery) && StringUtilities::isNullOrEmpty($filterOrSoqlQuery))
-        {
-            $filterOrSoqlQuery = new SoqlQuery();
-        }
-
-        $dataset = $this->urlQuery->sendGet($filterOrSoqlQuery, $this->sodaClient->associativeArrayEnabled(), $headers);
-
-        $this->setApiVersion($headers);
-
-        return $dataset;
+        return $this->getData($filterOrSoqlQuery);
     }
+
+    /**
+     * Fetch an individual row from a dataset.
+     *
+     * @param  int|string $rowID The row identifier of the row to fetch; if no identifier is set for the dataset, the
+     *                           internal row identifier should be used
+     *
+     * @link   https://dev.socrata.com/publishers/direct-row-manipulation.html#retrieving-an-individual-row  Retrieving An Individual Row
+     *
+     * @since  0.1.2
+     *
+     * @throws ClientException
+     *
+     * @return array|\stdClass An individual row
+     */
+    public function getRow($rowID)
+    {
+        $response = $this->sodaClient->getGuzzleClient()->get(sprintf('resource/%s/%s.json', $this->resourceId, $rowID));
+
+        $this->setApiVersion($response->getHeaders());
+
+        return json_decode($response->getBody()->getContents(), $this->sodaClient->associativeArrayEnabled());
+    }
+
+    //
+    // Editors
+    //
 
     /**
      * Delete an individual row based on their row identifier. For deleting more than a single row, use an upsert
@@ -181,28 +252,6 @@ class SodaDataset
     public function deleteRow ($rowID)
     {
         return $this->individualRow($rowID, "delete");
-    }
-
-    /**
-     * Fetch an individual row from a dataset.
-     *
-     * @param  int|string $rowID The row identifier of the row to fetch; if no identifier is set for the dataset, the
-     *                           internal row identifier should be used
-     *
-     * @link   http://dev.socrata.com/publishers/direct-row-manipulation.html#retrieving-an-individual-row  Retrieving
-     *         An Individual Row
-     *
-     * @see    SodaClient::enableAssociativeArrays()
-     * @see    SodaClient::disableAssociativeArrays()
-     *
-     * @since  0.1.2
-     *
-     * @return array The data set as a PHP array. The array will contain associative arrays or stdClass objects from
-     *               the decoded JSON received from the data set.
-     */
-    public function getRow ($rowID)
-    {
-        return $this->individualRow($rowID, "get");
     }
 
     /**
@@ -379,7 +428,7 @@ class SodaDataset
      *
      * @param array $headers An array with the cURL headers received
      */
-    private function setApiVersion ($headers)
+    private function setApiVersion (array $headers)
     {
         // Only set the API version number if it hasn't been set yet
         if ($this->apiVersion == 0)
@@ -395,7 +444,7 @@ class SodaDataset
      *
      * @return double The Socrata API version number this dataset uses
      */
-    private function parseApiVersion ($responseHeaders)
+    private function parseApiVersion (array $responseHeaders)
     {
         // A header that's unique to the legacy API
         if (array_key_exists('X-SODA2-Legacy-Types', $responseHeaders) && $responseHeaders['X-SODA2-Legacy-Types'])
