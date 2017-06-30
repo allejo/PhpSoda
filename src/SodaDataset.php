@@ -81,8 +81,6 @@ class SodaDataset
         $this->sodaClient = $sodaClient;
         $this->resourceId = $resourceID;
         $this->urlQuery   = new UrlQuery($this->buildResourceUrl(), $this->sodaClient->getToken(), $this->sodaClient->getEmail(), $this->sodaClient->getPassword());
-
-        $this->urlQuery->setOAuth2Token($this->sodaClient->getOAuth2Token());
     }
 
     /**

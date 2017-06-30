@@ -9,11 +9,13 @@
 
 namespace allejo\Socrata;
 
+use GuzzleHttp\Client;
+
 /**
  * An object provided to handle tokens, authentication, and configuration for interacting with the the Socrata API.
  *
- * @package allejo\Socrata
- * @since   0.1.0
+ * @api
+ * @since 0.1.0
  */
 class SodaClient
 {
@@ -25,7 +27,7 @@ class SodaClient
     private $domain;
 
     /**
-     * The AppToken used to read private data and to allow the application to work with less throttling
+     * The AppToken used to allow the application to work with less throttling
      *
      * @var string
      */
@@ -46,11 +48,11 @@ class SodaClient
     private $password;
 
     /**
-     * The OAuth 2.0 Access Token to be used with requests
+     * The Guzzle client used for making URL calls
      *
-     * @var string
+     * @var Client
      */
-    private $oAuth2Token;
+    private $client;
 
     /**
      * Whether or not to return the decoded JSON as an associative array. When set to false, it will return stdClass
@@ -63,20 +65,21 @@ class SodaClient
     /**
      * Create a client object to connect to the Socrata API
      *
-     * @param string $url      The URL or domain of the Socrata data set
+     * @api
+     *
+     * @param string $domain   The URL or domain of the Socrata data set
      * @param string $token    The AppToken used to access this information
      * @param string $email    Username for authentication
      * @param string $password Password for authentication
      *
      * @since 0.1.0
      */
-    public function __construct ($url, $token = "", $email = "", $password = "")
+    public function __construct ($domain, $token = "", $email = "", $password = "")
     {
-        $this->domain           = rtrim(preg_replace('/http(s)?:\/\//', "", $url), '/');
+        $this->domain           = rtrim(preg_replace('/http(s)?:\/\//', "", $domain), '/');
         $this->token            = $token;
         $this->email            = $email;
         $this->password         = $password;
-        $this->oAuth2Token      = "";
         $this->associativeArray = true;
     }
 
@@ -208,26 +211,52 @@ class SodaClient
     }
 
     /**
-     * Get the access token being used for OAuth 2.0
+     * Get the Guzzle client we'll be using for URL calls.
      *
-     * @return string The access token being used
+     * @api
      *
-     * @since 0.1.1
+     * @since  2.0.0
+     *
+     * @return Client
      */
-    public function getOAuth2Token ()
+    public function getGuzzleClient()
     {
-        return $this->oAuth2Token;
+        if ($this->client === null)
+        {
+            $guzzleConf = [
+                'base_uri' => 'https://' . $this->getDomain(),
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-type' => 'application/json',
+                ]
+            ];
+
+            if (!empty($this->getEmail()) && !empty($this->getPassword()))
+            {
+                $guzzleConf['auth'] = [$this->getEmail(), $this->getPassword()];
+            }
+            elseif (empty($this->getEmail()) xor empty($this->getPassword()))
+            {
+                trigger_error('Either an email or password is missing; HTTP authentication will be disabled for requests.', E_USER_WARNING);
+            }
+
+            $this->client = new Client($guzzleConf);
+        }
+
+        return $this->client;
     }
 
     /**
-     * Set the OAuth 2.0 access token
+     * Define your own Guzzle client with your own configuration.
      *
-     * @param string $token The access token to be used in queries
+     * @api
      *
-     * @since 0.1.1
+     * @param Client $client
+     *
+     * @since 2.0.0
      */
-    public function setOAuth2Token ($token)
+    public function setGuzzleClient(Client $client)
     {
-        $this->oAuth2Token = $token;
+        $this->client = $client;
     }
 }
