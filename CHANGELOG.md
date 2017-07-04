@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.2
+
+**Fixes**
+
+- Using aliases in the `SoqlQuery::select()` would cause a 400 error ([#7](https://github.com/allejo/PhpSoda/issues/7))
+- Add support for new array structure in `SoqlQuery::select()` for those using Symfony's YAML component ([#7](https://github.com/allejo/PhpSoda/issues/7))
+
+**Changes**
+
+- Added deprecation notices for upcoming changes in 2.0.0 of the library
+  - `SodaDataset::getDataset()` has been renamed to `SodaDataset::getData()`
+  - OAuth2 support will be dropped. Guzzle 6 will be used in 2.0.0 to be PSR-7 compliant and in turn, OAuth2 support should be configured through a custom Guzzle client.
+
 ## 1.0.1
 
 **Changes**
