@@ -210,6 +210,8 @@ class SodaClient
     /**
      * Get the access token being used for OAuth 2.0
      *
+     * @deprecated 2.0.0 This library will be moving to Guzzle, so configuring OAuth2 through your Guzzle client is the recommended approach.
+     *
      * @return string The access token being used
      *
      * @since 0.1.1
@@ -221,6 +223,8 @@ class SodaClient
 
     /**
      * Set the OAuth 2.0 access token
+     *
+     * @deprecated 2.0.0 This library will be moving to Guzzle, so configuring OAuth2 through your Guzzle client is the recommended approach.
      *
      * @param string $token The access token to be used in queries
      *

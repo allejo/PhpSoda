@@ -146,7 +146,7 @@ class SodaDataset
      * @return array The data set as a PHP array. The array will contain associative arrays or stdClass objects from
      *               the decoded JSON received from the data set.
      */
-    public function getDataset ($filterOrSoqlQuery = "")
+    public function getData ($filterOrSoqlQuery = "")
     {
         $headers = array();
 
@@ -160,6 +160,26 @@ class SodaDataset
         $this->setApiVersion($headers);
 
         return $dataset;
+    }
+
+    /**
+     * Fetch a dataset based on a resource ID.
+     *
+     * @deprecated 2.0.0 This function will be renamed to getData() in 2.0.0
+     *
+     * @param  string|SoqlQuery $filterOrSoqlQuery A simple filter or a SoqlQuery to filter the results
+     *
+     * @see    SodaClient::enableAssociativeArrays()
+     * @see    SodaClient::disableAssociativeArrays()
+     *
+     * @since  0.1.0
+     *
+     * @return array The data set as a PHP array. The array will contain associative arrays or stdClass objects from
+     *               the decoded JSON received from the data set.
+     */
+    public function getDataset ($filterOrSoqlQuery = "")
+    {
+        return $this->getData($filterOrSoqlQuery);
     }
 
     /**
