@@ -12,7 +12,7 @@ namespace allejo\Socrata;
 /**
  * An object provided for the creation and handling of SoQL queries in an object-oriented fashion.
  *
- * @package allejo\Socrata
+ * @api
  * @since   0.1.0
  */
 class SoqlQuery
@@ -61,6 +61,16 @@ class SoqlQuery
      * The SEARCH clause in SoQL
      */
     const SEARCH_KEY = '$q';
+
+    /**
+     * Allows you to write a SoQL query without each dollar sign clause
+     */
+    const QUERY_KEY = '$query';
+
+    /**
+     * Force Byte Order Mark with $$bom
+     */
+    const BYTE_ORDER_KEY = '$$bom';
 
     /**
      * The default value for the `$select` clause in a SoQL query. By default, select all the columns
@@ -361,6 +371,50 @@ class SoqlQuery
     public function fullTextSearch ($needle)
     {
         $this->queryElements[self::SEARCH_KEY] = rawurlencode($needle);
+
+        return $this;
+    }
+
+    /**
+     * Allows you to write SoQL queries in a SQL-like syntax without using the other methods in this object. This allows
+     * you to combine multiple SoQL clauses together into a single parameter, for convenience.
+     *
+     * **Warning:** This query should not be combined with any other filters other than forceByteOrderMark()
+     *
+     * @api
+     *
+     * @link https://dev.socrata.com/docs/queries/query.html SoQL $query Parameter
+     *
+     * @param string $query The SoQL query written like a SQL query
+     *
+     * @since 2.0.0
+     *
+     * @return $this
+     */
+    public function query ($query)
+    {
+        $this->queryElements[self::QUERY_KEY] = rawurlencode($query);
+
+        return $this;
+    }
+
+    /**
+     * The BOM is a special character that, when included as the first byte in a file, signals that it should be parsed
+     * as UTF-8.
+     *
+     * @api
+     *
+     * @link https://dev.socrata.com/docs/queries/bom.html SoQL $$bom Parameter
+     *
+     * @param bool $force
+     *
+     * @since 2.0.0
+     *
+     * @return $this
+     */
+    public function forceByteOrderMark ($force = true)
+    {
+        $this->queryElements[self::BYTE_ORDER_KEY] = $force ? 'true' : 'false';
 
         return $this;
     }
