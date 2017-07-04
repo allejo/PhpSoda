@@ -11,8 +11,12 @@
     "phpdocumentor/phpdocumentor": "2.*"
   },
   "autoload": {
+    "psr-4": {
+      "allejo\\Socrata\\": "src/"
+    }
+  },
+  "autoload-dev": {
     "classmap": [
-      "src/",
       "tests/utilities"
     ]
   },
@@ -28,5 +32,10 @@
     "irc": "irc://irc.freenode.net/socrata-soda",
     "wiki": "https://github.com/allejo/PhpSoda/wiki",
     "source": "https://github.com/allejo/PhpSoda"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.0-dev"
+    }
   }
 }
