@@ -4,6 +4,7 @@ use allejo\Socrata\SodaClient;
 use allejo\Socrata\SodaDataset;
 use allejo\Socrata\SoqlOrderDirection;
 use allejo\Socrata\SoqlQuery;
+use GuzzleHttp\Exception\ClientException;
 
 class SoqlQueryTest extends PHPUnit_Framework_TestCase
 {
@@ -21,15 +22,6 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
     private $domain;
     private $token;
 
-    public function invalidStringLimits ()
-    {
-        return array(
-            array("7"),
-            array("foo"),
-            array("!")
-        );
-    }
-
     public function setUp ()
     {
         $this->id     = "pkfj-5jsd";
@@ -40,11 +32,10 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
         $this->dataset = new SodaDataset($this->client, $this->id);
     }
 
-    /**
-     * @expectedException \allejo\Socrata\Exceptions\HttpException
-     */
     public function testBadUrl ()
     {
+        $this->expectException(ClientException::class);
+
         $client  = new SodaClient("www.example.com");
         $dataset = new SodaDataset($client, "qwer-trew");
 
@@ -110,21 +101,30 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($limit, count($results));
     }
 
+    public static function invalidStringLimits ()
+    {
+        return array(
+            array("7"),
+            array("foo"),
+            array("!")
+        );
+    }
+
     /**
      * @dataProvider invalidStringLimits
-     * @expectedException \InvalidArgumentException
      */
     public function testStringLimitQuery ($limit)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $soql = new SoqlQuery();
         $soql->limit($limit);
     }
 
-    /**
-     * @expectedException \OutOfBoundsException
-     */
     public function testNegativeLimitQuery ()
     {
+        $this->expectException(\OutOfBoundsException::class);
+
         $limit = -10;
 
         $soql = new SoqlQuery();
@@ -219,6 +219,8 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
         $soql = new SoqlQuery();
         $soql->select(array("date_posted", "state", "sample_type" => "sample_value"));
 
+        $this->assertEquals('$select=date_posted,state,sample_type%20AS%20sample_value', (string)$soql);
+
         $results = $this->dataset->getDataset($soql);
 
         $this->assertArrayHasKey("date_posted", $results[0]);
@@ -231,6 +233,8 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
     {
         $soql = new SoqlQuery();
         $soql->select(array("date_posted" => null, "state" => null, "sample_type" => "sample_value"));
+
+        $this->assertEquals('$select=date_posted,state,sample_type%20AS%20sample_value', (string)$soql);
 
         $results = $this->dataset->getDataset($soql);
 
@@ -245,6 +249,8 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
         $soql = new SoqlQuery();
         $soql->select(array("date_posted" => "post_date", "state" => "current_state", "sample_type" => "sample_value"));
 
+        $this->assertEquals('$select=date_posted%20AS%20post_date,state%20AS%20current_state,sample_type%20AS%20sample_value', (string)$soql);
+
         $results = $this->dataset->getDataset($soql);
 
         $this->assertArrayHasKey("post_date", $results[0]);
@@ -253,5 +259,31 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey("state", $results[0]);
         $this->assertArrayHasKey("sample_value", $results[0]);
         $this->assertArrayNotHasKey("sample_type", $results[0]);
+    }
+
+    public function testForceByteOrderMarkTrue ()
+    {
+        $soql = new SoqlQuery();
+        $soql->forceByteOrderMark();
+
+        $this->assertEquals('$$bom=true', (string)$soql);
+    }
+
+    public function testForceByteOrderMarkFalse ()
+    {
+        $soql = new SoqlQuery();
+        $soql->forceByteOrderMark(false);
+
+        $this->assertEquals('$$bom=false', (string)$soql);
+    }
+
+    public function testQueryQuery ()
+    {
+        $query = 'SELECT dataset_column, post_date WHERE count > 5';
+
+        $soql = new SoqlQuery();
+        $soql->query($query);
+
+        $this->assertEquals(sprintf('$query=%s', rawurlencode($query)), (string)$soql);
     }
 }
