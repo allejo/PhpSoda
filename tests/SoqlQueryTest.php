@@ -240,7 +240,7 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey("sample_type", $results[0]);
     }
 
-     public function testSelectColumnsQueryWithAliases ()
+    public function testSelectColumnsQueryWithAliases ()
     {
         $soql = new SoqlQuery();
         $soql->select(array("date_posted" => "post_date", "state" => "current_state", "sample_type" => "sample_value"));
