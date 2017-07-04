@@ -213,4 +213,45 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
 
         $this->assertContains($expected, (string)$soql);
     }
+
+    public function testSelectColumnsQueryWithPartialAliases ()
+    {
+        $soql = new SoqlQuery();
+        $soql->select(array("date_posted", "state", "sample_type" => "sample_value"));
+
+        $results = $this->dataset->getDataset($soql);
+
+        $this->assertArrayHasKey("date_posted", $results[0]);
+        $this->assertArrayHasKey("state", $results[0]);
+        $this->assertArrayHasKey("sample_value", $results[0]);
+        $this->assertArrayNotHasKey("sample_type", $results[0]);
+    }
+
+    public function testSelectColumnsQueryWithPartialAliasesWhereValueIsNull ()
+    {
+        $soql = new SoqlQuery();
+        $soql->select(array("date_posted" => null, "state" => null, "sample_type" => "sample_value"));
+
+        $results = $this->dataset->getDataset($soql);
+
+        $this->assertArrayHasKey("date_posted", $results[0]);
+        $this->assertArrayHasKey("state", $results[0]);
+        $this->assertArrayHasKey("sample_value", $results[0]);
+        $this->assertArrayNotHasKey("sample_type", $results[0]);
+    }
+
+    public function testSelectColumnsQueryWithAliases ()
+    {
+        $soql = new SoqlQuery();
+        $soql->select(array("date_posted" => "post_date", "state" => "current_state", "sample_type" => "sample_value"));
+
+        $results = $this->dataset->getDataset($soql);
+
+        $this->assertArrayHasKey("post_date", $results[0]);
+        $this->assertArrayNotHasKey("date_posted", $results[0]);
+        $this->assertArrayHasKey("current_state", $results[0]);
+        $this->assertArrayNotHasKey("state", $results[0]);
+        $this->assertArrayHasKey("sample_value", $results[0]);
+        $this->assertArrayNotHasKey("sample_type", $results[0]);
+    }
 }
