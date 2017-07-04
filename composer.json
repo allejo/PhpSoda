@@ -17,6 +17,11 @@
       "allejo\\Socrata\\": "src/"
     }
   },
+  "autoload-dev": {
+    "classmap": [
+      "tests/utilities"
+    ]
+  },
   "authors": [
     {
       "name": "Vladimir Jimenez",
