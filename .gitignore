@@ -72,7 +72,7 @@ output/
 
 # Build data
 /build/
-/docs/
+/docs/api/
 
 # Composer PHAR
 /composer.phar
