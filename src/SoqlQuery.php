@@ -166,7 +166,7 @@ class SoqlQuery
 
         foreach ($array as $key => $value)
         {
-            $formattedValues[] = (is_string($key)) ? sprintf($format, trim($key), trim($value)) : $value;
+            $formattedValues[] = (is_string($key) && (!is_null($value))) ? rawurlencode(sprintf($format, trim($key), trim($value))) : (is_string($key) ? $key : $value);
         }
 
         return $formattedValues;
