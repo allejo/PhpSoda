@@ -217,7 +217,7 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
     public function testSelectColumnsQueryWithPartialAliases ()
     {
         $soql = new SoqlQuery();
-        $soql->select("date_posted", "state", "sample_type" => "sample_value");
+        $soql->select(array("date_posted", "state", "sample_type" => "sample_value"));
 
         $results = $this->dataset->getDataset($soql);
 
@@ -230,7 +230,7 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
     public function testSelectColumnsQueryWithPartialAliasesWhereValueIsNull ()
     {
         $soql = new SoqlQuery();
-        $soql->select("date_posted" => null, "state" => null, "sample_type" => "sample_value");
+        $soql->select(array("date_posted" => null, "state" => null, "sample_type" => "sample_value"));
 
         $results = $this->dataset->getDataset($soql);
 
@@ -243,7 +243,7 @@ class SoqlQueryTest extends PHPUnit_Framework_TestCase
      public function testSelectColumnsQueryWithAliases ()
     {
         $soql = new SoqlQuery();
-        $soql->select("date_posted" => "post_date", "state" => "current_state", "sample_type" => "sample_value");
+        $soql->select(array("date_posted" => "post_date", "state" => "current_state", "sample_type" => "sample_value"));
 
         $results = $this->dataset->getDataset($soql);
 
