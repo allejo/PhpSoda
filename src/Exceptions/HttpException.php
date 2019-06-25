@@ -30,7 +30,7 @@ class HttpException extends \Exception
     {
         $json = json_decode($response);
 
-        if (is_null($json))
+        if (!is_null($json))
         {
             $status        = ucfirst($json['code']);
             $message       = $json['message'];
