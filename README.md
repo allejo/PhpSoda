@@ -5,9 +5,9 @@
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/allejo/PhpSoda.svg?maxAge=2592000)](https://scrutinizer-ci.com/g/allejo/PhpSoda/) 
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/allejo/PhpSoda.svg?maxAge=2592000)](https://scrutinizer-ci.com/g/allejo/PhpSoda/)
 
-A PHP library for working with the [Socrata API](http://dev.socrata.com/docs/endpoints.html). Provided as an alternative to Socrata's official implementation, this library fills the short-comings of the official library by providing more functionality, a more object-oriented approach, documentation, and plenty of example code.
+A PHP library for working with the [Socrata Open Data API](http://dev.socrata.com/docs/endpoints.html). Provided as an alternative to Socrata's official implementation, this library fills the short-comings of the official library by providing more functionality, a more object-oriented approach, documentation, and plenty of example code.
 
-This library fully supports interacting with the API by getting datasets, handling tokens, handling basic authentication, and OAuth2.0 tokens in order to write or modify datasets.
+This library fully supports interacting with the Socrata Open Data API (SODA) by getting datasets, handling tokens, handling basic authentication, and OAuth2.0 tokens in order to write or modify datasets.
 
 ## Requirements
 
@@ -64,6 +64,8 @@ $ds->upsert($data);
 // To replace a dataset
 $ds->replace($data);
 ```
+
+Note: This library supports writing directly to datasets with the Socrata Open Data API. For datasets with one or more data transformations applied to the schema through the Socrata Data Management Experience (the user interface for creating datasets), use the Socrata Data Management API to apply those same transformations to all updates. For more details on when to use SODA vs the Socrata Data Management API, see the [Data Management API documentation](https://socratapublishing.docs.apiary.io)
 
 ## Getting Help
 
